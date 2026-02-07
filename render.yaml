@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: policy-simulator
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: AUTH_USERNAME
+        sync: false
+      - key: AUTH_PASSWORD
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
