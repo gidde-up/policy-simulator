@@ -15,7 +15,7 @@ class TimeHorizonEnum(str, Enum):
 
 class PolicyScenarioRequest(BaseModel):
     """Request schema for policy simulation"""
-    country_code: str = Field(..., description="ISO3 country code (ZAF or TUN)")
+    country_code: str = Field(..., description="ISO3 country code (ZAF, TUN, VNM, or THA)")
     name: str = Field(default="Custom Scenario", description="Scenario name")
     tariff_changes: Dict[str, float] = Field(
         default_factory=dict,
@@ -93,6 +93,7 @@ class BaselineIndicators(BaseModel):
     unemployment_male: Optional[BaselineIndicator] = None
     labor_force: Optional[BaselineIndicator] = None
     employment_total: Optional[BaselineIndicator] = None
+    gov_expenditure_usd: Optional[float] = None  # Annual government expenditure in millions USD
 
 
 class DataSourceInfo(BaseModel):
@@ -101,6 +102,30 @@ class DataSourceInfo(BaseModel):
     reference_year: str = Field(description="Reference year for data")
     quality: str = Field(description="Data quality level: 'research-grade' or 'illustrative'")
     notes: str = Field(description="Additional notes about data sources")
+
+
+class JobQualityMetrics(BaseModel):
+    """Job quality indicators including working poverty, productivity, and formality"""
+    # Formal vs Informal breakdown
+    formal_jobs: float = Field(description="Number of formal jobs created")
+    informal_jobs: float = Field(description="Number of informal jobs created")
+    formalization_rate: float = Field(description="% of jobs that are formal (0-100)")
+
+    # Working poverty indicators
+    working_poverty_risk: float = Field(description="% of jobs at risk of working poverty (0-100)")
+    jobs_above_poverty_line: float = Field(description="Number of jobs above working poverty line")
+    jobs_below_poverty_line: float = Field(description="Number of jobs below working poverty line")
+
+    # Productivity indicators
+    avg_productivity_usd: float = Field(description="Average output per worker (USD/year)")
+    high_productivity_jobs: float = Field(description="Number of jobs in high-productivity sectors")
+    low_productivity_jobs: float = Field(description="Number of jobs in low-productivity sectors")
+    productivity_category: str = Field(description="Overall productivity level: low, medium, high")
+
+    # Sector composition
+    agriculture_jobs: float = Field(description="Jobs in agriculture sector")
+    manufacturing_jobs: float = Field(description="Jobs in manufacturing sector")
+    services_jobs: float = Field(description="Jobs in services sector")
 
 
 class PolicyCostsResponse(BaseModel):
@@ -139,6 +164,7 @@ class SimulationResponse(BaseModel):
     baseline_indicators: Optional[BaselineIndicators] = None
     data_source: Optional[DataSourceInfo] = None
     costs: Optional[PolicyCostsResponse] = None
+    job_quality: Optional[JobQualityMetrics] = None
 
 
 class ChatRequest(BaseModel):

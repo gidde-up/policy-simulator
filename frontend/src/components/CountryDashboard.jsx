@@ -59,19 +59,16 @@ function CountryDashboard({ countryCode }) {
   const prepareChartData = () => {
     if (!comparison?.data) return [];
 
-    const zafData = comparison.data.ZAF || [];
-    const tunData = comparison.data.TUN || [];
-
+    const countries = ['ZAF', 'TUN', 'VNM', 'THA', 'MOZ'];
     const yearMap = new Map();
 
-    zafData.forEach(d => {
-      yearMap.set(d.year, { year: d.year, ZAF: d.value });
-    });
-
-    tunData.forEach(d => {
-      const existing = yearMap.get(d.year) || { year: d.year };
-      existing.TUN = d.value;
-      yearMap.set(d.year, existing);
+    countries.forEach(code => {
+      const countryData = comparison.data[code] || [];
+      countryData.forEach(d => {
+        const existing = yearMap.get(d.year) || { year: d.year };
+        existing[code] = d.value;
+        yearMap.set(d.year, existing);
+      });
     });
 
     return Array.from(yearMap.values()).sort((a, b) => a.year - b.year);
@@ -113,7 +110,7 @@ function CountryDashboard({ countryCode }) {
         <div className="flex items-center justify-between">
           <div>
             <div className="flex items-center space-x-2 mb-1">
-              <span className="text-3xl">{countryCode === 'ZAF' ? '🇿🇦' : '🇹🇳'}</span>
+              <span className="text-3xl">{{ 'ZAF': '🇿🇦', 'TUN': '🇹🇳', 'VNM': '🇻🇳', 'THA': '🇹🇭' }[countryCode] || '🌍'}</span>
               <h2 className="text-2xl font-bold">{profile?.country_name}</h2>
             </div>
             <p className="text-blue-200">{profile?.region}</p>
@@ -291,6 +288,24 @@ function CountryDashboard({ countryCode }) {
                   stroke="#E70013"
                   strokeWidth={2}
                   dot={{ r: 3 }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="VNM"
+                  name="Viet Nam"
+                  stroke="#DA251D"
+                  strokeWidth={2}
+                  dot={{ r: 3 }}
+                  strokeDasharray="5 5"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="THA"
+                  name="Thailand"
+                  stroke="#241D4F"
+                  strokeWidth={2}
+                  dot={{ r: 3 }}
+                  strokeDasharray="5 5"
                 />
               </LineChart>
             </ResponsiveContainer>

@@ -14,7 +14,7 @@ This opens the backend (http://localhost:8000) and frontend (http://localhost:51
 An interactive, educational economic policy simulation tool for policymakers to visualize job creation effects of different policy choices.
 
 ### Key Features
-- **Target Countries**: South Africa (ZAF) and Tunisia (TUN)
+- **Target Countries**: South Africa (ZAF), Tunisia (TUN), Viet Nam (VNM), Thailand (THA), Mozambique (MOZ)
 - **Data Source**: World Bank WDI API (real-time indicators)
 - **Policy Levers**: Import tariffs, subsidies, SME stimulus, productivity investment
 - **Output**: Job creation projections disaggregated by gender, age (youth 15-24), job quality (formal/informal)
@@ -163,9 +163,12 @@ Fetched in real-time:
 | Country | Source | Quality | Reference Year |
 |---------|--------|---------|----------------|
 | South Africa | OECD TiVA/ICIO 2023 | Research-grade | 2020 |
+| Viet Nam | OECD TiVA/ICIO 2023 | Research-grade | 2020 |
+| Thailand | OECD TiVA/ICIO 2023 | Research-grade | 2020 |
 | Tunisia | Stylized estimates | Illustrative | N/A |
+| Mozambique | World Bank WDI 2024 + ILO | Illustrative | 2023-2024 |
 
-South Africa multipliers derived from OECD Inter-Country Input-Output tables with demographic shares from Stats SA Labour Force Survey.
+ZAF multipliers: OECD ICIO + Stats SA Labour Force Survey. VNM: OECD ICIO + GSO Labour Force Survey. THA: OECD ICIO + NSO Labour Force Survey. MOZ: Stylized estimates based on WDI employment data (69.5% agriculture, 95% informality), ILO statistics, and regional patterns from comparable low-income Sub-Saharan African economies.
 
 ### Still Stylized/Approximated
 - **Technical Coefficients Matrix**: Inter-industry linkages (not from national I-O tables)
@@ -341,6 +344,159 @@ agriculture, mining, manufacturing, textiles, automotive, food_processing, chemi
    | 10% manufacturing tariff | 112K | +$1.5B | -$13K (revenue) | $1,077 |
    | Mixed policy | 1.27M | -$4.1B | $3,237 | $5,686 |
 
+### Session 7: Web Deployment
+1. **HTTP Basic Auth** added to `backend/app/main.py`:
+   - Shared username/password protection via browser login popup
+   - Credentials configured via environment variables (`AUTH_USERNAME`, `AUTH_PASSWORD`)
+   - Auth is skipped when env vars are not set (local development unchanged)
+   - Health check endpoint (`/health`) exempted for Render monitoring
+
+2. **Frontend served from FastAPI**:
+   - Built React app (`frontend/dist/`) served as static files from the backend
+   - SPA catch-all route returns `index.html` for non-API paths
+   - Path resolution supports both local dev and Docker container layouts
+
+3. **Docker deployment**:
+   - Multi-stage `Dockerfile`: Node builds frontend, Python serves everything
+   - `.dockerignore` excludes dev files (venv, node_modules, .env)
+
+4. **Render.com hosting**:
+   - `render.yaml` blueprint for one-click deploy (free tier)
+   - Environment variables: `AUTH_USERNAME`, `AUTH_PASSWORD`, `ANTHROPIC_API_KEY`
+   - Auto-redeploys on every push to `main`
+
+5. **Git/GitHub**:
+   - Repository: `https://github.com/gidde-up/policy-simulator` (private)
+   - `.gitignore` for Python/Node/env files
+
+6. **Deployment instructions**: See `DEPLOYMENT.md`
+
+### Session 8: New Countries + Results Enhancements
+1. **Added Viet Nam (VNM)** — lower-middle-income, OECD ICIO coverage:
+   - GDP: $450B, 14 sectors with VNM-specific shares (GSO national accounts)
+   - TiVA employment multipliers (research-grade, OECD ICIO 2023)
+   - Demographic shares from GSO Viet Nam Labour Force Survey
+   - Country-specific I-O matrix (textiles/electronics/agriculture linkages)
+   - 3 preset scenarios: Electronics Hub, Textile Export, Rural Development
+
+2. **Added Thailand (THA)** — upper-middle-income, OECD ICIO coverage:
+   - GDP: $515B, 14 sectors with THA-specific shares (NESDC national accounts)
+   - TiVA employment multipliers (research-grade, OECD ICIO 2023)
+   - Demographic shares from NSO Thailand Labour Force Survey
+   - Country-specific I-O matrix (automotive supply chain, tourism linkages)
+   - 3 preset scenarios: Automotive Hub, Tourism Recovery, Food Processing
+
+3. **Jobs created % indicator**: Total jobs figure now shows percentage of labour force
+
+4. **Fiscal impact % of public budget**: Net fiscal impact now shows percentage of annual government expenditure (fetched from WDI indicator `GC.XPN.TOTL.GD.ZS`)
+
+5. **Files modified** (10 backend + 3 frontend):
+   - `tiva_multipliers.py`: VIETNAM_TIVA, THAILAND_TIVA data dictionaries
+   - `economic_model.py`: GDP, sector shares, `_load_vietnam_io()`, `_load_thailand_io()`
+   - `routes.py`: Validation, 6 presets, gov expenditure in baseline indicators
+   - `wdi_service.py`: VNM/THA supported countries, `gov_expenditure` WDI indicator
+   - `chat_service.py`: VNM/THA economic context in AI prompt
+   - `schemas.py`: Country code description, `gov_expenditure_usd` field
+   - `main.py`: Docstring
+   - `Header.jsx`: 4 country buttons
+   - `App.jsx`: Country label lookup
+   - `PresetScenarios.jsx`: VNM/THA fallback presets
+   - `ResultsPanel.jsx`: % of labour force, % of public expenditure
+
+### Session 9: Mozambique Integration
+1. **Added Mozambique (MOZ)** — low-income economy with high agriculture dependence:
+   - **Economic context**: 69.5% employment in agriculture, 95% informality, emerging LNG sector
+   - **Data sources**: World Bank WDI 2024, ILO labor force statistics
+   - **Employment multipliers**: Stylized estimates based on regional patterns:
+     - Very high labor intensity in agriculture (168 jobs/$1M)
+     - Extremely low in extractives/mining (8 jobs/$1M) - capital-intensive LNG/coal
+     - High informality across all sectors (74-92% in most sectors)
+     - Strong agricultural linkages in food processing (72 jobs/$1M)
+
+2. **Three policy scenarios** designed to test structural transformation:
+   - **Agricultural Focus**: Support existing agriculture/commodity sectors (cashews, sugar, cotton)
+     - Expected impact: Moderate (high labor intensity but limited linkages)
+   - **Commodity Extraction**: Develop natural gas, coal, and mineral extraction
+     - Expected impact: LOWEST (mining only 8 jobs/$1M, capital-intensive)
+   - **Industrialization Drive**: Push manufacturing, textiles, higher value-added production
+     - Expected impact: HIGHEST (targets labor-intensive sectors: textiles 124 jobs/$1M, construction 84 jobs/$1M, food processing 72 jobs/$1M, manufacturing 55 jobs/$1M)
+
+3. **Model validation criteria**: If working correctly, simulations should show:
+   - Total jobs created: Industrialization > Agriculture > Extraction
+   - Reflects real development challenge: natural gas boom creates minimal jobs despite high revenues
+
+4. **Frontend fixes**:
+   - Added emoji font support for proper flag rendering (🇲🇿)
+   - Updated CSS with "Segoe UI Emoji", "Noto Color Emoji", "Apple Color Emoji" font stack
+
+5. **Files modified** (5 backend + 4 frontend):
+   - **Backend**:
+     - `tiva_multipliers.py`: Added MOZAMBIQUE_STYLIZED multipliers with sector-specific data
+     - `wdi_service.py`: Added MOZ to SUPPORTED_COUNTRIES
+     - `routes.py`: Added 3 Mozambique preset scenarios to PRESET_SCENARIOS list + fixed country validation to accept MOZ
+     - `economic_model.py`: Added MOZ GDP ($22.75B) and sector shares (30% agriculture, 20% trade, reflecting WDI structure)
+   - **Frontend**:
+     - `Header.jsx`: Added Mozambique to country selector with flag emoji
+     - `PresetScenarios.jsx`: Added MOZ fallback presets (agriculture, extractives, industrialization)
+     - `CountryDashboard.jsx`: Added MOZ to comparison charts
+     - `index.html` + `index.css`: Added emoji font support for cross-browser flag rendering
+
+6. **Key fixes applied**:
+   - **Country validation**: Added "MOZ" to hardcoded validation lists in `/api/simulate` and `/api/multipliers/{code}` endpoints
+   - **GDP and sector shares**: Added Mozambique-specific economic structure to economic model (30% agriculture, 5% mining/LNG, 7% manufacturing, 20% trade)
+   - **Employment multipliers**: All 14 sectors with Mozambique-specific labor intensity and demographic shares (high informality, female/youth participation)
+
+7. **Documentation**:
+   - Created `MOZAMBIQUE_UPDATE.md` with setup instructions
+   - Created `MOZAMBIQUE_SCENARIOS.md` with detailed expected employment impacts and policy implications
+   - Created `MOZAMBIQUE_ANALYSIS.md` documenting why agriculture creates more jobs than industrialization (sector size dominance issue)
+
+### Session 10: Job Quality Metrics Integration
+1. **Problem identified**: Agriculture scenarios create MORE jobs than industrialization for Mozambique, but agricultural jobs have:
+   - 88% informality (vs 26% for manufacturing)
+   - ~85% working poverty risk (vs ~30% for manufacturing)
+   - $3,500/worker productivity (vs $12,000+ for manufacturing)
+
+2. **Job quality metrics added** to distinguish quantity vs quality of jobs:
+   - **Formalization rate**: % of jobs that are formal (formal/informal breakdown)
+   - **Working poverty risk**: % of jobs below poverty line based on sector poverty rates
+   - **Productivity**: Average output per worker (USD/year) by sector
+   - **Sector composition**: Jobs by agriculture, manufacturing, services
+
+3. **Backend changes**:
+   - **schemas.py**: New `JobQualityMetrics` schema with 13 fields tracking formalization, poverty, and productivity
+   - **economic_model.py**: New `_calculate_job_quality_metrics()` method with:
+     - Sector-specific working poverty rates (85% agriculture, 70% trade, 30% manufacturing, 10% finance)
+     - Sector-specific productivity estimates ($3.5K agriculture to $28K finance)
+     - Formal/informal job disaggregation
+     - High/medium/low productivity categorization
+   - **chat_service.py**: Updated system prompt to include Mozambique context
+
+4. **Frontend changes**:
+   - **ResultsPanel.jsx**: New "Job Quality Analysis" section with:
+     - Three metric cards (Formalization, Working Poverty Risk, Productivity)
+     - Color-coded by quality level (green/amber/red)
+     - Sector composition horizontal bar chart
+     - Interpretation note explaining trade-offs
+   - Displayed prominently after main employment impact, before job breakdown
+
+5. **Data sources for job quality estimates**:
+   - **Working poverty**: ILO Statistics, World Bank Poverty & Equity Database
+   - **Productivity**: Typical sector GDP per worker in developing economies
+   - **Informality**: From existing TIVA multipliers (informal_share)
+
+6. **Files modified** (3 backend + 1 frontend):
+   - Backend: `schemas.py`, `economic_model.py`, `chat_service.py`
+   - Frontend: `ResultsPanel.jsx`
+
+7. **Documentation**:
+   - Created `JOB_QUALITY_METRICS.md` with detailed methodology and interpretation guide
+
+8. **Impact on analysis**: Now scenarios can be compared on:
+   - **Quantity**: Total jobs created (agriculture wins for Mozambique)
+   - **Quality**: Formalization, productivity, poverty risk (manufacturing wins)
+   - Supports structural transformation narrative: fewer but better jobs
+
 ---
 
 ## Environment Setup
@@ -378,9 +534,28 @@ npm run dev
 ---
 
 ## URLs
+
+### Local Development
 - Frontend: http://localhost:5173
 - Backend API: http://localhost:8000
 - API Docs (Swagger): http://localhost:8000/docs
+
+### Production (Render.com)
+- Live site: https://policy-simulator-XXXX.onrender.com (check Render dashboard for actual URL)
+- Protected by HTTP Basic Auth (credentials in Render environment variables)
+
+---
+
+## Deployment Workflow
+
+To update the live website after making changes:
+```bash
+cd C:\Users\bernd\vibecode\policy-simulator
+git add -A
+git commit -m "Description of changes"
+git push
+```
+Render auto-redeploys in 3-5 minutes. See `DEPLOYMENT.md` for full details.
 
 ---
 
@@ -395,8 +570,9 @@ To continue development with Claude Code:
 
 ### Potential Next Tasks
 - ~~Integrate real OECD ICIO data~~ ✓ Done for ZAF employment multipliers
+- ~~Add cost analysis~~ ✓ Done (fiscal cost per job, tariff revenue vs deadweight loss)
+- ~~Deploy to web with access protection~~ ✓ Done (Render.com + HTTP Basic Auth)
 - **Full OECD ICIO integration**: Replace stylized technical coefficients with actual I-O matrices
-- **Add cost analysis**: Fiscal cost per job, tariff revenue vs deadweight loss
 - Add more countries (requires OECD ICIO coverage or regional estimates)
 - Add scenario comparison (side-by-side results)
 - Export results to PDF/Excel
@@ -428,6 +604,11 @@ To continue development with Claude Code:
 - Check `backend/.env` has valid `ANTHROPIC_API_KEY`
 - Verify API key has credits at console.anthropic.com
 
+### Render deployment issues
+- Check build logs in Render dashboard
+- Verify environment variables are set (`AUTH_USERNAME`, `AUTH_PASSWORD`)
+- Free tier spins down after 15 min inactivity — first load has ~30s cold start
+
 ---
 
 ## Model Limitations (Important!)
@@ -437,8 +618,10 @@ To continue development with Claude Code:
 3. **No price effects**: Doesn't model wage/price/exchange rate changes
 4. **Simplified sectors**: 14 aggregated vs thousands in reality
 5. **Stylized retaliation**: Trade retaliation is a simple penalty, not modeled dynamically
-6. **Mixed data quality**: ZAF has OECD data, TUN uses stylized estimates
-7. **Technical coefficients still stylized**: I-O linkages not from national tables
+6. **Mixed data quality**:
+   - **Research-grade**: ZAF, VNM, THA use OECD TiVA/ICIO 2023 data
+   - **Illustrative**: TUN, MOZ use stylized estimates based on regional patterns and WDI/ILO data
+7. **Technical coefficients still stylized**: I-O linkages not from national tables (except country-specific adjustments for VNM, THA)
 
 **This tool is for educational purposes only. Results are illustrative, not forecasts.**
 
@@ -454,9 +637,9 @@ policy-simulator/
 │   │   │   ├── __init__.py
 │   │   │   ├── routes.py          # FastAPI endpoints
 │   │   │   └── schemas.py         # Pydantic models (incl. DataSourceInfo)
-│   │   ├── data/                  # NEW: TiVA multiplier data
+│   │   ├── data/
 │   │   │   ├── __init__.py
-│   │   │   └── tiva_multipliers.py
+│   │   │   └── tiva_multipliers.py # OECD TiVA employment multipliers
 │   │   ├── models/
 │   │   │   ├── __init__.py
 │   │   │   └── economic_model.py  # Core I-O simulation + non-linear effects
@@ -464,12 +647,17 @@ policy-simulator/
 │   │   │   ├── __init__.py
 │   │   │   ├── wdi_service.py     # World Bank API client
 │   │   │   └── chat_service.py    # Claude AI integration
-│   │   └── main.py                # FastAPI app entry point
+│   │   └── main.py                # FastAPI app + Basic Auth + static file serving
 │   ├── requirements.txt
-│   ├── .env                       # ANTHROPIC_API_KEY
+│   ├── .env                       # ANTHROPIC_API_KEY (local only, gitignored)
 │   └── venv/
 ├── frontend/
 │   └── ... (unchanged)
+├── .gitignore
+├── .dockerignore
+├── Dockerfile                     # Multi-stage build for deployment
+├── render.yaml                    # Render.com deployment config
+├── DEPLOYMENT.md                  # Step-by-step deployment instructions
 ├── start.bat
 ├── start.sh
 ├── SETUP.txt
@@ -478,4 +666,4 @@ policy-simulator/
 
 ---
 
-*Last updated: January 2026*
+*Last updated: February 2026*

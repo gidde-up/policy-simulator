@@ -25,14 +25,20 @@ async function fetchApi(endpoint, options = {}) {
     const response = await fetch(url, config);
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ detail: 'Unknown error' }));
-      throw new ApiError(error.detail || 'Request failed', response.status);
+      const text = await response.text();
+      let detail;
+      try {
+        detail = JSON.parse(text).detail;
+      } catch {
+        detail = `HTTP ${response.status}: ${text.substring(0, 200) || response.statusText}`;
+      }
+      throw new ApiError(detail || `Request failed (${response.status})`, response.status);
     }
 
     return response.json();
   } catch (error) {
     if (error instanceof ApiError) throw error;
-    throw new ApiError(error.message || 'Network error', 0);
+    throw new ApiError(error.message || 'Network error - is the backend running?', 0);
   }
 }
 

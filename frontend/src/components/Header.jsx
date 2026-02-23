@@ -5,6 +5,9 @@ function Header({ selectedCountry, onCountryChange }) {
   const countries = [
     { code: 'ZAF', name: 'South Africa', flag: '🇿🇦' },
     { code: 'TUN', name: 'Tunisia', flag: '🇹🇳' },
+    { code: 'VNM', name: 'Viet Nam', flag: '🇻🇳' },
+    { code: 'THA', name: 'Thailand', flag: '🇹🇭' },
+    { code: 'MOZ', name: 'Mozambique', flag: '🇲🇿' },
   ];
 
   return (
@@ -36,8 +39,8 @@ function Header({ selectedCountry, onCountryChange }) {
                       }
                     `}
                   >
-                    <span className="mr-1">{country.flag}</span>
-                    {country.name}
+                    <span className="mr-2 text-lg emoji-text">{country.flag}</span>
+                    <span>{country.name}</span>
                   </button>
                 ))}
               </div>

@@ -145,8 +145,10 @@ class InputOutputModel:
         self.sectors = list(Sector)
         self.n_sectors = len(self.sectors)
 
-        # Country GDP in millions USD (2023 approximate values)
-        self.gdp_millions = {'ZAF': 400000, 'TUN': 50000}.get(country_code, 100000)
+        # Country GDP in millions USD (2023-2024 approximate values)
+        self.gdp_millions = {
+            'ZAF': 400000, 'TUN': 50000, 'VNM': 450000, 'THA': 515000, 'MOZ': 22750
+        }.get(country_code, 100000)
 
         # Sector shares of GDP
         self.sector_shares = self._get_sector_shares()
@@ -171,7 +173,30 @@ class InputOutputModel:
                     'chemicals': 0.035, 'construction': 0.035, 'utilities': 0.025,
                     'trade': 0.15, 'transport': 0.09, 'finance': 0.21,
                     'public_services': 0.06, 'other_services': 0.04}
+        elif self.country_code == "VNM":
+            # GSO Viet Nam national accounts ~2023
+            return {'agriculture': 0.12, 'mining': 0.03, 'manufacturing': 0.16,
+                    'textiles': 0.05, 'automotive': 0.02, 'food_processing': 0.04,
+                    'chemicals': 0.03, 'construction': 0.06, 'utilities': 0.02,
+                    'trade': 0.11, 'transport': 0.06, 'finance': 0.05,
+                    'public_services': 0.07, 'other_services': 0.05}
+        elif self.country_code == "THA":
+            # NESDC Thailand national accounts ~2023
+            return {'agriculture': 0.08, 'mining': 0.02, 'manufacturing': 0.18,
+                    'textiles': 0.03, 'automotive': 0.06, 'food_processing': 0.04,
+                    'chemicals': 0.04, 'construction': 0.04, 'utilities': 0.03,
+                    'trade': 0.13, 'transport': 0.07, 'finance': 0.08,
+                    'public_services': 0.06, 'other_services': 0.06}
+        elif self.country_code == "MOZ":
+            # Mozambique - World Bank WDI 2024: Agriculture 30.8% GDP, Services 54.7%, Industry 14.5%
+            # High agriculture dependence, emerging LNG sector, low industrial base
+            return {'agriculture': 0.30, 'mining': 0.05, 'manufacturing': 0.07,
+                    'textiles': 0.01, 'automotive': 0.005, 'food_processing': 0.03,
+                    'chemicals': 0.01, 'construction': 0.03, 'utilities': 0.02,
+                    'trade': 0.20, 'transport': 0.05, 'finance': 0.03,
+                    'public_services': 0.15, 'other_services': 0.05}
         else:
+            # Tunisia / default
             return {'agriculture': 0.10, 'mining': 0.02, 'manufacturing': 0.12,
                     'textiles': 0.06, 'automotive': 0.03, 'food_processing': 0.05,
                     'chemicals': 0.04, 'construction': 0.05, 'utilities': 0.02,
@@ -192,6 +217,10 @@ class InputOutputModel:
             self._load_south_africa_io()
         elif self.country_code == "TUN":
             self._load_tunisia_io()
+        elif self.country_code == "VNM":
+            self._load_vietnam_io()
+        elif self.country_code == "THA":
+            self._load_thailand_io()
         else:
             self._load_default_io()
 
@@ -271,6 +300,76 @@ class InputOutputModel:
 
         # Manufacturing sector
         self.tech_coefficients[sector_idx['manufacturing'], sector_idx['automotive']] = 0.22
+
+        # Ensure productivity
+        row_sums = self.tech_coefficients.sum(axis=0)
+        for j in range(n):
+            if row_sums[j] >= 0.9:
+                self.tech_coefficients[:, j] *= 0.8 / row_sums[j]
+
+    def _load_vietnam_io(self):
+        """
+        Viet Nam stylized I-O coefficients
+        Based on OECD ICIO structure for Viet Nam
+        """
+        n = self.n_sectors
+        self.tech_coefficients = np.random.uniform(0.01, 0.04, (n, n))
+        sector_idx = {s.value: i for i, s in enumerate(self.sectors)}
+
+        # Agriculture -> food processing (strong agro-processing)
+        self.tech_coefficients[sector_idx['agriculture'], sector_idx['food_processing']] = 0.26
+
+        # Manufacturing inputs (electronics assembly supply chain)
+        self.tech_coefficients[sector_idx['manufacturing'], sector_idx['automotive']] = 0.18
+        self.tech_coefficients[sector_idx['chemicals'], sector_idx['textiles']] = 0.12
+        self.tech_coefficients[sector_idx['manufacturing'], sector_idx['textiles']] = 0.08
+
+        # Mining -> manufacturing (coal, raw materials)
+        self.tech_coefficients[sector_idx['mining'], sector_idx['manufacturing']] = 0.10
+
+        # Construction uses manufactured inputs
+        self.tech_coefficients[sector_idx['manufacturing'], sector_idx['construction']] = 0.12
+
+        # Transport -> trade (logistics chain)
+        self.tech_coefficients[sector_idx['transport'], sector_idx['trade']] = 0.06
+
+        # Food processing -> services (tourism/hospitality)
+        self.tech_coefficients[sector_idx['food_processing'], sector_idx['other_services']] = 0.05
+
+        # Ensure productivity
+        row_sums = self.tech_coefficients.sum(axis=0)
+        for j in range(n):
+            if row_sums[j] >= 0.9:
+                self.tech_coefficients[:, j] *= 0.8 / row_sums[j]
+
+    def _load_thailand_io(self):
+        """
+        Thailand stylized I-O coefficients
+        Based on OECD ICIO structure for Thailand
+        """
+        n = self.n_sectors
+        self.tech_coefficients = np.random.uniform(0.01, 0.04, (n, n))
+        sector_idx = {s.value: i for i, s in enumerate(self.sectors)}
+
+        # Automotive supply chain (ASEAN's largest auto producer)
+        self.tech_coefficients[sector_idx['manufacturing'], sector_idx['automotive']] = 0.28
+        self.tech_coefficients[sector_idx['chemicals'], sector_idx['automotive']] = 0.10
+
+        # Agriculture -> food processing (major food exporter)
+        self.tech_coefficients[sector_idx['agriculture'], sector_idx['food_processing']] = 0.24
+
+        # Mining -> chemicals (natural gas -> petrochemicals)
+        self.tech_coefficients[sector_idx['mining'], sector_idx['chemicals']] = 0.08
+
+        # Tourism-related linkages
+        self.tech_coefficients[sector_idx['food_processing'], sector_idx['other_services']] = 0.08
+        self.tech_coefficients[sector_idx['transport'], sector_idx['other_services']] = 0.10
+
+        # Textiles -> trade
+        self.tech_coefficients[sector_idx['textiles'], sector_idx['trade']] = 0.06
+
+        # Manufacturing -> construction
+        self.tech_coefficients[sector_idx['manufacturing'], sector_idx['construction']] = 0.14
 
         # Ensure productivity
         row_sums = self.tech_coefficients.sum(axis=0)
@@ -476,6 +575,11 @@ class InputOutputModel:
         # Calculate policy costs
         results['costs'] = self._calculate_policy_costs(scenario, total_all)
 
+        # Calculate job quality metrics
+        results['job_quality'] = self._calculate_job_quality_metrics(
+            results['sector_effects'], results['aggregate']
+        )
+
         return results
 
     def _calculate_policy_costs(self, scenario: PolicyScenario, total_jobs: float) -> PolicyCosts:
@@ -619,6 +723,148 @@ class InputOutputModel:
         }
 
         return costs
+
+    def _calculate_job_quality_metrics(
+        self, sector_effects: List[Any], aggregate: Any
+    ) -> Dict[str, Any]:
+        """
+        Calculate job quality metrics including working poverty, productivity, and formality.
+
+        Working poverty estimates based on:
+        - ILO: Working poverty is highly correlated with informality
+        - Agriculture and informal sectors have ~70-90% working poverty risk
+        - Manufacturing/formal sectors have ~20-40% working poverty risk
+
+        Productivity estimates based on:
+        - GDP per worker by sector
+        - High productivity: Finance, Mining, Utilities (>$15K/worker)
+        - Medium productivity: Manufacturing, Services ($5-15K/worker)
+        - Low productivity: Agriculture, Construction (<$5K/worker)
+        """
+        # Initialize accumulators
+        formal_jobs = 0
+        informal_jobs = 0
+        agriculture_jobs = 0
+        manufacturing_jobs = 0
+        services_jobs = 0
+        weighted_poverty_risk = 0
+        weighted_productivity = 0
+        high_prod_jobs = 0
+        low_prod_jobs = 0
+
+        # Sector productivity levels (USD per worker per year)
+        # Based on typical developing country sector productivity
+        sector_productivity = {
+            'agriculture': 3500,  # Low - subsistence farming
+            'mining': 25000,  # High - capital intensive
+            'manufacturing': 12000,  # Medium-high - formal industry
+            'textiles': 6000,  # Medium-low - labor intensive
+            'automotive': 15000,  # High - skilled manufacturing
+            'food_processing': 8000,  # Medium
+            'chemicals': 18000,  # High - capital intensive
+            'construction': 7000,  # Medium-low
+            'utilities': 22000,  # High - capital intensive
+            'trade': 5000,  # Low-medium - informal retail
+            'transport': 9000,  # Medium
+            'finance': 28000,  # High - formal services
+            'public_services': 11000,  # Medium
+            'other_services': 6000,  # Low-medium - mixed formality
+        }
+
+        # Working poverty risk by sector (% of workers below poverty line)
+        # Based on ILO working poverty estimates for developing countries
+        sector_poverty_risk = {
+            'agriculture': 0.85,  # Very high - subsistence/informal
+            'mining': 0.15,  # Low - formal, higher wages
+            'manufacturing': 0.30,  # Low-medium - mostly formal
+            'textiles': 0.45,  # Medium - low wages but formal
+            'automotive': 0.20,  # Low - skilled, formal
+            'food_processing': 0.40,  # Medium
+            'chemicals': 0.25,  # Low-medium
+            'construction': 0.55,  # Medium-high - informal contractors
+            'utilities': 0.15,  # Low - formal sector
+            'trade': 0.70,  # High - informal retail
+            'transport': 0.50,  # Medium
+            'finance': 0.10,  # Very low - formal, high wages
+            'public_services': 0.25,  # Low-medium
+            'other_services': 0.65,  # High - informal hospitality/services
+        }
+
+        total_jobs = 0
+
+        for sector_effect in sector_effects:
+            sector = sector_effect.sector
+            jobs = sector_effect.employment_effect.total_jobs
+
+            if jobs <= 0:
+                continue
+
+            total_jobs += jobs
+
+            # Formal vs informal
+            informal_share = sector_effect.employment_effect.informal_share
+            informal_jobs += jobs * informal_share
+            formal_jobs += jobs * (1 - informal_share)
+
+            # Sector categorization
+            if sector == 'agriculture':
+                agriculture_jobs += jobs
+            elif sector in ['manufacturing', 'textiles', 'automotive', 'food_processing',
+                           'chemicals', 'construction', 'mining']:
+                manufacturing_jobs += jobs
+            else:
+                services_jobs += jobs
+
+            # Productivity weighting
+            productivity = sector_productivity.get(sector, 10000)
+            weighted_productivity += jobs * productivity
+
+            if productivity >= 15000:
+                high_prod_jobs += jobs
+            elif productivity < 8000:
+                low_prod_jobs += jobs
+
+            # Working poverty risk weighting
+            poverty_risk = sector_poverty_risk.get(sector, 0.50)
+            weighted_poverty_risk += jobs * poverty_risk
+
+        # Calculate aggregate metrics
+        if total_jobs > 0:
+            formalization_rate = (formal_jobs / total_jobs) * 100
+            working_poverty_risk = (weighted_poverty_risk / total_jobs) * 100
+            avg_productivity = weighted_productivity / total_jobs
+            jobs_below_poverty = weighted_poverty_risk
+            jobs_above_poverty = total_jobs - jobs_below_poverty
+        else:
+            formalization_rate = 0
+            working_poverty_risk = 0
+            avg_productivity = 0
+            jobs_below_poverty = 0
+            jobs_above_poverty = 0
+
+        # Determine productivity category
+        if avg_productivity >= 15000:
+            productivity_category = "high"
+        elif avg_productivity >= 8000:
+            productivity_category = "medium"
+        else:
+            productivity_category = "low"
+
+        return {
+            'formal_jobs': formal_jobs,
+            'informal_jobs': informal_jobs,
+            'formalization_rate': formalization_rate,
+            'working_poverty_risk': working_poverty_risk,
+            'jobs_above_poverty_line': jobs_above_poverty,
+            'jobs_below_poverty_line': jobs_below_poverty,
+            'avg_productivity_usd': avg_productivity,
+            'high_productivity_jobs': high_prod_jobs,
+            'low_productivity_jobs': low_prod_jobs,
+            'productivity_category': productivity_category,
+            'agriculture_jobs': agriculture_jobs,
+            'manufacturing_jobs': manufacturing_jobs,
+            'services_jobs': services_jobs,
+        }
 
     def _calculate_demand_shocks(self, scenario: PolicyScenario) -> Dict[str, float]:
         """

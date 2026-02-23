@@ -214,6 +214,14 @@ INDICATORS = {
         'Wage and salaried workers, female (% of female employment)',
         '%'
     ),
+
+    # Government expenditure
+    'gov_expenditure': WDIIndicator(
+        'NE.CON.GOVT.ZS',
+        'Government expenditure (% of GDP)',
+        'General government final consumption expenditure (% of GDP)',
+        '%'
+    ),
 }
 
 
@@ -224,6 +232,9 @@ class WDIService:
     SUPPORTED_COUNTRIES = {
         'ZAF': {'name': 'South Africa', 'region': 'Sub-Saharan Africa'},
         'TUN': {'name': 'Tunisia', 'region': 'Middle East & North Africa'},
+        'VNM': {'name': 'Viet Nam', 'region': 'East Asia & Pacific'},
+        'THA': {'name': 'Thailand', 'region': 'East Asia & Pacific'},
+        'MOZ': {'name': 'Mozambique', 'region': 'Sub-Saharan Africa'},
     }
 
     def __init__(self):
@@ -300,13 +311,19 @@ class WDIService:
         end_year: int = 2024
     ) -> Dict[str, Dict[str, List[Dict]]]:
         """
-        Fetch multiple indicators concurrently.
+        Fetch multiple indicators in small batches to avoid WDI API rate limits.
 
         Returns nested dict: {indicator_key: {country_code: [values]}}
         """
-        tasks = []
-        for key in indicator_keys:
-            if key in INDICATORS:
+        valid_keys = [k for k in indicator_keys if k in INDICATORS]
+        output = {}
+
+        # Fetch in batches of 5 to avoid rate limiting
+        batch_size = 5
+        for i in range(0, len(valid_keys), batch_size):
+            batch_keys = valid_keys[i:i + batch_size]
+            tasks = []
+            for key in batch_keys:
                 indicator = INDICATORS[key]
                 tasks.append(
                     self.fetch_indicator(
@@ -317,14 +334,17 @@ class WDIService:
                     )
                 )
 
-        results = await asyncio.gather(*tasks, return_exceptions=True)
+            results = await asyncio.gather(*tasks, return_exceptions=True)
 
-        output = {}
-        for key, result in zip(indicator_keys, results):
-            if isinstance(result, Exception):
-                output[key] = {}
-            else:
-                output[key] = result
+            for key, result in zip(batch_keys, results):
+                if isinstance(result, Exception):
+                    output[key] = {}
+                else:
+                    output[key] = result
+
+            # Delay between batches to respect WDI API rate limits
+            if i + batch_size < len(valid_keys):
+                await asyncio.sleep(0.5)
 
         return output
 
@@ -348,7 +368,8 @@ class WDIService:
             'empl_agriculture', 'empl_industry', 'empl_services',
             'gdp_current', 'gdp_growth', 'gdp_per_capita',
             'population', 'labor_force',
-            'vulnerable_employment', 'wage_workers'
+            'vulnerable_employment', 'wage_workers',
+            'gov_expenditure'
         ]
 
         end_year = year or datetime.now().year

@@ -83,7 +83,7 @@ app = FastAPI(
     ## Overview
 
     This API powers an interactive tool for exploring the employment effects
-    of economic policy choices in South Africa and Tunisia.
+    of economic policy choices in South Africa, Tunisia, Viet Nam, and Thailand.
 
     ## Features
 

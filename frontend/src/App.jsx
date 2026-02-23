@@ -209,7 +209,7 @@ function App() {
                   <div className="flex justify-between">
                     <span className="text-gray-600">Country:</span>
                     <span className="font-medium">
-                      {selectedCountry === 'ZAF' ? '🇿🇦 South Africa' : '🇹🇳 Tunisia'}
+                      {{ 'ZAF': '🇿🇦 South Africa', 'TUN': '🇹🇳 Tunisia', 'VNM': '🇻🇳 Viet Nam', 'THA': '🇹🇭 Thailand' }[selectedCountry]}
                     </span>
                   </div>
                   <div className="flex justify-between">

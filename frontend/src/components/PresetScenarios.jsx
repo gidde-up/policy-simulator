@@ -9,6 +9,13 @@ const PRESET_ICONS = {
   textile: Factory,
   agro: Leaf,
   services: Building,
+  electronics: Factory,
+  auto: Factory,
+  tourism: Building,
+  rural: Leaf,
+  food: Leaf,
+  extractives: Factory,
+  transformation: Building,
 };
 
 function PresetScenarios({ countryCode, onSelectPreset }) {
@@ -76,6 +83,141 @@ function PresetScenarios({ countryCode, onSelectPreset }) {
             subsidy_changes: { utilities: 15, construction: 10 },
             sme_stimulus: 1.0,
             productivity_investment: 5,
+            time_horizon: 'long',
+          },
+        },
+      ];
+    } else if (country === 'VNM') {
+      return [
+        {
+          id: 'vnm_electronics',
+          name: 'Electronics Hub',
+          description: 'Support electronics and manufacturing upgrading',
+          icon: 'electronics',
+          params: {
+            country_code: 'VNM',
+            tariff_changes: { manufacturing: 10, automotive: 12 },
+            subsidy_changes: { manufacturing: 8, chemicals: 4 },
+            sme_stimulus: 0.5,
+            productivity_investment: 5,
+            time_horizon: 'medium',
+          },
+        },
+        {
+          id: 'vnm_textile',
+          name: 'Textile Export',
+          description: 'Strengthen textile and garment sector for export markets',
+          icon: 'textile',
+          params: {
+            country_code: 'VNM',
+            tariff_changes: { textiles: 8 },
+            subsidy_changes: { textiles: 12, food_processing: 4 },
+            sme_stimulus: 1.5,
+            productivity_investment: 3,
+            time_horizon: 'medium',
+          },
+        },
+        {
+          id: 'vnm_rural',
+          name: 'Rural Development',
+          description: 'Agricultural modernization and rural SME support',
+          icon: 'rural',
+          params: {
+            country_code: 'VNM',
+            tariff_changes: {},
+            subsidy_changes: { agriculture: 10, food_processing: 8, trade: 5 },
+            sme_stimulus: 2.5,
+            productivity_investment: 1,
+            time_horizon: 'short',
+          },
+        },
+      ];
+    } else if (country === 'THA') {
+      return [
+        {
+          id: 'tha_auto',
+          name: 'Automotive Hub',
+          description: 'Strengthen automotive manufacturing and EV transition',
+          icon: 'auto',
+          params: {
+            country_code: 'THA',
+            tariff_changes: { automotive: 15, manufacturing: 8 },
+            subsidy_changes: { automotive: 10, chemicals: 4 },
+            sme_stimulus: 0.5,
+            productivity_investment: 6,
+            time_horizon: 'medium',
+          },
+        },
+        {
+          id: 'tha_tourism',
+          name: 'Tourism Recovery',
+          description: 'Support tourism recovery and hospitality services',
+          icon: 'tourism',
+          params: {
+            country_code: 'THA',
+            tariff_changes: {},
+            subsidy_changes: { other_services: 12, transport: 6, food_processing: 4 },
+            sme_stimulus: 2.0,
+            productivity_investment: 1,
+            time_horizon: 'short',
+          },
+        },
+        {
+          id: 'tha_food',
+          name: 'Food Processing',
+          description: 'Strengthen food processing exports and agriculture',
+          icon: 'food',
+          params: {
+            country_code: 'THA',
+            tariff_changes: { food_processing: 10, agriculture: 5 },
+            subsidy_changes: { food_processing: 10, agriculture: 8 },
+            sme_stimulus: 1.5,
+            productivity_investment: 3,
+            time_horizon: 'long',
+          },
+        },
+      ];
+    } else if (country === 'MOZ') {
+      return [
+        {
+          id: 'moz_agriculture',
+          name: 'Agricultural Focus',
+          description: 'Strengthen agriculture productivity and rural value chains (cashews, sugar, cotton)',
+          icon: 'agro',
+          params: {
+            country_code: 'MOZ',
+            tariff_changes: { agriculture: 10, food_processing: 8 },
+            subsidy_changes: { agriculture: 15, food_processing: 10 },
+            sme_stimulus: 1.5,
+            productivity_investment: 2,
+            time_horizon: 'medium',
+          },
+        },
+        {
+          id: 'moz_extractives',
+          name: 'Commodity Extraction',
+          description: 'Develop natural gas, coal, and mineral extraction sectors',
+          icon: 'extractives',
+          params: {
+            country_code: 'MOZ',
+            tariff_changes: { mining: 0 },
+            subsidy_changes: { mining: 12, utilities: 8, transport: 6 },
+            sme_stimulus: 0.5,
+            productivity_investment: 5,
+            time_horizon: 'long',
+          },
+        },
+        {
+          id: 'moz_industrialization',
+          name: 'Industrialization Drive',
+          description: 'Push for manufacturing, textiles, and higher value-added production',
+          icon: 'manufacturing',
+          params: {
+            country_code: 'MOZ',
+            tariff_changes: { manufacturing: 20, textiles: 18, food_processing: 12, construction: 10 },
+            subsidy_changes: { manufacturing: 25, textiles: 20, food_processing: 15, construction: 12 },
+            sme_stimulus: 2.5,
+            productivity_investment: 7,
             time_horizon: 'long',
           },
         },

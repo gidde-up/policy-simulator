@@ -136,6 +136,13 @@ async def get_baseline_indicators(country_code: str, aggregate_effect) -> Baseli
                 unit="%"
             )
 
+        # Government expenditure (for fiscal impact as % of budget)
+        gdp_usd = indicators.get('gdp_current', {}).get('value', 0)
+        gov_exp_pct = indicators.get('gov_expenditure', {}).get('value', 0)
+        if gdp_usd > 0 and gov_exp_pct > 0:
+            # GDP is in USD, gov_exp_pct is % of GDP -> convert to millions USD
+            result.gov_expenditure_usd = (gdp_usd * gov_exp_pct / 100) / 1_000_000
+
         return result
 
     except Exception as e:
@@ -154,10 +161,10 @@ async def run_simulation(request: PolicyScenarioRequest):
     disaggregated by sector, gender, age, and job quality.
     """
     # Validate country
-    if request.country_code.upper() not in ["ZAF", "TUN"]:
+    if request.country_code.upper() not in ["ZAF", "TUN", "VNM", "THA", "MOZ"]:
         raise HTTPException(
             status_code=400,
-            detail="Unsupported country. Use ZAF (South Africa) or TUN (Tunisia)"
+            detail="Unsupported country. Use ZAF, TUN, VNM, THA, or MOZ"
         )
 
     # Map time horizon
@@ -251,6 +258,13 @@ async def run_simulation(request: PolicyScenarioRequest):
             cost_breakdown=costs_data.cost_breakdown,
         )
 
+    # Convert job quality metrics
+    job_quality_data = results.get('job_quality')
+    job_quality = None
+    if job_quality_data:
+        from app.api.schemas import JobQualityMetrics
+        job_quality = JobQualityMetrics(**job_quality_data)
+
     return SimulationResponse(
         scenario_name=results['scenario_name'],
         country=results['country'],
@@ -260,7 +274,8 @@ async def run_simulation(request: PolicyScenarioRequest):
         transmission_paths=transmission_paths,
         baseline_indicators=baseline_indicators,
         data_source=data_source,
-        costs=costs
+        costs=costs,
+        job_quality=job_quality
     )
 
 
@@ -271,7 +286,7 @@ async def get_multipliers(country_code: str):
 
     Shows direct, indirect, and induced job effects per unit of output.
     """
-    if country_code.upper() not in ["ZAF", "TUN"]:
+    if country_code.upper() not in ["ZAF", "TUN", "VNM", "THA", "MOZ"]:
         raise HTTPException(status_code=400, detail="Unsupported country")
 
     model = get_model(country_code)
@@ -362,12 +377,12 @@ async def compare_countries(
     end_year: int = Query(default=2024)
 ):
     """
-    Compare indicator between South Africa and Tunisia.
+    Compare indicator across supported countries.
     """
     service = get_wdi_service()
     data = await service.get_time_series(
         indicator_key,
-        ["ZAF", "TUN"],
+        ["ZAF", "TUN", "VNM", "THA"],
         start_year,
         end_year
     )
@@ -512,6 +527,144 @@ PRESET_SCENARIOS = [
             sme_stimulus=2.5,
             productivity_investment=1,
             time_horizon=TimeHorizonEnum.short
+        )
+    ),
+    # Viet Nam presets
+    PresetScenario(
+        id="vnm_electronics_hub",
+        name="Viet Nam Electronics & Manufacturing Upgrading",
+        description="Support FDI-driven electronics and manufacturing toward higher value-added",
+        country_code="VNM",
+        params=PolicyScenarioRequest(
+            country_code="VNM",
+            name="Electronics Hub",
+            tariff_changes={"manufacturing": 10, "automotive": 12},
+            subsidy_changes={"manufacturing": 8, "chemicals": 4},
+            sme_stimulus=0.5,
+            productivity_investment=5,
+            time_horizon=TimeHorizonEnum.medium
+        )
+    ),
+    PresetScenario(
+        id="vnm_textile_export",
+        name="Viet Nam Textile Export Competitiveness",
+        description="Strengthen textile and garment sector for export markets",
+        country_code="VNM",
+        params=PolicyScenarioRequest(
+            country_code="VNM",
+            name="Textile Export",
+            tariff_changes={"textiles": 8},
+            subsidy_changes={"textiles": 12, "food_processing": 4},
+            sme_stimulus=1.5,
+            productivity_investment=3,
+            time_horizon=TimeHorizonEnum.medium
+        )
+    ),
+    PresetScenario(
+        id="vnm_rural_development",
+        name="Viet Nam Rural & Agricultural Development",
+        description="Address rural-urban divide through agricultural modernization and SME support",
+        country_code="VNM",
+        params=PolicyScenarioRequest(
+            country_code="VNM",
+            name="Rural Development",
+            tariff_changes={},
+            subsidy_changes={"agriculture": 10, "food_processing": 8, "trade": 5},
+            sme_stimulus=2.5,
+            productivity_investment=1,
+            time_horizon=TimeHorizonEnum.short
+        )
+    ),
+    # Thailand presets
+    PresetScenario(
+        id="tha_auto_industry",
+        name="Thailand Automotive Hub Expansion",
+        description="Strengthen automotive manufacturing and support EV transition",
+        country_code="THA",
+        params=PolicyScenarioRequest(
+            country_code="THA",
+            name="Automotive Hub",
+            tariff_changes={"automotive": 15, "manufacturing": 8},
+            subsidy_changes={"automotive": 10, "chemicals": 4},
+            sme_stimulus=0.5,
+            productivity_investment=6,
+            time_horizon=TimeHorizonEnum.medium
+        )
+    ),
+    PresetScenario(
+        id="tha_tourism_recovery",
+        name="Thailand Tourism & Services Recovery",
+        description="Support tourism recovery and expand hospitality services",
+        country_code="THA",
+        params=PolicyScenarioRequest(
+            country_code="THA",
+            name="Tourism Recovery",
+            tariff_changes={},
+            subsidy_changes={"other_services": 12, "transport": 6, "food_processing": 4},
+            sme_stimulus=2.0,
+            productivity_investment=1,
+            time_horizon=TimeHorizonEnum.short
+        )
+    ),
+    PresetScenario(
+        id="tha_food_security",
+        name="Thailand Food Processing & Agriculture",
+        description="Strengthen food processing exports and agricultural productivity",
+        country_code="THA",
+        params=PolicyScenarioRequest(
+            country_code="THA",
+            name="Food Security",
+            tariff_changes={"food_processing": 10, "agriculture": 5},
+            subsidy_changes={"food_processing": 10, "agriculture": 8},
+            sme_stimulus=1.5,
+            productivity_investment=3,
+            time_horizon=TimeHorizonEnum.long
+        )
+    ),
+    # Mozambique presets
+    PresetScenario(
+        id="moz_agriculture",
+        name="Mozambique Agricultural Focus",
+        description="Strengthen agriculture productivity and rural value chains (cashews, sugar, cotton)",
+        country_code="MOZ",
+        params=PolicyScenarioRequest(
+            country_code="MOZ",
+            name="Agricultural Focus",
+            tariff_changes={"agriculture": 10, "food_processing": 8},
+            subsidy_changes={"agriculture": 15, "food_processing": 10},
+            sme_stimulus=1.5,
+            productivity_investment=2,
+            time_horizon=TimeHorizonEnum.medium
+        )
+    ),
+    PresetScenario(
+        id="moz_extractives",
+        name="Mozambique Commodity Extraction",
+        description="Develop natural gas, coal, and mineral extraction sectors",
+        country_code="MOZ",
+        params=PolicyScenarioRequest(
+            country_code="MOZ",
+            name="Commodity Extraction",
+            tariff_changes={"mining": 0},
+            subsidy_changes={"mining": 12, "utilities": 8, "transport": 6},
+            sme_stimulus=0.5,
+            productivity_investment=5,
+            time_horizon=TimeHorizonEnum.long
+        )
+    ),
+    PresetScenario(
+        id="moz_industrialization",
+        name="Mozambique Industrialization Drive",
+        description="Push for manufacturing, textiles, and higher value-added production",
+        country_code="MOZ",
+        params=PolicyScenarioRequest(
+            country_code="MOZ",
+            name="Industrialization Drive",
+            tariff_changes={"manufacturing": 20, "textiles": 18, "food_processing": 12, "construction": 10},
+            subsidy_changes={"manufacturing": 25, "textiles": 20, "food_processing": 15, "construction": 12},
+            sme_stimulus=2.5,
+            productivity_investment=7,
+            time_horizon=TimeHorizonEnum.long
         )
     ),
 ]

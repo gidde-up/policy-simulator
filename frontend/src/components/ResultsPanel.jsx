@@ -1,5 +1,5 @@
 import React from 'react';
-import { TrendingUp, TrendingDown, Users, Briefcase, AlertCircle, HelpCircle, ArrowRight, ArrowDown, ArrowUp, Database, CheckCircle, DollarSign, Scale } from 'lucide-react';
+import { TrendingUp, TrendingDown, Users, Briefcase, AlertCircle, HelpCircle, ArrowRight, ArrowDown, ArrowUp, Database, CheckCircle, DollarSign, Scale, Award, Activity, Shield } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, PieChart, Pie, Legend, ComposedChart, Line } from 'recharts';
 
 // Helper component for before/after unemployment display
@@ -160,8 +160,18 @@ function ResultsPanel({ results, loading }) {
           <div>
             <div className={`text-4xl font-bold ${isPositive ? 'text-green-700' : 'text-red-700'}`}>
               {isPositive ? '+' : ''}{Math.round(totalJobs).toLocaleString()}
+              {results.baseline_indicators?.labor_force?.current_value > 0 && (
+                <span className="text-lg ml-2 font-semibold opacity-75">
+                  ({isPositive ? '+' : ''}{(totalJobs / results.baseline_indicators.labor_force.current_value * 100).toFixed(2)}%)
+                </span>
+              )}
             </div>
-            <div className="text-gray-600">Total Jobs {isPositive ? 'Created' : 'Lost'}</div>
+            <div className="text-gray-600">
+              Total Jobs {isPositive ? 'Created' : 'Lost'}
+              {results.baseline_indicators?.labor_force?.current_value > 0 && (
+                <span className="text-gray-400 ml-1">(% of labour force)</span>
+              )}
+            </div>
           </div>
         </div>
 
@@ -201,6 +211,170 @@ function ResultsPanel({ results, loading }) {
           </div>
         </div>
       </div>
+
+      {/* Job Quality Analysis */}
+      {results.job_quality && (
+        <div className="bg-white rounded-xl shadow-md p-6">
+          <h3 className="font-bold text-gray-800 mb-2 flex items-center">
+            <Award className="w-5 h-5 mr-2 text-blue-600" />
+            Job Quality Analysis
+          </h3>
+          <p className="text-sm text-gray-500 mb-4">
+            Quality indicators for jobs created: formality, productivity, and working poverty risk
+          </p>
+
+          <div className="grid grid-cols-3 gap-4 mb-6">
+            {/* Formalization Rate */}
+            <div className={`p-4 rounded-lg border-2 ${
+              results.job_quality.formalization_rate >= 60 ? 'bg-green-50 border-green-200' :
+              results.job_quality.formalization_rate >= 40 ? 'bg-amber-50 border-amber-200' :
+              'bg-red-50 border-red-200'
+            }`}>
+              <div className="flex items-center space-x-2 mb-2">
+                <Shield className={`w-5 h-5 ${
+                  results.job_quality.formalization_rate >= 60 ? 'text-green-600' :
+                  results.job_quality.formalization_rate >= 40 ? 'text-amber-600' :
+                  'text-red-600'
+                }`} />
+                <span className="text-xs font-medium text-gray-600">Formalization</span>
+              </div>
+              <div className={`text-3xl font-bold ${
+                results.job_quality.formalization_rate >= 60 ? 'text-green-700' :
+                results.job_quality.formalization_rate >= 40 ? 'text-amber-700' :
+                'text-red-700'
+              }`}>
+                {results.job_quality.formalization_rate.toFixed(0)}%
+              </div>
+              <div className="text-xs text-gray-500 mt-1">
+                {Math.round(results.job_quality.formal_jobs).toLocaleString()} formal jobs
+              </div>
+              <div className="text-xs text-gray-400">
+                {Math.round(results.job_quality.informal_jobs).toLocaleString()} informal jobs
+              </div>
+            </div>
+
+            {/* Working Poverty Risk */}
+            <div className={`p-4 rounded-lg border-2 ${
+              results.job_quality.working_poverty_risk <= 30 ? 'bg-green-50 border-green-200' :
+              results.job_quality.working_poverty_risk <= 60 ? 'bg-amber-50 border-amber-200' :
+              'bg-red-50 border-red-200'
+            }`}>
+              <div className="flex items-center space-x-2 mb-2">
+                <AlertCircle className={`w-5 h-5 ${
+                  results.job_quality.working_poverty_risk <= 30 ? 'text-green-600' :
+                  results.job_quality.working_poverty_risk <= 60 ? 'text-amber-600' :
+                  'text-red-600'
+                }`} />
+                <span className="text-xs font-medium text-gray-600">Working Poverty Risk</span>
+              </div>
+              <div className={`text-3xl font-bold ${
+                results.job_quality.working_poverty_risk <= 30 ? 'text-green-700' :
+                results.job_quality.working_poverty_risk <= 60 ? 'text-amber-700' :
+                'text-red-700'
+              }`}>
+                {results.job_quality.working_poverty_risk.toFixed(0)}%
+              </div>
+              <div className="text-xs text-gray-500 mt-1">
+                {Math.round(results.job_quality.jobs_above_poverty_line).toLocaleString()} above poverty line
+              </div>
+              <div className="text-xs text-gray-400">
+                {Math.round(results.job_quality.jobs_below_poverty_line).toLocaleString()} at poverty risk
+              </div>
+            </div>
+
+            {/* Productivity Level */}
+            <div className={`p-4 rounded-lg border-2 ${
+              results.job_quality.productivity_category === 'high' ? 'bg-green-50 border-green-200' :
+              results.job_quality.productivity_category === 'medium' ? 'bg-amber-50 border-amber-200' :
+              'bg-red-50 border-red-200'
+            }`}>
+              <div className="flex items-center space-x-2 mb-2">
+                <Activity className={`w-5 h-5 ${
+                  results.job_quality.productivity_category === 'high' ? 'text-green-600' :
+                  results.job_quality.productivity_category === 'medium' ? 'text-amber-600' :
+                  'text-red-600'
+                }`} />
+                <span className="text-xs font-medium text-gray-600">Avg Productivity</span>
+              </div>
+              <div className={`text-2xl font-bold ${
+                results.job_quality.productivity_category === 'high' ? 'text-green-700' :
+                results.job_quality.productivity_category === 'medium' ? 'text-amber-700' :
+                'text-red-700'
+              }`}>
+                ${(results.job_quality.avg_productivity_usd / 1000).toFixed(1)}K
+              </div>
+              <div className="text-xs text-gray-500 mt-1">
+                per worker/year
+              </div>
+              <div className={`text-xs font-medium mt-1 ${
+                results.job_quality.productivity_category === 'high' ? 'text-green-600' :
+                results.job_quality.productivity_category === 'medium' ? 'text-amber-600' :
+                'text-red-600'
+              }`}>
+                {results.job_quality.productivity_category.toUpperCase()} productivity
+              </div>
+            </div>
+          </div>
+
+          {/* Sector Composition Bar */}
+          <div className="mt-4">
+            <h4 className="text-sm font-medium text-gray-700 mb-2">Jobs by Broad Sector</h4>
+            <div className="flex h-8 rounded-lg overflow-hidden border border-gray-200">
+              {results.job_quality.agriculture_jobs > 0 && (
+                <div
+                  className="bg-amber-500 flex items-center justify-center text-xs text-white font-medium"
+                  style={{ width: `${(results.job_quality.agriculture_jobs / aggregate.total_jobs * 100).toFixed(1)}%` }}
+                  title={`Agriculture: ${Math.round(results.job_quality.agriculture_jobs).toLocaleString()} jobs`}
+                >
+                  {((results.job_quality.agriculture_jobs / aggregate.total_jobs * 100) > 10) &&
+                    `Agri ${(results.job_quality.agriculture_jobs / aggregate.total_jobs * 100).toFixed(0)}%`}
+                </div>
+              )}
+              {results.job_quality.manufacturing_jobs > 0 && (
+                <div
+                  className="bg-blue-500 flex items-center justify-center text-xs text-white font-medium"
+                  style={{ width: `${(results.job_quality.manufacturing_jobs / aggregate.total_jobs * 100).toFixed(1)}%` }}
+                  title={`Manufacturing/Industry: ${Math.round(results.job_quality.manufacturing_jobs).toLocaleString()} jobs`}
+                >
+                  {((results.job_quality.manufacturing_jobs / aggregate.total_jobs * 100) > 10) &&
+                    `Mfg ${(results.job_quality.manufacturing_jobs / aggregate.total_jobs * 100).toFixed(0)}%`}
+                </div>
+              )}
+              {results.job_quality.services_jobs > 0 && (
+                <div
+                  className="bg-purple-500 flex items-center justify-center text-xs text-white font-medium"
+                  style={{ width: `${(results.job_quality.services_jobs / aggregate.total_jobs * 100).toFixed(1)}%` }}
+                  title={`Services: ${Math.round(results.job_quality.services_jobs).toLocaleString()} jobs`}
+                >
+                  {((results.job_quality.services_jobs / aggregate.total_jobs * 100) > 10) &&
+                    `Svc ${(results.job_quality.services_jobs / aggregate.total_jobs * 100).toFixed(0)}%`}
+                </div>
+              )}
+            </div>
+            <div className="flex justify-between mt-2 text-xs text-gray-600">
+              <span className="flex items-center">
+                <span className="w-3 h-3 rounded bg-amber-500 mr-1"></span>
+                Agriculture: {Math.round(results.job_quality.agriculture_jobs).toLocaleString()}
+              </span>
+              <span className="flex items-center">
+                <span className="w-3 h-3 rounded bg-blue-500 mr-1"></span>
+                Manufacturing: {Math.round(results.job_quality.manufacturing_jobs).toLocaleString()}
+              </span>
+              <span className="flex items-center">
+                <span className="w-3 h-3 rounded bg-purple-500 mr-1"></span>
+                Services: {Math.round(results.job_quality.services_jobs).toLocaleString()}
+              </span>
+            </div>
+          </div>
+
+          {/* Interpretation Note */}
+          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-800">
+            <strong>Interpreting Job Quality:</strong> High formalization rates, low working poverty risk, and high productivity indicate
+            better quality jobs with higher wages and social protection. Agriculture-heavy scenarios often create many informal,
+            low-productivity jobs with high poverty risk, while manufacturing/services create fewer but higher-quality jobs.
+          </div>
+        </div>
+      )}
 
       {/* Cost Analysis */}
       {results.costs && (
@@ -336,13 +510,26 @@ function ResultsPanel({ results, loading }) {
                 ? 'bg-green-100 border border-green-300'
                 : 'bg-red-100 border border-red-300'
             }`}>
-              <span className="font-medium text-gray-700">Net Annual Fiscal Impact</span>
-              <span className={`font-bold text-lg ${
-                results.costs.net_fiscal_impact >= 0 ? 'text-green-700' : 'text-red-700'
-              }`}>
-                {results.costs.net_fiscal_impact >= 0 ? '+' : ''}
-                ${(results.costs.net_fiscal_impact / 1000).toFixed(2)}B
-              </span>
+              <div>
+                <span className="font-medium text-gray-700">Net Annual Fiscal Impact</span>
+                {results.baseline_indicators?.gov_expenditure_usd > 0 && (
+                  <span className="text-xs text-gray-400 ml-1">(% of public expenditure)</span>
+                )}
+              </div>
+              <div className="text-right">
+                <span className={`font-bold text-lg ${
+                  results.costs.net_fiscal_impact >= 0 ? 'text-green-700' : 'text-red-700'
+                }`}>
+                  {results.costs.net_fiscal_impact >= 0 ? '+' : ''}
+                  ${(results.costs.net_fiscal_impact / 1000).toFixed(2)}B
+                  {results.baseline_indicators?.gov_expenditure_usd > 0 && (
+                    <span className="text-sm ml-1 font-semibold opacity-75">
+                      ({results.costs.net_fiscal_impact >= 0 ? '+' : ''}
+                      {(results.costs.net_fiscal_impact / results.baseline_indicators.gov_expenditure_usd * 100).toFixed(2)}%)
+                    </span>
+                  )}
+                </span>
+              </div>
             </div>
 
             {/* Warning about tariff revenue illusion */}
