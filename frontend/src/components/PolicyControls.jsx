@@ -229,7 +229,8 @@ function PolicyControls({
                 <h3 className="font-medium text-gray-800">Industrial Policy & Productivity Investment</h3>
               </div>
               <p className="text-sm text-gray-600 mb-4">
-                Investment in industrial upgrading, technology adoption, and productivity improvement. May reduce jobs short-term but increases quality jobs long-term.
+                Share of manufacturing sector GDP invested in industrial upgrading, technology adoption, and productivity improvement.
+                Targets manufacturing, automotive, chemicals, and food processing. May reduce jobs short-term but increases quality jobs long-term.
               </p>
               <PolicySlider
                 label="Productivity Investment Target"
@@ -238,7 +239,7 @@ function PolicyControls({
                 min={0}
                 max={10}
                 step={0.5}
-                unit="%"
+                unit="% of sector GDP"
                 color="purple"
               />
             </div>

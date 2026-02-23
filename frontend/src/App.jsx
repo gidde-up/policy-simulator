@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Play, RotateCcw, BarChart3, MessageSquare, Database, Settings, Info, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
+import { Play, RotateCcw, BarChart3, MessageSquare, Database, Settings, Info, AlertTriangle, CheckCircle, XCircle, FileText, ChevronDown, ChevronUp } from 'lucide-react';
 import Header from './components/Header';
 import PolicyControls from './components/PolicyControls';
 import ResultsPanel from './components/ResultsPanel';
@@ -12,6 +12,7 @@ import { useSimulation } from './hooks/useSimulation';
 function App() {
   const [selectedCountry, setSelectedCountry] = useState('ZAF');
   const [activeTab, setActiveTab] = useState('simulate'); // 'simulate' | 'data' | 'chat'
+  const [showTechnicalDocs, setShowTechnicalDocs] = useState(false);
 
   const {
     params,
@@ -513,6 +514,286 @@ function App() {
                   <span>Country-specific labor market studies and econometric estimates</span>
                 </li>
               </ul>
+            </div>
+
+            {/* Full Technical Documentation */}
+            <div className="bg-white rounded-xl shadow-md overflow-hidden">
+              <button
+                onClick={() => setShowTechnicalDocs(!showTechnicalDocs)}
+                className="w-full p-6 flex items-center justify-between hover:bg-gray-50 transition-colors"
+              >
+                <div className="flex items-center">
+                  <FileText className="w-5 h-5 mr-2 text-gray-600" />
+                  <h3 className="text-lg font-bold text-gray-800">Full Technical Model Documentation</h3>
+                </div>
+                {showTechnicalDocs ? (
+                  <ChevronUp className="w-5 h-5 text-gray-400" />
+                ) : (
+                  <ChevronDown className="w-5 h-5 text-gray-400" />
+                )}
+              </button>
+
+              {showTechnicalDocs && (
+                <div className="px-6 pb-6 space-y-6 text-sm text-gray-700 border-t">
+
+                  {/* 1. Core Framework */}
+                  <div className="pt-4">
+                    <h4 className="font-bold text-gray-800 mb-2">1. Core Framework: Leontief Input-Output Model</h4>
+                    <p className="mb-2">
+                      The model uses the standard open Leontief demand-driven framework. Given a technical coefficients
+                      matrix <strong>A</strong> (14&times;14 sectors), the Leontief inverse is:
+                    </p>
+                    <div className="bg-gray-100 rounded p-3 font-mono text-center mb-2">
+                      L = (I &minus; A)<sup>&minus;1</sup>
+                    </div>
+                    <p className="mb-2">
+                      Employment effects of a demand shock vector <strong>&Delta;d</strong> are calculated as:
+                    </p>
+                    <div className="bg-gray-100 rounded p-3 font-mono text-center mb-2">
+                      &Delta;employment = e &middot; L &middot; &Delta;d
+                    </div>
+                    <p>
+                      where <strong>e</strong> is the vector of employment coefficients (jobs per million USD of output).
+                    </p>
+                  </div>
+
+                  {/* 2. Sectors */}
+                  <div>
+                    <h4 className="font-bold text-gray-800 mb-2">2. Sectors (14)</h4>
+                    <div className="grid grid-cols-2 gap-1 text-xs">
+                      {['Agriculture', 'Mining', 'Manufacturing', 'Textiles & Apparel',
+                        'Automotive', 'Food Processing', 'Chemicals', 'Construction',
+                        'Utilities', 'Wholesale & Retail Trade', 'Transport & Logistics',
+                        'Financial Services', 'Public Services', 'Other Services'].map(s => (
+                        <span key={s} className="bg-gray-50 rounded px-2 py-1">{s}</span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 3. Employment Multipliers */}
+                  <div>
+                    <h4 className="font-bold text-gray-800 mb-2">3. Employment Multipliers</h4>
+                    <p className="mb-2">Each sector has three multiplier components:</p>
+                    <ul className="space-y-1 ml-4 list-disc">
+                      <li><strong>Direct</strong>: Jobs created per $1M output in the sector itself</li>
+                      <li><strong>Indirect</strong>: Jobs created in upstream supplier sectors via inter-industry linkages</li>
+                      <li><strong>Induced</strong>: Jobs created through household consumption of wages earned</li>
+                    </ul>
+                    <p className="mt-2">
+                      <strong>Type I multiplier</strong> = Direct + Indirect. <strong>Type II multiplier</strong> = Direct + Indirect + Induced.
+                    </p>
+                    <p className="mt-2">
+                      <strong>Data sources</strong>: South Africa uses OECD TiVA/ICIO 2023 (reference year 2020) with Stats SA Labour Force Survey demographics.
+                      Tunisia, Viet Nam, Thailand, and Mozambique use stylized estimates based on ILO statistics and regional patterns.
+                    </p>
+                  </div>
+
+                  {/* 4. GDP and Sector Shares */}
+                  <div>
+                    <h4 className="font-bold text-gray-800 mb-2">4. Country GDP and Sector Shares</h4>
+                    <table className="w-full text-xs border-collapse">
+                      <thead>
+                        <tr className="bg-gray-100">
+                          <th className="p-2 text-left border">Country</th>
+                          <th className="p-2 text-right border">GDP ($M)</th>
+                          <th className="p-2 text-right border">Agriculture</th>
+                          <th className="p-2 text-right border">Manufacturing</th>
+                          <th className="p-2 text-right border">Services</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {[
+                          ['South Africa', '400,000', '2.5%', '12.0%', '55.0%'],
+                          ['Tunisia', '50,000', '10.0%', '15.0%', '50.0%'],
+                          ['Viet Nam', '450,000', '12.0%', '16.0%', '34.0%'],
+                          ['Thailand', '515,000', '8.0%', '18.0%', '40.0%'],
+                          ['Mozambique', '22,750', '30.0%', '7.0%', '48.0%'],
+                        ].map(([c, gdp, ag, mfg, svc]) => (
+                          <tr key={c}>
+                            <td className="p-2 border">{c}</td>
+                            <td className="p-2 border text-right">{gdp}</td>
+                            <td className="p-2 border text-right">{ag}</td>
+                            <td className="p-2 border text-right">{mfg}</td>
+                            <td className="p-2 border text-right">{svc}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                    <p className="mt-1 text-xs text-gray-500">Sources: World Bank WDI 2024, national statistics offices. Approximate values.</p>
+                  </div>
+
+                  {/* 5. Policy Transmission */}
+                  <div>
+                    <h4 className="font-bold text-gray-800 mb-2">5. Policy Transmission: From Levers to Demand Shocks</h4>
+                    <p className="mb-2">Each policy lever is translated into a sectoral demand shock (&Delta;d) in millions USD:</p>
+
+                    <div className="space-y-3">
+                      <div className="bg-blue-50 rounded p-3">
+                        <h5 className="font-medium text-blue-800">a) Import Tariffs</h5>
+                        <p className="mt-1">Tariff effects use a non-linear response curve:</p>
+                        <ul className="mt-1 ml-4 list-disc text-xs">
+                          <li>Positive effects peak at 8-12% tariff rate (domestic substitution)</li>
+                          <li>Above ~20%, negative effects dominate (retaliation, inefficiency)</li>
+                          <li>&Delta;d = sector_GDP &times; tariff_response(rate) &times; protection_effectiveness</li>
+                          <li>Aggregate tariffs above 80% trigger a retaliation penalty (0.85&times; multiplier)</li>
+                        </ul>
+                      </div>
+
+                      <div className="bg-green-50 rounded p-3">
+                        <h5 className="font-medium text-green-800">b) Subsidies</h5>
+                        <p className="mt-1">Direct demand stimulus with diminishing returns:</p>
+                        <ul className="mt-1 ml-4 list-disc text-xs">
+                          <li>&Delta;d = sector_GDP &times; (subsidy_rate / 100) &times; effectiveness</li>
+                          <li>Effectiveness = 0.7 at &le;5%, declining to ~0.55 above 10%</li>
+                          <li>Total subsidy commitment above 50% triggers fiscal crowding-out (0.8&times;)</li>
+                        </ul>
+                      </div>
+
+                      <div className="bg-orange-50 rounded p-3">
+                        <h5 className="font-medium text-orange-800">c) SME Stimulus</h5>
+                        <p className="mt-1">Broad-based stimulus with fiscal multiplier:</p>
+                        <ul className="mt-1 ml-4 list-disc text-xs">
+                          <li>&Delta;d = GDP &times; (sme_pct / 100) &times; fiscal_multiplier &times; sector_weight</li>
+                          <li>Fiscal multiplier: 1.5 at 1% GDP, declining to ~1.0 at 4%+</li>
+                          <li>Distributed across labour-intensive sectors (trade, services, food processing, textiles, construction)</li>
+                        </ul>
+                      </div>
+
+                      <div className="bg-purple-50 rounded p-3">
+                        <h5 className="font-medium text-purple-800">d) Industrial Policy &amp; Productivity Investment</h5>
+                        <p className="mt-1">Investment as % of sector GDP in manufacturing sectors:</p>
+                        <ul className="mt-1 ml-4 list-disc text-xs">
+                          <li>&Delta;d = sector_GDP &times; (prod_pct / 100) &times; effectiveness &times; time_multiplier</li>
+                          <li>Targets 4 sectors: manufacturing, automotive, chemicals, food processing</li>
+                          <li>Effectiveness = 0.5 at &le;5%, diminishing above (0.5 &minus; (pct &minus; 5) &times; 0.03)</li>
+                          <li>Time-dependent: 0.2&times; at 1 year, 0.6&times; at 3 years, 1.0&times; at 5 years</li>
+                          <li>Job quality bonus at longer horizons: +10% (3yr), +20% (5yr)</li>
+                          <li>Fiscal cost: government co-finances 30% of investment</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 6. Policy Synergies */}
+                  <div>
+                    <h4 className="font-bold text-gray-800 mb-2">6. Policy Synergy Multiplier</h4>
+                    <p>
+                      A balanced policy mix (2-3 instruments) receives a synergy bonus of up to 1.15&times;.
+                      Certain combinations provide additional bonuses (e.g., subsidies + productivity investment: +5%).
+                      More than 4 simultaneous instruments incur implementation complexity penalties.
+                    </p>
+                  </div>
+
+                  {/* 7. Time Scaling */}
+                  <div>
+                    <h4 className="font-bold text-gray-800 mb-2">7. Time Horizon Scaling</h4>
+                    <table className="w-full text-xs border-collapse">
+                      <thead>
+                        <tr className="bg-gray-100">
+                          <th className="p-2 text-left border">Horizon</th>
+                          <th className="p-2 text-right border">Direct</th>
+                          <th className="p-2 text-right border">Indirect</th>
+                          <th className="p-2 text-right border">Induced</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr><td className="p-2 border">Short (1 year)</td><td className="p-2 border text-right">0.6&times;</td><td className="p-2 border text-right">0.3&times;</td><td className="p-2 border text-right">0.2&times;</td></tr>
+                        <tr><td className="p-2 border">Medium (3 years)</td><td className="p-2 border text-right">1.0&times;</td><td className="p-2 border text-right">0.8&times;</td><td className="p-2 border text-right">0.6&times;</td></tr>
+                        <tr><td className="p-2 border">Long (5 years)</td><td className="p-2 border text-right">1.0&times;</td><td className="p-2 border text-right">1.0&times;</td><td className="p-2 border text-right">1.0&times;</td></tr>
+                      </tbody>
+                    </table>
+                    <p className="mt-1 text-xs text-gray-500">Direct effects materialise faster than indirect/induced effects.</p>
+                  </div>
+
+                  {/* 8. Demographic Disaggregation */}
+                  <div>
+                    <h4 className="font-bold text-gray-800 mb-2">8. Demographic Disaggregation</h4>
+                    <p>Each sector carries demographic shares from TiVA/ILO data:</p>
+                    <ul className="mt-1 ml-4 list-disc">
+                      <li><strong>Female share</strong>: Proportion of sector workforce that is female</li>
+                      <li><strong>Youth share</strong>: Proportion aged 15-24</li>
+                      <li><strong>Informal share</strong>: Proportion in informal employment</li>
+                    </ul>
+                    <p className="mt-1">
+                      Aggregate shares are weighted averages across sectors, weighted by jobs created per sector.
+                    </p>
+                  </div>
+
+                  {/* 9. Job Quality Metrics */}
+                  <div>
+                    <h4 className="font-bold text-gray-800 mb-2">9. Job Quality Metrics</h4>
+                    <p className="mb-2">Three quality indicators are calculated from sector-level data:</p>
+
+                    <div className="space-y-2">
+                      <div>
+                        <h5 className="font-medium">a) Formalization Rate</h5>
+                        <p className="text-xs">&nbsp;&nbsp;= (1 &minus; weighted_informal_share) &times; 100%. Uses informal_share from employment multiplier data per sector.</p>
+                      </div>
+                      <div>
+                        <h5 className="font-medium">b) Working Poverty Risk</h5>
+                        <p className="text-xs">&nbsp;&nbsp;= weighted average of sector-specific poverty risk rates. Based on ILO estimates:
+                          agriculture 85%, trade 70%, other services 65%, construction 55%, transport 50%,
+                          textiles 45%, food processing 40%, manufacturing 30%, public services 25%,
+                          chemicals 25%, automotive 20%, mining 15%, utilities 15%, finance 10%.</p>
+                      </div>
+                      <div>
+                        <h5 className="font-medium">c) Average Productivity</h5>
+                        <p className="text-xs">&nbsp;&nbsp;= weighted average of sector GDP per worker (USD/year).
+                          Ranges from $3,500 (agriculture) to $28,000 (finance).
+                          Categorised as LOW (&lt;$8K), MEDIUM ($8-15K), HIGH (&gt;$15K).</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 10. Cost-Benefit Analysis */}
+                  <div>
+                    <h4 className="font-bold text-gray-800 mb-2">10. Cost-Benefit Analysis</h4>
+                    <p className="mb-2">All costs are calculated as annual flows:</p>
+                    <ul className="ml-4 list-disc space-y-1">
+                      <li><strong>Tariff revenue (net)</strong> = remaining_imports &times; tariff_rate, after behavioral import reduction (elasticity = &minus;1.2)</li>
+                      <li><strong>Deadweight loss</strong> = 0.5 &times; tariff_rate&sup2; &times; |elasticity| &times; import_value (Harberger triangle)</li>
+                      <li><strong>Subsidy cost</strong> = subsidy_rate &times; sector_GDP</li>
+                      <li><strong>SME stimulus cost</strong> = sme_pct &times; GDP (less 20% tax recapture)</li>
+                      <li><strong>Productivity cost</strong> = prod_pct &times; sector_GDP &times; 0.30 (30% government co-financing)</li>
+                      <li><strong>Cost per job (fiscal)</strong> = net_fiscal_impact / total_jobs</li>
+                      <li><strong>Cost per job (economic)</strong> = total_economic_cost / total_jobs (includes deadweight loss)</li>
+                    </ul>
+                  </div>
+
+                  {/* 11. Technical Coefficients */}
+                  <div>
+                    <h4 className="font-bold text-gray-800 mb-2">11. Technical Coefficients Matrix (A)</h4>
+                    <p>
+                      The inter-industry linkage matrix is stylized for each country, reflecting key supply chain relationships:
+                    </p>
+                    <ul className="mt-1 ml-4 list-disc text-xs">
+                      <li>Agriculture &rarr; Food Processing (strong linkage, 0.18-0.26)</li>
+                      <li>Mining &rarr; Manufacturing (raw material inputs, 0.10-0.15)</li>
+                      <li>Manufacturing &rarr; Automotive (component supply, 0.18-0.28)</li>
+                      <li>Chemicals &rarr; Textiles (input materials, 0.08-0.12)</li>
+                      <li>Background coefficients: random uniform 0.01-0.04</li>
+                      <li>Row sums capped at 0.9 to ensure matrix invertibility</li>
+                    </ul>
+                    <p className="mt-1 text-xs text-gray-500">
+                      These are NOT derived from national supply-use tables. Country-specific patterns reflect known
+                      structural features (e.g., Thailand's automotive supply chain, Mozambique's agriculture dominance).
+                    </p>
+                  </div>
+
+                  {/* 12. Confidence Intervals */}
+                  <div>
+                    <h4 className="font-bold text-gray-800 mb-2">12. Uncertainty and Confidence Intervals</h4>
+                    <p>
+                      Sector-level estimates carry &plusmn;15% uncertainty for most sectors, &plusmn;20% for agriculture and other services
+                      (higher variance in informal sectors). Aggregate confidence interval is &plusmn;20% of total jobs.
+                    </p>
+                  </div>
+
+                  <div className="pt-4 border-t text-xs text-gray-500">
+                    <p>Last updated: February 2026. This documentation is maintained alongside the codebase and updated with each model change.</p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
