@@ -497,6 +497,38 @@ agriculture, mining, manufacturing, textiles, automotive, food_processing, chemi
    - **Quality**: Formalization, productivity, poverty risk (manufacturing wins)
    - Supports structural transformation narrative: fewer but better jobs
 
+### Session 11: UI Clarifications & Technical Documentation
+
+1. **Industrial Policy slider label clarified**:
+   - Unit changed from `%` to `% of sector GDP`
+   - Description updated: "Share of manufacturing sector GDP invested in industrial upgrading...Targets manufacturing, automotive, chemicals, and food processing."
+   - File: `frontend/src/components/PolicyControls.jsx`
+
+2. **Full Technical Model Documentation added** (Methodology tab):
+   - Collapsible panel at bottom of Methodology tab ("Full Technical Model Documentation")
+   - Hidden by default; shown on click — does not clutter main interface
+   - 12 sections covering all model components:
+     1. Core Leontief framework and equations (L = (I−A)⁻¹, Δemployment = e·L·Δd)
+     2. 14 sectors list
+     3. Employment multiplier types and data sources per country
+     4. Country GDP and sector shares table (all 5 countries)
+     5. Policy transmission equations for all four levers
+     6. Policy synergy multiplier logic
+     7. Time horizon scaling table (direct/indirect/induced by horizon)
+     8. Demographic disaggregation methodology
+     9. Job quality metrics calculations (formalization, poverty risk, productivity)
+     10. Cost-benefit analysis formulas (incl. Harberger triangle for DWL)
+     11. Technical coefficients matrix assumptions and country-specific linkages
+     12. Uncertainty and confidence interval methodology
+   - Includes timestamp; to be updated with each model change
+   - File: `frontend/src/App.jsx`
+
+3. **Files modified** (2 frontend):
+   - `frontend/src/components/PolicyControls.jsx`
+   - `frontend/src/App.jsx`
+
+4. **Deployed**: Commit `98663c8` pushed to `gidde-up/policy-simulator` → auto-deployed via Render
+
 ---
 
 ## Environment Setup
