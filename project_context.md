@@ -171,9 +171,10 @@ Fetched in real-time:
 ZAF multipliers: OECD ICIO + Stats SA Labour Force Survey. VNM: OECD ICIO + GSO Labour Force Survey. THA: OECD ICIO + NSO Labour Force Survey. MOZ: Stylized estimates based on WDI employment data (69.5% agriculture, 95% informality), ILO statistics, and regional patterns from comparable low-income Sub-Saharan African economies.
 
 ### Still Stylized/Approximated
-- **Technical Coefficients Matrix**: Inter-industry linkages (not from national I-O tables)
+- **Technical Coefficients Matrix**: Inter-industry linkages not from national I-O tables; seeded (`np.random.seed(42)`) for reproducibility
 - **Sector GDP Shares**: Approximate proportions
 - **Policy Response Functions**: Non-linear effects are stylized, not econometrically estimated
+- **Confidence intervals**: OECD countries ±10–15%; stylized countries ±25–30% (data-quality-aware since v0.8.0)
 
 ---
 
@@ -226,22 +227,31 @@ Export-oriented sectors (automotive, textiles, manufacturing, chemicals) face ad
 **SME Stimulus:**
 | % of GDP | Fiscal Multiplier |
 |----------|------------------|
-| 0-1% | 1.5 |
-| 1-2% | 1.35 |
-| 2-3% | 1.15 |
-| 3%+ | ~1.0 (absorption constraints) |
+| 0-1% | 1.0 |
+| 1-2% | 0.90 |
+| 2-3% | 0.82 |
+| 3%+ | ~0.75 (absorption constraints) |
+Source: IMF/World Bank empirical estimates for developing countries (v0.8.0)
 
 **Productivity Investment:**
-- Short-term (1yr): 0.2 effectiveness, no quality bonus
-- Medium-term (3yr): 0.6 effectiveness, +10% quality bonus
-- Long-term (5yr): 1.0 effectiveness, +20% quality bonus
+- Short-term (1yr): −0.15 multiplier (displacement effect dominates); no quality bonus
+- Medium-term (3yr): +0.45 multiplier (competitiveness gains begin); +10% quality bonus
+- Long-term (5yr): +1.0 multiplier (expanded markets dominate); +20% quality bonus
+Source: Acemoglu & Restrepo (2018); direction corrected in v0.8.0
+
+**Import Elasticities (sector-specific):**
+agriculture −0.5, mining −0.6, manufacturing −1.5, textiles −2.0, automotive −1.8,
+food_processing −0.8, chemicals −1.3, construction −0.7, utilities −0.4,
+trade −1.0, transport −0.8, finance −0.5, public_services −0.3, other_services −0.6
+Source: Kee, Nicita & Olarreaga (2008); replaces universal −1.2 constant in v0.8.0
 
 **Policy Synergies:**
-- 2 policies: +10% effectiveness
-- 3 policies: +15% effectiveness (optimal)
-- 4 policies: +10% (implementation complexity)
-- Complementary combos: additional +5% each
-- Non-complementary combos: -10% penalty
+- 2 policies: +5% effectiveness (base bonus 1.05)
+- 3 policies: +8% effectiveness (base bonus 1.08)
+- 4 policies: implementation complexity penalty applies
+- Complementary combos (subsidy + productivity, SME + moderate tariffs): additional +5%
+- Non-complementary combos: −10% penalty
+- Negative interaction: avg tariff >8% AND avg subsidy >8% triggers rent-seeking penalty (v0.8.0)
 
 ### 14 Sectors
 agriculture, mining, manufacturing, textiles, automotive, food_processing, chemicals, construction, utilities, trade, transport, finance, public_services, other_services
@@ -356,15 +366,15 @@ Open the project in Claude Code. CLAUDE.md at the project root is loaded automat
 
 ## Model Limitations (Important!)
 
-1. **Static model**: No dynamic adjustments or general equilibrium effects
-2. **Simplified non-linearity**: Response curves are stylized, not econometrically estimated
-3. **No price effects**: Doesn't model wage/price/exchange rate changes
+1. **Partial equilibrium only**: No general equilibrium feedback — no wage pressure, no crowding-out of private investment, no exchange-rate effects, no price-level changes (displayed as warning banner in UI since v0.8.0)
+2. **Gross employment effects**: Results are gross, not net of economy-wide displacement (Stolper-Samuelson redistribution not modeled; disclaimer shown in UI)
+3. **Simplified non-linearity**: Response curves are stylized, not econometrically estimated
 4. **Simplified sectors**: 14 aggregated vs thousands in reality
 5. **Stylized retaliation**: Trade retaliation is a simple penalty, not modeled dynamically
-6. **Mixed data quality**:
-   - **Research-grade**: ZAF, VNM, THA use OECD TiVA/ICIO 2023 data
-   - **Illustrative**: TUN, MOZ use stylized estimates based on regional patterns and WDI/ILO data
-7. **Technical coefficients still stylized**: I-O linkages not from national tables (except country-specific adjustments for VNM, THA)
+6. **Technical coefficients still stylized**: I-O linkages seeded with `np.random.seed(42)` for reproducibility (v0.8.0) but not from national I-O tables
+7. **Mixed data quality** (signalled by badge in UI):
+   - **Research-grade** (±10–15% confidence): ZAF, VNM, THA — OECD TiVA/ICIO 2023
+   - **Illustrative** (±25–30% confidence): TUN, MOZ — stylized estimates from WDI/ILO
 
 **This tool is for educational purposes only. Results are illustrative, not forecasts.**
 
@@ -400,11 +410,14 @@ policy-simulator/
 ├── .dockerignore
 ├── Dockerfile                     # Multi-stage build for deployment
 ├── render.yaml                    # Render.com deployment config
+├── CLAUDE.md                      # Claude Code workflow instructions (auto-loaded)
+├── CHANGELOG.md                   # Version history (v0.1.0 → current)
 ├── DEPLOYMENT.md                  # Step-by-step deployment instructions
+├── project_review_plan.md         # Multi-perspective review (sessions 12-13)
 ├── start.bat
 ├── start.sh
 ├── SETUP.txt
-└── PROJECT_CONTEXT.md
+└── project_context.md             # This file — technical reference
 ```
 
 ---
