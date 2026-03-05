@@ -2,11 +2,12 @@
 
 All notable changes to this project are documented here.
 Versioning follows [Semantic Versioning](https://semver.org/): MAJOR.MINOR.PATCH.
+The project is in pre-release (0.x.y); version 1.0.0 will mark the first production-ready release.
 
 ---
 
-## [1.2.0] — 2026-03-05
-**Session 12-13 — Model integrity, economic rigor, and UI transparency**
+## [0.3.0] — 2026-03-05
+**Sessions 12-13 — Model integrity, economic rigor, and UI transparency**
 Commit: `23f09b3`
 
 ### Backend — Model integrity (Coder review)
@@ -30,7 +31,7 @@ Commit: `23f09b3`
 
 ---
 
-## [1.1.0] — 2026-02-23
+## [0.2.0] — 2026-02-23
 **Sessions 9-11 — Mozambique expansion and job quality metrics**
 Commits: `4286408`, `0e54df7`, `98663c8`, `24d03c6`
 
@@ -45,8 +46,8 @@ Commits: `4286408`, `0e54df7`, `98663c8`, `24d03c6`
 
 ---
 
-## [1.0.0] — 2026-02-07
-**Sessions 1-8 — Initial release**
+## [0.1.0] — 2026-02-07
+**Sessions 1-8 — Initial working version**
 Commit: `d2f0335`
 
 ### Core features
@@ -69,13 +70,22 @@ Commit: `d2f0335`
 
 | Version | Status | Description |
 |---------|--------|-------------|
-| 1.2.x | Current | Model integrity + economic rigor fixes |
-| 1.1.x | Archived | Mozambique + job quality |
-| 1.0.x | Archived | Initial release |
+| 0.3.x | Current | Model integrity + economic rigor fixes |
+| 0.2.x | Archived | Mozambique + job quality |
+| 0.1.x | Archived | Initial working version |
 
-### Planned (not yet implemented)
-- Reviewer 3 (Learner/Didactic) fixes: guided mode, auto-triggered AI interpretation, scenario comparison, sensitivity analysis, ChatPanel prompt chips
-- Unit test suite
+Version 1.0.0 target: completion of Reviewer 3 (Learner/Didactic) fixes and a unit test suite.
+
+### Planned for 0.4.0 (Learner/Didactic fixes)
+- Guided mode with structured exercises per country
+- Auto-triggered 3-sentence AI interpretation after each simulation run
+- Time horizon labels with year counts (Short = 1 yr, Medium = 3 yr, Long = 5 yr)
+- ChatPanel example prompt chips
+- Scenario save + compare feature
+
+### Planned for 0.5.0 (Code quality)
+- Unit test suite (3-5 core tests)
 - Sensitivity chart (single-slider range sweep)
 - PDF/export results
 - LocalStorage scenario persistence
+- Sankey tooltip with actual job numbers
