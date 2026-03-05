@@ -387,10 +387,11 @@ class WDIService:
             'country_name': self.SUPPORTED_COUNTRIES[country_code]['name'],
             'region': self.SUPPORTED_COUNTRIES[country_code]['region'],
             'indicators': {},
-            'data_year': None
+            'data_year': None,
+            'data_warnings': []
         }
 
-        # Extract latest value for each indicator
+        # Extract latest value for each indicator; flag any that are missing
         for key, country_data in data.items():
             if country_code in country_data and country_data[country_code]:
                 values = country_data[country_code]
@@ -404,6 +405,11 @@ class WDIService:
                 }
                 if profile['data_year'] is None or latest['year'] > profile['data_year']:
                     profile['data_year'] = latest['year']
+            else:
+                indicator_name = INDICATORS[key].name if key in INDICATORS else key
+                profile['data_warnings'].append(
+                    f"'{indicator_name}' not available for {country_code} in WDI"
+                )
 
         return profile
 

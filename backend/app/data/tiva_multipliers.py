@@ -776,6 +776,27 @@ MOZAMBIQUE_STYLIZED = {
 }
 
 
+# Sector-specific import price elasticities of demand.
+# Sources: Kee, Nicita & Olarreaga (2008); Fontagné et al. (2022); IMF WEO estimates.
+# Negative values: a 1% tariff increase reduces imports by this percentage.
+SECTOR_IMPORT_ELASTICITIES: Dict[str, float] = {
+    'agriculture': -0.5,        # Food staples: relatively inelastic, limited substitutes
+    'mining': -0.6,             # Extractives: inelastic, site-specific commodities
+    'manufacturing': -1.5,      # Industrial goods: moderate elasticity, global supply chains
+    'textiles': -2.0,           # Highly elastic: many low-cost global producers
+    'automotive': -1.8,         # Elastic: deep global value chains, brand competition
+    'food_processing': -0.8,    # Moderate: some consumer preference for local brands
+    'chemicals': -1.3,          # Moderate: differentiated but substitutable products
+    'construction': -0.7,       # Inelastic: local labour dominates, materials less tradeable
+    'utilities': -0.4,          # Very inelastic: natural monopoly, regulated pricing
+    'trade': -1.0,              # Unit elastic (services, limited import exposure)
+    'transport': -0.8,          # Moderate: some substitution between local/foreign carriers
+    'finance': -0.5,            # Inelastic: regulatory and trust barriers to switching
+    'public_services': -0.3,    # Very inelastic: predominantly domestic provision
+    'other_services': -0.6,     # Moderately inelastic: tourism competes with domestic leisure
+}
+
+
 def get_multipliers(country_code: str) -> Dict[str, SectorMultipliers]:
     """
     Get employment multipliers for a country.

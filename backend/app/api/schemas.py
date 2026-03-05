@@ -2,7 +2,7 @@
 Pydantic schemas for API request/response validation
 """
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from typing import Dict, List, Optional, Any
 from enum import Enum
 
@@ -19,11 +19,11 @@ class PolicyScenarioRequest(BaseModel):
     name: str = Field(default="Custom Scenario", description="Scenario name")
     tariff_changes: Dict[str, float] = Field(
         default_factory=dict,
-        description="Tariff changes by sector (% change)"
+        description="Tariff changes by sector (% change, -50 to 100)"
     )
     subsidy_changes: Dict[str, float] = Field(
         default_factory=dict,
-        description="Subsidy changes by sector (% change)"
+        description="Subsidy changes by sector (% change, 0 to 30)"
     )
     sme_stimulus: float = Field(
         default=0.0,
@@ -41,6 +41,26 @@ class PolicyScenarioRequest(BaseModel):
         default=TimeHorizonEnum.medium,
         description="Time horizon for simulation"
     )
+
+    @field_validator('tariff_changes')
+    @classmethod
+    def validate_tariffs(cls, v: Dict[str, float]) -> Dict[str, float]:
+        for sector, value in v.items():
+            if not (-50 <= value <= 100):
+                raise ValueError(
+                    f"Tariff for '{sector}' must be between -50% and 100%, got {value}"
+                )
+        return v
+
+    @field_validator('subsidy_changes')
+    @classmethod
+    def validate_subsidies(cls, v: Dict[str, float]) -> Dict[str, float]:
+        for sector, value in v.items():
+            if not (0 <= value <= 30):
+                raise ValueError(
+                    f"Subsidy for '{sector}' must be between 0% and 30%, got {value}"
+                )
+        return v
 
 
 class EmploymentEffectResponse(BaseModel):
@@ -193,6 +213,10 @@ class CountryProfileResponse(BaseModel):
     region: str
     data_year: Optional[int]
     indicators: Dict[str, Any]
+    data_warnings: List[str] = Field(
+        default_factory=list,
+        description="Indicators that could not be retrieved from the WDI API"
+    )
 
 
 class TimeSeriesRequest(BaseModel):

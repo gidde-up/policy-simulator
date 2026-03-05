@@ -14,7 +14,10 @@ from dataclasses import dataclass
 from enum import Enum
 
 # Import TiVA multipliers
-from ..data.tiva_multipliers import get_multipliers, is_tiva_available, get_data_source_info
+from ..data.tiva_multipliers import (
+    get_multipliers, is_tiva_available, get_data_source_info,
+    SECTOR_IMPORT_ELASTICITIES
+)
 
 
 class TimeHorizon(Enum):
@@ -213,6 +216,11 @@ class InputOutputModel:
         # Technical coefficients matrix A (simplified)
         # Each row i shows how much input from sector i is needed per unit output of sector j
 
+        # Fixed seed for reproducible stylized baseline coefficients.
+        # The key inter-industry linkages below are econometrically grounded;
+        # the seed only affects the small background noise values (0.01-0.06).
+        np.random.seed(42)
+
         if self.country_code == "ZAF":
             self._load_south_africa_io()
         elif self.country_code == "TUN":
@@ -227,10 +235,8 @@ class InputOutputModel:
         # Calculate Leontief inverse: L = (I - A)^(-1)
         I = np.eye(self.n_sectors)
         self.leontief_inverse = np.linalg.inv(I - self.tech_coefficients)
-
-        # Type II multiplier includes induced consumption effects
-        # Approximated by scaling factor (typically 1.3-1.6 in developing countries)
-        self.induced_multiplier = 1.4
+        # Note: induced effects are taken directly from sector-specific TiVA values
+        # (tiva_multipliers.induced), not from a flat multiplier.
 
     def _load_south_africa_io(self):
         """
@@ -469,6 +475,11 @@ class InputOutputModel:
         # Get employment multipliers
         multipliers = self.calculate_employment_multipliers()
 
+        # Data-quality-aware uncertainty bounds.
+        # OECD TiVA countries (ZAF, VNM, THA): narrower intervals.
+        # Stylized-estimate countries (TUN, MOZ): wider intervals.
+        is_research_grade = self.data_source_info.get('quality') == 'research-grade'
+
         # Calculate sector-by-sector effects
         total_direct = 0
         total_indirect = 0
@@ -502,8 +513,13 @@ class InputOutputModel:
             youth_share = self.youth_shares[sector_name]
             informal_share = self.informal_shares[sector_name]
 
-            # Add uncertainty (±15-25% depending on sector)
-            uncertainty = 0.20 if sector_name in ['agriculture', 'other_services'] else 0.15
+            # Uncertainty bounds scale with data quality and sector variance.
+            # High-variance sectors (agriculture, informal services) get wider bands.
+            high_variance = sector_name in ['agriculture', 'other_services']
+            if is_research_grade:
+                uncertainty = 0.15 if high_variance else 0.10
+            else:
+                uncertainty = 0.30 if high_variance else 0.25
 
             effect = EmploymentEffect(
                 direct_jobs=direct,
@@ -551,6 +567,7 @@ class InputOutputModel:
 
         total_all = total_direct + total_indirect + total_induced
 
+        agg_uncertainty = 0.15 if is_research_grade else 0.25
         results['aggregate'] = EmploymentEffect(
             direct_jobs=total_direct,
             indirect_jobs=total_indirect,
@@ -563,8 +580,8 @@ class InputOutputModel:
             formal_share=1 - agg_informal,
             informal_share=agg_informal,
             avg_wage_effect=self._estimate_aggregate_wage_effect(scenario),
-            confidence_low=total_all * 0.80,
-            confidence_high=total_all * 1.20
+            confidence_low=total_all * (1 - agg_uncertainty),
+            confidence_high=total_all * (1 + agg_uncertainty)
         )
 
         # Build transmission paths for Sankey diagram
@@ -608,16 +625,17 @@ class InputOutputModel:
             'public_services': 0.05, 'other_services': 0.15,
         }
 
-        # Import demand elasticity (how much imports fall when price rises)
-        # Typical range: -0.5 to -2.0; we use -1.2 as middle estimate
-        import_elasticity = -1.2
-
         for sector, tariff_pct in scenario.tariff_changes.items():
             if tariff_pct <= 0:
                 continue
 
             sector_gdp = self.gdp_millions * self.sector_shares.get(sector, 0.05)
             import_value = sector_gdp * import_shares.get(sector, 0.20)
+
+            # Sector-specific import price elasticity.
+            # Range: -0.3 (public services) to -2.0 (textiles).
+            # Source: Kee, Nicita & Olarreaga (2008); Fontagné et al. (2022).
+            import_elasticity = SECTOR_IMPORT_ELASTICITIES.get(sector, -1.2)
 
             # Gross revenue (naive: tariff × imports)
             gross_revenue = import_value * (tariff_pct / 100)
@@ -1000,6 +1018,29 @@ class InputOutputModel:
 
             effects[sector] = effect
 
+        # Downstream input cost penalty.
+        # A tariff on sector i raises input costs for sectors j that use i as a production input.
+        # These higher costs reduce downstream sector j's demand and employment.
+        # Penalty_j = tech_coeff[i,j] × tariff_rate × GDP_j × pass_through
+        # Pass-through of 0.4: 40% of input cost increase translates to output reduction.
+        # Threshold of 0.07 filters out background noise (random baseline = 0.01-0.05).
+        sector_idx = {s.value: idx for idx, s in enumerate(self.sectors)}
+        pass_through = 0.4
+        for tariffed_sector, tariff_pct in scenario.tariff_changes.items():
+            if tariff_pct <= 0 or tariffed_sector not in sector_idx:
+                continue
+            i = sector_idx[tariffed_sector]
+            for j, downstream in enumerate(self.sectors):
+                downstream_name = downstream.value
+                if downstream_name == tariffed_sector:
+                    continue
+                linkage = self.tech_coefficients[i, j]
+                if linkage < 0.07:  # Only meaningful structural linkages
+                    continue
+                downstream_gdp = self.gdp_millions * self.sector_shares.get(downstream_name, 0.05)
+                cost_penalty = linkage * (tariff_pct / 100) * downstream_gdp * pass_through
+                effects[downstream_name] = effects.get(downstream_name, 0) - cost_penalty
+
         # Cross-sector retaliation effect: aggregate high tariffs trigger partner retaliation
         if metrics['total_tariff'] > 50:
             retaliation_factor = 1 - min(0.3, (metrics['total_tariff'] - 50) * 0.01)
@@ -1065,20 +1106,24 @@ class InputOutputModel:
 
         sme_sectors = ['trade', 'other_services', 'food_processing', 'textiles', 'construction']
 
-        # Fiscal multiplier with diminishing returns
-        # 1% GDP: multiplier ~1.5
-        # 2% GDP: multiplier ~1.35
-        # 3% GDP: multiplier ~1.15
-        # 4%+ GDP: multiplier ~1.0 (absorption constraints)
+        # Fiscal multiplier with diminishing returns.
+        # Calibrated to IMF/World Bank estimates for developing countries:
+        # typically 0.5-1.0, lower than advanced economies due to import leakage,
+        # financing constraints, and limited institutional capacity.
+        # (Source: IMF WEO 2012; Batini et al. 2014; World Bank 2019)
+        # 0-1% GDP: multiplier ~1.0 (best efficiency, targeted programmes)
+        # 1-2% GDP: multiplier ~0.90 (moderate absorption)
+        # 2-3% GDP: multiplier ~0.82 (crowding-out begins)
+        # 3%+ GDP:  multiplier ~0.75 (fiscal/institutional constraints binding)
         stimulus_pct = scenario.sme_stimulus
         if stimulus_pct <= 1:
-            multiplier = 1.5
+            multiplier = 1.0
         elif stimulus_pct <= 2:
-            multiplier = 1.5 - (stimulus_pct - 1) * 0.15
+            multiplier = 1.0 - (stimulus_pct - 1) * 0.10
         elif stimulus_pct <= 3:
-            multiplier = 1.35 - (stimulus_pct - 2) * 0.2
+            multiplier = 0.90 - (stimulus_pct - 2) * 0.08
         else:
-            multiplier = max(0.9, 1.15 - (stimulus_pct - 3) * 0.15)
+            multiplier = max(0.75, 0.82 - (stimulus_pct - 3) * 0.05)
 
         total_stimulus = self.gdp_millions * (stimulus_pct / 100) * multiplier
         stimulus_per_sector = total_stimulus / len(sme_sectors)
@@ -1094,9 +1139,18 @@ class InputOutputModel:
         """
         Calculate productivity investment effects.
 
-        Productivity investments have delayed effects that grow over time.
-        Short-term: may reduce jobs (automation)
-        Long-term: creates higher-quality jobs, increases competitiveness
+        Standard economic theory (Acemoglu & Restrepo 2018; IMF WEO 2018):
+        - SHORT-TERM: Negative net employment effect. Automation and technology
+          adoption displace workers faster than new tasks/sectors absorb them.
+          Investment spending creates some construction/installation jobs, but
+          the net effect on sector employment is modestly negative.
+        - MEDIUM-TERM: Small positive effect as competitiveness gains generate
+          new export demand and adjacent service jobs, offsetting displacement.
+        - LONG-TERM: Positive. Higher productivity → lower prices → expanded
+          markets → new job categories → net employment gains.
+
+        A time_mult < 0 means productivity investment reduces gross employment
+        in the short run; the absolute value scales the magnitude.
         """
         effects = {}
 
@@ -1105,29 +1159,31 @@ class InputOutputModel:
 
         prod_sectors = ['manufacturing', 'automotive', 'chemicals', 'food_processing']
 
-        # Time-dependent multiplier
+        # Time-dependent net employment direction
         if scenario.time_horizon == TimeHorizon.SHORT:
-            time_mult = 0.2  # Limited short-term effect
-            job_quality_bonus = 0  # No quality improvement yet
+            # Displacement effect dominates: automation reduces labour per unit output
+            time_mult = -0.15
+            job_quality_bonus = 0
         elif scenario.time_horizon == TimeHorizon.MEDIUM:
-            time_mult = 0.6
-            job_quality_bonus = 0.1  # Some quality jobs emerging
+            # Competitiveness gains begin to offset displacement
+            time_mult = 0.45
+            job_quality_bonus = 0.10
         else:  # LONG
+            # Expanded markets and new occupations dominate
             time_mult = 1.0
-            job_quality_bonus = 0.2  # Significant quality improvement
+            job_quality_bonus = 0.20
 
         # Diminishing returns on productivity investment
         prod_pct = scenario.productivity_investment
         if prod_pct <= 5:
             effectiveness = 0.5
         else:
-            effectiveness = 0.5 - (prod_pct - 5) * 0.03  # Slower diminishing
+            effectiveness = 0.5 - (prod_pct - 5) * 0.03
 
         for sector in prod_sectors:
             sector_gdp = self.gdp_millions * self.sector_shares.get(sector, 0.05)
             base_effect = sector_gdp * (prod_pct / 100) * effectiveness * time_mult
-            # Add bonus for job quality improvement
-            quality_effect = base_effect * job_quality_bonus
+            quality_effect = abs(base_effect) * job_quality_bonus if time_mult > 0 else 0
             effects[sector] = base_effect + quality_effect
 
         return effects
@@ -1148,37 +1204,37 @@ class InputOutputModel:
         if num_policies == 0:
             return 1.0
         elif num_policies == 1:
-            # Single policy: no synergy bonus
             return 1.0
         elif num_policies == 2:
-            # Two policies: moderate synergy
-            synergy = 1.1
+            # Two complementary policies: modest coordination gains
+            synergy = 1.05
         elif num_policies == 3:
-            # Three policies: optimal synergy
-            synergy = 1.15
+            # Three policies: some coordination benefit, offset by complexity
+            synergy = 1.08
         else:
-            # Four policies: implementation complexity reduces effectiveness
-            synergy = 1.1
+            # Four policies: implementation complexity likely reduces effectiveness
+            synergy = 1.05
 
-        # Complementarity bonus: certain combinations work better together
+        # Interaction effects — grounded in economic policy literature
         complementarity = 1.0
 
-        # Subsidy + Productivity: complementary (invest in capacity + upgrade it)
+        # Subsidy + Productivity: positive interaction
+        # (capacity investment + technology upgrade reinforce each other)
         if metrics['has_subsidy'] and metrics['has_productivity']:
-            complementarity += 0.05
+            complementarity += 0.04
 
-        # SME + moderate tariffs: complementary (protect small firms + support them)
-        if metrics['has_sme'] and metrics['has_tariff'] and metrics['avg_tariff'] <= 15:
-            complementarity += 0.05
-
-        # High tariffs + no productivity: non-complementary (protection without upgrading)
-        if metrics['has_tariff'] and metrics['avg_tariff'] > 15 and not metrics['has_productivity']:
-            complementarity -= 0.1
-
-        # High subsidies + high tariffs: can crowd out, less complementary
+        # Tariffs + Subsidies: negative interaction above low thresholds.
+        # Combined rent-seeking incentives reduce allocative efficiency.
+        # At any tariff+subsidy combination, some crowding-out occurs.
         if metrics['has_subsidy'] and metrics['has_tariff']:
-            if metrics['avg_subsidy'] > 10 and metrics['avg_tariff'] > 15:
-                complementarity -= 0.1
+            if metrics['avg_tariff'] > 8 or metrics['avg_subsidy'] > 8:
+                complementarity -= 0.08
+            if metrics['avg_tariff'] > 15 and metrics['avg_subsidy'] > 10:
+                complementarity -= 0.07  # Stacking: double rent-seeking penalty
+
+        # High tariffs without productivity investment: protection trap
+        if metrics['has_tariff'] and metrics['avg_tariff'] > 15 and not metrics['has_productivity']:
+            complementarity -= 0.10
 
         return synergy * complementarity
 

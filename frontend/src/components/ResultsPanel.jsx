@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TrendingUp, TrendingDown, Users, Briefcase, AlertCircle, HelpCircle, ArrowRight, ArrowDown, ArrowUp, Database, CheckCircle, DollarSign, Scale, Award, Activity, Shield } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, PieChart, Pie, Legend, ComposedChart, Line } from 'recharts';
 
@@ -82,6 +82,8 @@ function UnemploymentIndicator({ label, icon, current, projected, change, color 
 }
 
 function ResultsPanel({ results, loading }) {
+  const [warningDismissed, setWarningDismissed] = useState(false);
+
   if (loading) {
     return (
       <div className="bg-white rounded-xl shadow-md p-8">
@@ -138,8 +140,54 @@ function ResultsPanel({ results, loading }) {
     { name: 'Informal', value: aggregate.informal_share * 100, color: '#EF4444' },
   ];
 
+  const dataQuality = results.data_source?.quality;
+  const isResearchGrade = dataQuality === 'research-grade';
+
   return (
     <div className="space-y-4">
+      {/* Model Boundaries Warning — dismissible, not skippable on first view */}
+      {!warningDismissed && (
+        <div className="bg-amber-50 border border-amber-300 rounded-xl p-4">
+          <div className="flex items-start justify-between">
+            <div className="flex items-start space-x-3">
+              <AlertCircle className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="font-semibold text-amber-800 text-sm">Model boundaries — read before interpreting results</p>
+                <p className="text-amber-700 text-xs mt-1">
+                  This is a <strong>partial equilibrium, fixed-price Input-Output model</strong>. Results are illustrative, not forecasts.
+                  The model does <strong>not</strong> capture: wage pressure from labour market tightening; crowding-out of private investment;
+                  exchange rate effects of tariffs; price level changes; or net economy-wide employment displacement
+                  (figures shown are <strong>gross</strong> job effects, not net of sector reallocation).
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => setWarningDismissed(true)}
+              className="ml-3 text-amber-500 hover:text-amber-700 text-xs underline flex-shrink-0"
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Data Quality Badge */}
+      {dataQuality && (
+        <div className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-xs font-medium w-fit ${
+          isResearchGrade
+            ? 'bg-green-50 border border-green-200 text-green-700'
+            : 'bg-yellow-50 border border-yellow-200 text-yellow-700'
+        }`}>
+          <Database className="w-3 h-3" />
+          <span>
+            {isResearchGrade ? 'OECD TiVA data — research-grade' : 'Stylized estimates — illustrative only'}
+          </span>
+          {results.data_source?.reference_year && (
+            <span className="text-gray-400">({results.data_source.reference_year})</span>
+          )}
+        </div>
+      )}
+
       {/* Main Results Card */}
       <div className={`rounded-xl shadow-md p-6 ${isPositive ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}>
         <div className="flex items-center justify-between mb-4">
@@ -171,6 +219,9 @@ function ResultsPanel({ results, loading }) {
               {results.baseline_indicators?.labor_force?.current_value > 0 && (
                 <span className="text-gray-400 ml-1">(% of labour force)</span>
               )}
+            </div>
+            <div className="text-xs text-gray-400 mt-1">
+              Gross figure — does not account for jobs displaced in unprotected sectors
             </div>
           </div>
         </div>
