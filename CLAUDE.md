@@ -20,6 +20,11 @@
 ### Version string
 - Keep `__version__` in `backend/app/main.py` in sync with the latest CHANGELOG entry.
 
+## project_context.md — mandatory maintenance
+- **Update project_context.md at the end of every session** to reflect any changes to: project structure, key files, API endpoints, data sources, model parameters, environment setup, or known issues.
+- Do NOT add session history here — that belongs in CHANGELOG.md.
+- Keep the technical reference accurate and current; it is the primary onboarding document for resuming work.
+
 ## Project version
 Current version: **0.8.0** (2026-03-05)
 Next planned: **0.9.0** — Learner/Didactic fixes (guided mode, auto AI interpretation, scenario compare)
