@@ -417,8 +417,9 @@ function App() {
                   <ul className="space-y-2">
                     <li><strong>Tariffs:</strong> Positive effects peak around 8-12%. Above ~20%, negative effects dominate (trade retaliation, inefficiency, reduced export competitiveness). Very high tariffs can result in net job losses.</li>
                     <li><strong>Subsidies:</strong> Diminishing returns above 5%. High total subsidy commitments face fiscal crowding-out effects.</li>
-                    <li><strong>SME Stimulus:</strong> Fiscal multiplier decreases at high levels (1.5 at 1% GDP, declining to ~1.0 at 4%+ GDP) due to absorption constraints.</li>
-                    <li><strong>Policy Synergies:</strong> Balanced policy mixes (2-3 complementary instruments) are more effective than isolated interventions. Certain combinations provide bonuses (e.g., subsidies + productivity investment), while others may crowd out (e.g., very high tariffs + high subsidies).</li>
+                    <li><strong>SME Stimulus:</strong> Fiscal multiplier 1.0 at 1% GDP, declining to ~0.75 at 3%+ GDP (IMF/World Bank developing-country estimates). Absorption constraints limit effectiveness at high levels.</li>
+                    <li><strong>Productivity Investment:</strong> Short-term effect is slightly negative (displacement dominates, −0.15×); positive effects emerge at medium (3yr, +0.45×) and long term (5yr, +1.0×) via competitiveness gains.</li>
+                    <li><strong>Policy Synergies:</strong> Balanced mixes (2-3 instruments) receive a modest bonus (up to 1.08×). High tariffs combined with high subsidies trigger a rent-seeking penalty rather than a synergy bonus.</li>
                   </ul>
                 </div>
               </div>
@@ -654,7 +655,7 @@ function App() {
                         <p className="mt-1">Broad-based stimulus with fiscal multiplier:</p>
                         <ul className="mt-1 ml-4 list-disc text-xs">
                           <li>&Delta;d = GDP &times; (sme_pct / 100) &times; fiscal_multiplier &times; sector_weight</li>
-                          <li>Fiscal multiplier: 1.5 at 1% GDP, declining to ~1.0 at 4%+</li>
+                          <li>Fiscal multiplier: 1.0 at 1% GDP, declining to ~0.75 at 3%+ (IMF/World Bank empirical range for developing countries)</li>
                           <li>Distributed across labour-intensive sectors (trade, services, food processing, textiles, construction)</li>
                         </ul>
                       </div>
@@ -666,7 +667,7 @@ function App() {
                           <li>&Delta;d = sector_GDP &times; (prod_pct / 100) &times; effectiveness &times; time_multiplier</li>
                           <li>Targets 4 sectors: manufacturing, automotive, chemicals, food processing</li>
                           <li>Effectiveness = 0.5 at &le;5%, diminishing above (0.5 &minus; (pct &minus; 5) &times; 0.03)</li>
-                          <li>Time-dependent: 0.2&times; at 1 year, 0.6&times; at 3 years, 1.0&times; at 5 years</li>
+                          <li>Time-dependent multiplier: &minus;0.15&times; at 1 year (displacement), +0.45&times; at 3 years (competitiveness), +1.0&times; at 5 years (expanded markets) — Acemoglu &amp; Restrepo (2018)</li>
                           <li>Job quality bonus at longer horizons: +10% (3yr), +20% (5yr)</li>
                           <li>Fiscal cost: government co-finances 30% of investment</li>
                         </ul>
@@ -678,9 +679,9 @@ function App() {
                   <div>
                     <h4 className="font-bold text-gray-800 mb-2">6. Policy Synergy Multiplier</h4>
                     <p>
-                      A balanced policy mix (2-3 instruments) receives a synergy bonus of up to 1.15&times;.
-                      Certain combinations provide additional bonuses (e.g., subsidies + productivity investment: +5%).
-                      More than 4 simultaneous instruments incur implementation complexity penalties.
+                      A balanced policy mix (2-3 instruments) receives a modest synergy bonus (1.05&times; for 2 policies, 1.08&times; for 3).
+                      Complementary combinations (e.g., subsidies + productivity investment, SME + moderate tariffs) receive an additional +5%.
+                      Non-complementary combinations incur a &minus;10% penalty. When average tariff and average subsidy both exceed 8%, a rent-seeking penalty replaces the synergy bonus.
                     </p>
                   </div>
 
@@ -750,7 +751,8 @@ function App() {
                     <h4 className="font-bold text-gray-800 mb-2">10. Cost-Benefit Analysis</h4>
                     <p className="mb-2">All costs are calculated as annual flows:</p>
                     <ul className="ml-4 list-disc space-y-1">
-                      <li><strong>Tariff revenue (net)</strong> = remaining_imports &times; tariff_rate, after behavioral import reduction (elasticity = &minus;1.2)</li>
+                      <li><strong>Tariff revenue (net)</strong> = remaining_imports &times; tariff_rate, after behavioral import reduction using sector-specific elasticities (Kee, Nicita &amp; Olarreaga 2008; range &minus;0.3 to &minus;2.0)</li>
+                      <li><strong>Tariff downstream cost</strong> = linkage_coefficient &times; tariff_rate &times; downstream_sector_GDP &times; 0.4 pass-through; applied to all downstream sectors with linkage &gt;0.07</li>
                       <li><strong>Deadweight loss</strong> = 0.5 &times; tariff_rate&sup2; &times; |elasticity| &times; import_value (Harberger triangle)</li>
                       <li><strong>Subsidy cost</strong> = subsidy_rate &times; sector_GDP</li>
                       <li><strong>SME stimulus cost</strong> = sme_pct &times; GDP (less 20% tax recapture)</li>
@@ -771,7 +773,7 @@ function App() {
                       <li>Mining &rarr; Manufacturing (raw material inputs, 0.10-0.15)</li>
                       <li>Manufacturing &rarr; Automotive (component supply, 0.18-0.28)</li>
                       <li>Chemicals &rarr; Textiles (input materials, 0.08-0.12)</li>
-                      <li>Background coefficients: random uniform 0.01-0.04</li>
+                      <li>Background coefficients: random uniform 0.01-0.05, seeded with np.random.seed(42) for reproducibility</li>
                       <li>Row sums capped at 0.9 to ensure matrix invertibility</li>
                     </ul>
                     <p className="mt-1 text-xs text-gray-500">
@@ -784,13 +786,12 @@ function App() {
                   <div>
                     <h4 className="font-bold text-gray-800 mb-2">12. Uncertainty and Confidence Intervals</h4>
                     <p>
-                      Sector-level estimates carry &plusmn;15% uncertainty for most sectors, &plusmn;20% for agriculture and other services
-                      (higher variance in informal sectors). Aggregate confidence interval is &plusmn;20% of total jobs.
+                      Confidence intervals are data-quality-aware. OECD-backed countries (ZAF, VNM, THA): &plusmn;10% for most sectors, &plusmn;15% for agriculture and informal sectors. Stylized countries (TUN, MOZ): &plusmn;25% for most sectors, &plusmn;30% for agriculture and informal sectors. The data quality level is indicated by the badge shown in the results header.
                     </p>
                   </div>
 
                   <div className="pt-4 border-t text-xs text-gray-500">
-                    <p>Last updated: February 2026. This documentation is maintained alongside the codebase and updated with each model change.</p>
+                    <p>Last updated: March 2026 (v0.8.0). This documentation is maintained alongside the codebase and updated with each model change.</p>
                   </div>
                 </div>
               )}
