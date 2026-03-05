@@ -18,6 +18,8 @@ import os
 import secrets
 from pathlib import Path
 
+__version__ = "1.2.0"
+
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -105,7 +107,7 @@ app = FastAPI(
     **Note**: This is a didactic tool designed for policy education.
     Results should be interpreted as illustrative, not precise forecasts.
     """,
-    version="1.0.0",
+    version=__version__,
     lifespan=lifespan
 )
 
@@ -129,7 +131,7 @@ app.include_router(router, prefix="/api")
 @app.get("/health")
 async def health_check():
     """Health check endpoint"""
-    return {"status": "healthy"}
+    return {"status": "healthy", "version": __version__}
 
 
 # --------------- Serve Frontend Static Files ---------------
@@ -158,7 +160,7 @@ else:
         """API root - no frontend build found"""
         return {
             "name": "Economic Policy Simulator API",
-            "version": "1.0.0",
+            "version": __version__,
             "status": "running",
             "docs": "/docs",
             "note": "Frontend not built. Run 'npm run build' in frontend/ directory.",
