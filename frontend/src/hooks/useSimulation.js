@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { runSimulation } from '../services/api';
+import { runSimulation, explainResults } from '../services/api';
 
 const DEFAULT_PARAMS = {
   country_code: 'ZAF',
@@ -14,6 +14,7 @@ const DEFAULT_PARAMS = {
 export function useSimulation() {
   const [params, setParams] = useState(DEFAULT_PARAMS);
   const [results, setResults] = useState(null);
+  const [interpretation, setInterpretation] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -48,6 +49,8 @@ export function useSimulation() {
     try {
       const result = await runSimulation(params);
       setResults(result);
+      setInterpretation(null);
+      explainResults(result).then(resp => setInterpretation(resp.explanation)).catch(() => {});
       return result;
     } catch (err) {
       setError(err.message);
@@ -67,12 +70,14 @@ export function useSimulation() {
   const reset = useCallback(() => {
     setParams(DEFAULT_PARAMS);
     setResults(null);
+    setInterpretation(null);
     setError(null);
   }, []);
 
   return {
     params,
     results,
+    interpretation,
     loading,
     error,
     updateParam,

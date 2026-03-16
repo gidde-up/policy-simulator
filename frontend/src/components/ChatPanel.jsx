@@ -203,8 +203,23 @@ Try asking me things like:
         <div ref={messagesEndRef} />
       </div>
 
+      {/* Prompt chips */}
+      <div className="flex flex-wrap gap-2 px-4 pt-3 pb-1 border-t">
+        {[
+          "What policy would create the most jobs?",
+          "What are the risks of high tariffs?",
+          "How does SME stimulus compare to subsidies?",
+          "Explain these results in simple terms",
+        ].map(chip => (
+          <button key={chip} onClick={() => setInput(chip)}
+            className="text-xs bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 rounded-full px-3 py-1">
+            {chip}
+          </button>
+        ))}
+      </div>
+
       {/* Input */}
-      <div className="p-4 border-t">
+      <div className="p-4">
         <div className="flex space-x-2">
           <input
             type="text"

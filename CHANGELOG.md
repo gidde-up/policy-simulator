@@ -6,7 +6,17 @@ The project is in pre-release (0.x.y); version 1.0.0 will mark the first product
 
 ---
 
-## [0.8.0] — 2026-03-05  ← current
+## [0.9.0] — 2026-03-16  ← current
+**Session 14 — Learner/Didactic fixes**
+
+### Frontend
+- **Time horizon year labels**: buttons now read "Short (1 yr)", "Medium (3 yrs)", "Long (5 yrs)" for clarity
+- **ChatPanel prompt chips**: four clickable example prompts added above the input field to guide users who don't know what to ask
+- **Auto-triggered AI interpretation**: after each simulation run, ResultsPanel automatically fetches a plain-language explanation from the `/api/explain` endpoint and displays it in a blue panel above the numeric results; interpretation clears on reset and reloads on each new run; fails silently if API is unavailable
+
+---
+
+## [0.8.0] — 2026-03-05
 **Sessions 12-13 — Model integrity, economic rigor, and UI transparency**
 Commit: `23f09b3`
 
@@ -147,6 +157,7 @@ Commit: `d2f0335` (bundled with initial commit)
 
 | Version | Date | Sessions | Description |
 |---------|------|----------|-------------|
+| 0.9.0 | 2026-03-16 | 14 | Learner/didactic fixes (time horizon labels, prompt chips, auto AI interpretation) |
 | 0.8.0 | 2026-03-05 | 12-13 | Model integrity + economic rigor + UI transparency |
 | 0.7.1 | 2026-02-23 | 11 | UI clarifications + full technical documentation |
 | 0.7.0 | 2026-02-23 | 9-10 | Mozambique + job quality metrics |
@@ -160,12 +171,10 @@ Commit: `d2f0335` (bundled with initial commit)
 
 Version 1.0.0 target: completion of learner/didactic improvements (guided mode, auto-triggered AI interpretation, scenario comparison) and a unit test suite.
 
-### Planned for 0.9.0 (Learner/Didactic — Reviewer 3 issues)
+### Planned for 0.10.0 (Learner/Didactic — remaining Reviewer 3 items)
 - Guided mode with structured exercises per country (3-4 per country, framed as questions)
-- Auto-triggered 3-sentence AI interpretation after each simulation run
-- Time horizon labels with year counts (Short = 1 yr, Medium = 3 yr, Long = 5 yr)
-- ChatPanel example prompt chips
 - Scenario save + compare feature (side-by-side results)
+- Policy lever real-world anchoring (current tariff rate context on sliders)
 
 ### Planned for 0.10.0 (Code quality)
 - Unit test suite (3-5 core tests)

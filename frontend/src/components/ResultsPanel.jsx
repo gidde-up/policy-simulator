@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TrendingUp, TrendingDown, Users, Briefcase, AlertCircle, HelpCircle, ArrowRight, ArrowDown, ArrowUp, Database, CheckCircle, DollarSign, Scale, Award, Activity, Shield } from 'lucide-react';
+import { TrendingUp, TrendingDown, Users, Briefcase, AlertCircle, HelpCircle, ArrowRight, ArrowDown, ArrowUp, Database, CheckCircle, DollarSign, Scale, Award, Activity, Shield, Sparkles } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, PieChart, Pie, Legend, ComposedChart, Line } from 'recharts';
 
 // Helper component for before/after unemployment display
@@ -81,7 +81,7 @@ function UnemploymentIndicator({ label, icon, current, projected, change, color 
   );
 }
 
-function ResultsPanel({ results, loading }) {
+function ResultsPanel({ results, loading, interpretation }) {
   const [warningDismissed, setWarningDismissed] = useState(false);
 
   if (loading) {
@@ -185,6 +185,17 @@ function ResultsPanel({ results, loading }) {
           {results.data_source?.reference_year && (
             <span className="text-gray-400">({results.data_source.reference_year})</span>
           )}
+        </div>
+      )}
+
+      {/* AI Interpretation */}
+      {interpretation && (
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-start space-x-3">
+          <Sparkles className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-sm font-semibold text-blue-800 mb-1">AI Interpretation</p>
+            <p className="text-sm text-blue-700 whitespace-pre-line">{interpretation}</p>
+          </div>
         </div>
       )}
 

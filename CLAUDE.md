@@ -26,5 +26,5 @@
 - Keep the technical reference accurate and current; it is the primary onboarding document for resuming work.
 
 ## Project version
-Current version: **0.8.0** (2026-03-05)
-Next planned: **0.9.0** — Learner/Didactic fixes (guided mode, auto AI interpretation, scenario compare)
+Current version: **0.9.0** (2026-03-16)
+Next planned: **0.10.0** — Learner/Didactic fixes continued (guided mode, scenario compare, policy lever anchoring)

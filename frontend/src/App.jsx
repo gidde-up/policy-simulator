@@ -17,6 +17,7 @@ function App() {
   const {
     params,
     results,
+    interpretation,
     loading,
     error,
     updateParam,
@@ -121,9 +122,9 @@ function App() {
                 <h3 className="font-medium text-gray-800 mb-3">Time Horizon</h3>
                 <div className="flex space-x-2">
                   {[
-                    { value: 'short', label: '1 Year', desc: 'Immediate effects' },
-                    { value: 'medium', label: '3 Years', desc: 'Adjustment period' },
-                    { value: 'long', label: '5 Years', desc: 'Structural change' },
+                    { value: 'short', label: 'Short (1 yr)', desc: 'Immediate effects' },
+                    { value: 'medium', label: 'Medium (3 yrs)', desc: 'Adjustment period' },
+                    { value: 'long', label: 'Long (5 yrs)', desc: 'Structural change' },
                   ].map((option) => (
                     <button
                       key={option.value}
@@ -180,7 +181,7 @@ function App() {
 
             {/* Right Column - Results */}
             <div className="lg:col-span-2 space-y-4">
-              <ResultsPanel results={results} loading={loading} />
+              <ResultsPanel results={results} loading={loading} interpretation={interpretation} />
 
               {results && (
                 <SankeyDiagram transmissionPaths={results.transmission_paths} />
