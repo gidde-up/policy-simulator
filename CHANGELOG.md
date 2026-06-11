@@ -6,7 +6,32 @@ The project is in pre-release (0.x.y); version 1.0.0 will mark the first product
 
 ---
 
-## [0.11.0] — 2026-06-11  ← current
+## [0.12.0] — 2026-06-11  ← current
+**Session 17 — Session C of the post-audit overhaul: Phase 3 didactic UI rebuild**
+
+External verification of Session B passed (full numerical reproduction of all five acceptance results and the ZAF channel decomposition); its two carry-over items are implemented here.
+
+### Backend
+- Curated scenarios moved to `backend/app/api/presets_data.py` (plain data) with per-scenario walkthrough narrations; `tests/test_presets.py` runs every scenario on the engine and asserts the sign/structure claims its walkthrough makes — five draft narratives were corrected to the model's true stories in the process (notably: tax-financed support to VNM manufacturing and THA automotive is net employment-NEGATIVE because those sectors employ fewer people per dollar than the household basket the financing drag falls on; TUN tariff-plus-support on textiles nets out to approximately zero)
+- New endpoints: `GET /api/assumptions[?country_code=]` (the registry with citations, for the lever popovers), `GET /api/limitations` (serves docs/model-limitations.md), `GET /api/sectors?country_code=` now returns each sector's output share
+- Simulation response carries `data_source.model_version`; the Type II note now states that the sign of small net results can flip under the upper-bound closure (verifier carry-over 1)
+- SEN elasticity registry entry: basis text strengthened per the verifier — the low value is independently defensible (thin domestic manufacturing capacity), not only an acceptance-gate calibration
+- New documentation: `docs/levers/{tariff,sector_support,sme_stimulus}.md` methodological notes, `docs/model-limitations.md`; Dockerfile ships `docs/` so the API can serve it
+
+### Frontend (Phase 3 rebuild)
+- **Guided Tour is the default tab**: pick a curated scenario, the model runs immediately, and a step-by-step walkthrough narrates what the result teaches; "Open in Free Exploration" hands the levers over for modification
+- Free Exploration: the full controls/results view, now behind its own clearly labelled tab
+- First-visit modal (learning tool framing, localStorage-gated); permanently accessible "what the model can and cannot tell you" panel rendered from docs/model-limitations.md, linked from the banner and the Methodology tab
+- Per-lever assumptions popovers rendering the registry entries (values, basis, citations) for the active country
+- Micro-sectors greyed out in lever selection below 0.5% of the country's output (verifier carry-over 2; e.g. Senegal automotive at 0.01%)
+- Sector tooltips show each didactic sector's ICIO industry composition
+- ResultsPanel: when the parameter range straddles zero or the net effect is under 0.05% of baseline, the headline becomes "Net effect: approximately zero" with the gross reallocation (+gains/−losses) as the robust message; gross reallocation shown alongside all results; every results view stamped "Model vX – OECD ICIO 2025 ed. (year 2022)"
+- PolicySlider: numeric input beside each slider, visible keyboard focus states, disabled state for micro-sectors
+- Accessibility pass: focus-visible rings on interactive elements, low-contrast grey text raised
+
+---
+
+## [0.11.0] — 2026-06-11
 **Session 16 — Session B of the post-audit overhaul: Phase 1 completed (VNM, THA, SEN) and Phase 2 engine rebuild**
 
 External verification of the Session A deliverables passed (independent recomputation of all ZAF/TUN derived objects; four non-blocking follow-ups, all implemented below).

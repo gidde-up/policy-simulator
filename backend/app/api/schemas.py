@@ -135,6 +135,7 @@ class DataSourceInfo(BaseModel):
     citation: str
     reference_year: int
     notes: str
+    model_version: str = ""
 
 
 class BaselineIndicator(BaseModel):
@@ -218,9 +219,15 @@ class MultiplierResponse(BaseModel):
     type_2: float
 
 
+class WalkthroughStep(BaseModel):
+    title: str
+    text: str
+
+
 class PresetScenario(BaseModel):
     id: str
     name: str
     description: str
     country_code: str
     params: PolicyScenarioRequest
+    walkthrough: List[WalkthroughStep] = Field(default_factory=list)

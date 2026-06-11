@@ -418,9 +418,11 @@ def run_scenario(iso3: str, tariffs: dict | None = None,
             "financing_drag_included": bool(include_financing_drag
                                             and sector_support),
         },
-        "induced_note": ("upper-bound illustration of induced effects; "
-                         "the household closure caps the consumption "
-                         "propensity at 1" if include_type_ii else None),
+        "induced_note": ("upper-bound illustration of induced effects "
+                         "(the household closure caps the consumption "
+                         "propensity at 1); the sign of small net "
+                         "results can flip under this closure"
+                         if include_type_ii else None),
         "uncertainty": {
             "low": min(totals),
             "high": max(totals),

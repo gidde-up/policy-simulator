@@ -131,22 +131,36 @@ real-income loss, optional stylised retaliation.
   `productivity_investment` and `time_horizon` REMOVED.
   Response: aggregate with parameter-range bounds, channel decomposition,
   per-sector effects, costs, citation-based data_source, assumptions ids.
-- `GET /api/multipliers/{code}`, `GET /api/sectors` (now with ICIO
-  composition per sector), `GET /api/countries` (engine-driven)
+- `GET /api/multipliers/{code}`, `GET /api/sectors[?country_code=]`
+  (ICIO composition + per-country output shares), `GET /api/countries`
+- `GET /api/assumptions[?country_code=]` (registry with citations),
+  `GET /api/limitations` (docs/model-limitations.md) — new in 0.12.0
 - WDI: `GET /api/country/{code}/profile`, `/api/indicators`,
   `/api/timeseries`, `/api/comparison/{indicator}`
 - Chat endpoints exist but are dormant (UI hidden)
-- `GET /api/presets`: 15 presets (3 per country), lever settings only
+- `GET /api/presets`: 15 curated scenarios (3 per country) with
+  walkthrough narrations, defined in `presets_data.py` and verified by
+  the test suite
 
 ### App Component (`frontend/src/App.jsx`)
 
-3 tabs since 0.11.0 (AI Assistant tab hidden; Sankey, demographics,
-job-quality, wage panels removed — their data was not derivable from
-verified sources):
-1. **Policy Simulation**: presets + controls (+ 3 model toggles) +
-   results with channel decomposition
-2. **Country Data**: WDI indicators dashboard
-3. **Methodology**: truthful model + data description
+4 tabs since 0.12.0 (AI Assistant remains hidden; Sankey, demographics,
+job-quality, wage panels removed in 0.11.0 — their data was not
+derivable from verified sources):
+1. **Guided Tour (default)**: curated scenarios from
+   `backend/app/api/presets_data.py`, run immediately with step-by-step
+   walkthroughs; every walkthrough claim is enforced by
+   `data-pipeline/tests/test_presets.py` against the engine
+2. **Free Exploration**: controls (+ 3 model toggles, micro-sectors
+   greyed below 0.5% of output, per-lever assumptions popovers,
+   composition tooltips) + results with channel decomposition
+3. **Country Data**: WDI indicators dashboard
+4. **Methodology**: truthful model + data description
+
+Plus: first-visit modal, persistent banner with the "what the model can
+and cannot tell you" panel (served from `docs/model-limitations.md` via
+`GET /api/limitations`), "approximately zero" headline framing when the
+parameter range straddles zero, model-version stamp on results.
 
 ---
 
@@ -326,13 +340,12 @@ scripted. Pushing to main requires `pytest` green (CLAUDE.md rule 6).
 
 Open the project in Claude Code. CLAUDE.md at the project root is loaded automatically and contains workflow instructions. See CHANGELOG.md for version history and planned work.
 
-Sessions A+B of the post-audit overhaul are complete (data pipeline for
-all 5 countries + engine rebuild). The Session B deliverables for the
-external verifier: the three new country JSONs (VNM, THA, SEN) and
-`data-pipeline/reports/engine_zaf_tariff10.json` (ZAF 10% manufacturing
-tariff with channel decomposition). Next: **Session C** — Phase 3 UI
-rebuild (guided mode, curated scenario walkthroughs, assumptions
-popovers, accessibility), then Session D (CI, README rewrite, 1.0.0).
+Sessions A, B and C of the post-audit overhaul are complete (data
+pipeline for all 5 countries, engine rebuild, didactic UI rebuild; both
+external verifications passed). Next: **Session D** — Phase 4 hygiene:
+GitHub Action running the pytest suite, README rewrite (remove all
+stale claims), Render deployment notes (cold starts, keep-alive), bump
+to 1.0.0.
 
 ---
 

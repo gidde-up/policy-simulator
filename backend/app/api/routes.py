@@ -174,10 +174,17 @@ async def run_simulation(request: PolicyScenarioRequest):
         ),
         induced_note=r["induced_note"],
         uncertainty=UncertaintyInfo(**r["uncertainty"]),
-        data_source=DataSourceInfo(**r["data_source"]),
+        data_source=DataSourceInfo(**r["data_source"],
+                                   model_version=_app_version()),
         assumptions_used=r["assumptions_used"],
         baseline_indicators=baseline_indicators,
     )
+
+
+def _app_version() -> str:
+    # lazy import: app.main imports this module at startup
+    from ..main import __version__
+    return __version__
 
 
 @router.get("/multipliers/{country_code}",
@@ -195,23 +202,67 @@ async def get_multipliers(country_code: str):
 
 
 @router.get("/sectors")
-async def get_sectors():
-    """The 14 didactic sectors, with their ICIO industry composition."""
+async def get_sectors(country_code: Optional[str] = None):
+    """The 14 didactic sectors with their ICIO industry composition.
+    With country_code, each sector also carries its share of the
+    country's gross output (the UI greys out micro-sectors below a small
+    threshold to avoid meaningless decimals, e.g. SEN automotive)."""
     available = engine.available_countries()
     if not available:
         raise HTTPException(status_code=500, detail="No country data")
-    cd = engine.load_country(available[0])
+    iso3 = (country_code or available[0]).upper()
+    if iso3 not in available:
+        raise HTTPException(status_code=400, detail="Unsupported country")
+    cd = engine.load_country(iso3)
     composition = cd.metadata.get("sector_composition", {})
+    total_x = float(cd.x.sum())
     return {
+        "country_code": iso3,
         "sectors": [
             {
                 "id": s,
                 "name": s.replace('_', ' ').title(),
                 "icio_industries": composition.get(s, []),
+                "output_share": float(cd.x[k]) / total_x,
             }
-            for s in cd.sectors
+            for k, s in enumerate(cd.sectors)
         ]
     }
+
+
+@router.get("/assumptions")
+async def get_assumptions(country_code: Optional[str] = None):
+    """The assumptions registry: every substituted data cell and every
+    behavioural parameter, with citations. Optionally filtered to one
+    country plus the GLOBAL engine parameters."""
+    import json as _json
+    from pathlib import Path
+    path = Path(__file__).resolve().parents[1] / "data" / "assumptions.json"
+    registry = _json.loads(path.read_text(encoding="utf-8"))
+    if country_code:
+        iso3 = country_code.upper()
+        registry["entries"] = [
+            e for e in registry["entries"]
+            if e["country"] in (iso3, "GLOBAL")
+        ]
+    return registry
+
+
+@router.get("/limitations")
+async def get_limitations():
+    """The 'what this model can and cannot tell you' text, served from
+    docs/model-limitations.md (single source of truth)."""
+    from pathlib import Path
+    here = Path(__file__).resolve()
+    candidates = [
+        here.parents[3] / "docs" / "model-limitations.md",  # repo checkout
+        here.parents[2] / "docs" / "model-limitations.md",  # docker image
+    ]
+    for p in candidates:
+        if p.exists():
+            return {"markdown": p.read_text(encoding="utf-8")}
+    raise HTTPException(status_code=404,
+                        detail="model-limitations.md not found")
 
 
 # ============== WDI Data Routes ==============
@@ -310,76 +361,21 @@ async def suggest_policies(country_code: str, goal: str = Query(...)):
 
 
 # ============== Preset Scenarios ==============
-# Presets are LEVER SETTINGS for didactic exploration -- they make no
-# factual claims about the economies. Rebuilt on the new engine; the
-# walkthrough narratives come in the Phase 3 UI session.
+# Curated didactic scenarios live in presets_data.py (plain data, no
+# framework imports) so the pipeline test suite verifies every
+# walkthrough claim against the engine (tests/test_presets.py).
 
-def _preset(pid, name, description, country, **params):
-    return PresetScenario(
-        id=pid, name=name, description=description, country_code=country,
-        params=PolicyScenarioRequest(country_code=country, name=name,
-                                     **params))
-
+from . import presets_data
 
 PRESET_SCENARIOS = [
-    # South Africa
-    _preset("zaf_manufacturing_protection", "Manufacturing Protection",
-            "Tariffs on manufacturing, automotive and textiles: explore "
-            "the protected-sector gain against downstream and "
-            "real-income costs", "ZAF",
-            tariff_changes={"manufacturing": 15, "automotive": 20,
-                            "textiles": 10}),
-    _preset("zaf_construction_push", "Construction & Trade Support",
-            "Government support to labour-intensive sectors, "
-            "tax-financed: gross gains vs financing drag", "ZAF",
-            sector_support={"construction": 8, "trade": 5}),
-    _preset("zaf_demand_stimulus", "Broad Demand Stimulus",
-            "SME/demand stimulus of 2% of GDP spread through household "
-            "consumption", "ZAF",
-            sme_stimulus=2),
-    # Tunisia
-    _preset("tun_textile_focus", "Textile Sector Focus",
-            "Combined tariff and support for textiles: protection vs "
-            "support side by side", "TUN",
-            tariff_changes={"textiles": 10},
-            sector_support={"textiles": 8}),
-    _preset("tun_agro_processing", "Agro-processing Support",
-            "Support to food processing and agriculture", "TUN",
-            sector_support={"food_processing": 10, "agriculture": 5}),
-    _preset("tun_demand_stimulus", "Broad Demand Stimulus",
-            "SME/demand stimulus of 2% of GDP", "TUN",
-            sme_stimulus=2),
-    # Viet Nam
-    _preset("vnm_manufacturing_support", "Manufacturing Support",
-            "Support to the manufacturing sector", "VNM",
-            sector_support={"manufacturing": 10}),
-    _preset("vnm_textile_export", "Textile Sector Support",
-            "Support to textiles plus a small demand stimulus", "VNM",
-            sector_support={"textiles": 8}, sme_stimulus=0.5),
-    _preset("vnm_tariff_experiment", "Tariff Experiment",
-            "A 10% manufacturing tariff: see the channel decomposition",
-            "VNM", tariff_changes={"manufacturing": 10}),
-    # Thailand
-    _preset("tha_automotive", "Automotive Focus",
-            "Tariff plus support for the automotive sector", "THA",
-            tariff_changes={"automotive": 10},
-            sector_support={"automotive": 8}),
-    _preset("tha_services_transport", "Services & Transport Support",
-            "Support to services and transport", "THA",
-            sector_support={"other_services": 8, "transport": 5}),
-    _preset("tha_food_processing", "Food Processing Support",
-            "Support to food processing and agriculture", "THA",
-            sector_support={"food_processing": 10, "agriculture": 4}),
-    # Senegal
-    _preset("sen_agriculture", "Agriculture & Agro-processing",
-            "Support to agriculture and food processing", "SEN",
-            sector_support={"agriculture": 10, "food_processing": 6}),
-    _preset("sen_construction", "Construction & Infrastructure",
-            "Support to construction plus a small demand stimulus", "SEN",
-            sector_support={"construction": 10}, sme_stimulus=1),
-    _preset("sen_tariff_experiment", "Tariff Experiment",
-            "A 10% manufacturing tariff: see the channel decomposition",
-            "SEN", tariff_changes={"manufacturing": 10}),
+    PresetScenario(
+        id=p["id"], name=p["name"], description=p["description"],
+        country_code=p["country_code"],
+        params=PolicyScenarioRequest(country_code=p["country_code"],
+                                     name=p["name"], **p["params"]),
+        walkthrough=p["walkthrough"],
+    )
+    for p in presets_data.PRESETS
 ]
 
 

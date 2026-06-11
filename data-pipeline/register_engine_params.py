@@ -65,7 +65,12 @@ KNO_TABLE1_IMPORT_WEIGHTED = {
                   "ground rule 4); set to the bottom of the cited "
                   "literature range [-0.5, -1.67], consistent with KNO's "
                   "finding that differentiated goods have the least "
-                  "elastic import demand"),
+                  "elastic import demand. A low import-substitution "
+                  "elasticity is independently defensible for Senegal: "
+                  "thin domestic manufacturing capacity means tariffs "
+                  "raise prices rather than shift demand to domestic "
+                  "suppliers, which is the structural story behind the "
+                  "differentiated-goods finding"),
 }
 
 

@@ -112,6 +112,18 @@ function ResultsPanel({ results, loading }) {
   const totalJobs = aggregate.total_jobs;
   const isPositive = totalJobs > 0;
 
+  // gross reallocation: the robust message when the net is marginal
+  const grossGains = sector_effects.reduce(
+    (acc, s) => acc + Math.max(0, s.total_jobs), 0);
+  const grossLosses = sector_effects.reduce(
+    (acc, s) => acc + Math.min(0, s.total_jobs), 0);
+
+  // "approximately zero" framing: the parameter range straddles zero,
+  // or the net effect is below 0.05% of baseline employment
+  const rangeStraddlesZero = uncertainty.low < 0 && uncertainty.high > 0;
+  const nearZero = rangeStraddlesZero
+    || Math.abs(aggregate.pct_of_baseline_employment) < 0.05;
+
   // channel bars: merge tariff + other channels, drop nulls
   const channelEntries = [];
   if (tariff_channels) {
@@ -162,35 +174,59 @@ function ResultsPanel({ results, loading }) {
             <Briefcase className="w-5 h-5 mr-2 text-blue-600" />
             Employment Impact
           </h2>
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-gray-500">
             Comparative-static adjustment
           </span>
         </div>
 
-        <div className="flex items-center space-x-4 mb-2">
-          {isPositive ? (
-            <TrendingUp className="w-10 h-10 text-green-500" />
-          ) : (
-            <TrendingDown className="w-10 h-10 text-red-500" />
-          )}
-          <div>
-            <div className={`text-4xl font-bold ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
-              {isPositive ? '+' : ''}{Math.round(totalJobs).toLocaleString()} jobs
+        {nearZero ? (
+          /* marginal net result: the honest headline is the reallocation */
+          <div className="mb-2">
+            <div className="text-3xl font-bold text-gray-800">
+              Net effect: approximately zero
             </div>
-            <div className="text-sm text-gray-500">
-              {aggregate.pct_of_baseline_employment >= 0 ? '+' : ''}
-              {aggregate.pct_of_baseline_employment.toFixed(3)}% of baseline employment
-              ({Math.round(baseline.sector_sum_employment_persons).toLocaleString()} persons, {baseline.reference_year})
+            <div className="text-sm text-gray-600 mt-1">
+              Point estimate {totalJobs >= 0 ? '+' : ''}{Math.round(totalJobs).toLocaleString()} jobs
+              ({aggregate.pct_of_baseline_employment >= 0 ? '+' : ''}
+              {aggregate.pct_of_baseline_employment.toFixed(3)}% of baseline employment)
+              {rangeStraddlesZero && ' - the parameter range includes both signs'}
+            </div>
+            <div className="text-base font-medium text-gray-800 mt-2">
+              The robust result is the reallocation:{' '}
+              <span className="text-green-700">+{Math.round(grossGains).toLocaleString()}</span>
+              {' / '}
+              <span className="text-red-700">{Math.round(grossLosses).toLocaleString()}</span>
+              {' '}jobs shifted between sectors
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="flex items-center space-x-4 mb-2">
+            {isPositive ? (
+              <TrendingUp className="w-10 h-10 text-green-600" />
+            ) : (
+              <TrendingDown className="w-10 h-10 text-red-600" />
+            )}
+            <div>
+              <div className={`text-4xl font-bold ${isPositive ? 'text-green-700' : 'text-red-700'}`}>
+                {isPositive ? '+' : ''}{Math.round(totalJobs).toLocaleString()} jobs
+              </div>
+              <div className="text-sm text-gray-600">
+                {aggregate.pct_of_baseline_employment >= 0 ? '+' : ''}
+                {aggregate.pct_of_baseline_employment.toFixed(3)}% of baseline employment
+                ({Math.round(baseline.sector_sum_employment_persons).toLocaleString()} persons, {baseline.reference_year})
+                {' '}&middot; gross: <span className="text-green-700">+{Math.round(grossGains).toLocaleString()}</span>
+                {' / '}<span className="text-red-700">{Math.round(grossLosses).toLocaleString()}</span>
+              </div>
+            </div>
+          </div>
+        )}
 
-        <div className="text-sm text-gray-600 bg-gray-50 rounded-lg p-3 mb-4">
+        <div className="text-sm text-gray-700 bg-gray-50 rounded-lg p-3 mb-4">
           Range over the registered parameter values:{' '}
           <span className="font-medium">
             {Math.round(uncertainty.low).toLocaleString()} to {Math.round(uncertainty.high).toLocaleString()} jobs
           </span>
-          <span className="text-xs text-gray-400 block mt-1">{uncertainty.basis}</span>
+          <span className="text-xs text-gray-500 block mt-1">{uncertainty.basis}</span>
         </div>
 
         {/* Direct / indirect / induced breakdown */}
@@ -310,18 +346,21 @@ function ResultsPanel({ results, loading }) {
             change={results.baseline_indicators.unemployment_total.change}
             color="blue"
           />
-          <p className="text-xs text-gray-400 mt-2">
+          <p className="text-xs text-gray-500 mt-2">
             Projection applies the simulated net job change to the WDI labour force;
             the WDI (LFS) employment concept differs from the model baseline.
           </p>
         </div>
       )}
 
-      {/* Data source */}
+      {/* Data source + model version stamp */}
       <div className="bg-white rounded-xl shadow-md p-4 flex items-start space-x-3">
-        <Database className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
-        <div className="text-xs text-gray-500">
-          <span className="font-medium text-gray-600">{data_source.citation}</span>
+        <Database className="w-5 h-5 text-gray-500 mt-0.5 flex-shrink-0" />
+        <div className="text-xs text-gray-600">
+          <span className="font-medium text-gray-700">
+            {data_source.model_version ? `Model v${data_source.model_version} - ` : ''}
+            {data_source.citation}
+          </span>
           <span className="block mt-1">
             Behavioural parameters: {results.assumptions_used.join(', ')} (see assumptions registry).
           </span>

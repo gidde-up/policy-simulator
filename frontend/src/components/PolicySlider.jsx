@@ -1,15 +1,22 @@
 import React from 'react';
 
+function clamp(v, min, max) {
+  if (Number.isNaN(v)) return 0;
+  return Math.min(max, Math.max(min, v));
+}
+
 function PolicySlider({
   label,
   value,
   onChange,
-  min = -30,
+  min = 0,
   max = 30,
   step = 1,
   unit = '%',
   description = '',
   color = 'blue',
+  disabled = false,
+  disabledNote = '',
 }) {
   const colorClasses = {
     blue: 'bg-blue-500',
@@ -22,25 +29,43 @@ function PolicySlider({
   const isNegative = value < 0;
 
   return (
-    <div className="mb-4">
+    <div className={`mb-4 ${disabled ? 'opacity-50' : ''}`}
+         title={disabled ? disabledNote : undefined}>
       <div className="flex justify-between items-center mb-1">
         <label className="text-sm font-medium text-gray-700">
           {label}
+          {disabled && (
+            <span className="ml-2 text-xs text-gray-600 font-normal">
+              ({disabledNote})
+            </span>
+          )}
         </label>
-        <span
-          className={`
-            text-sm font-bold px-2 py-0.5 rounded
-            ${isPositive ? 'text-green-700 bg-green-100' : ''}
-            ${isNegative ? 'text-red-700 bg-red-100' : ''}
-            ${value === 0 ? 'text-gray-500 bg-gray-100' : ''}
-          `}
-        >
-          {value > 0 ? '+' : ''}{value}{unit}
+        {/* Numeric input beside the slider */}
+        <span className="flex items-center space-x-1">
+          <input
+            type="number"
+            min={min}
+            max={max}
+            step={step}
+            value={value}
+            disabled={disabled}
+            onChange={(e) => onChange(clamp(parseFloat(e.target.value), min, max))}
+            aria-label={`${label} value`}
+            className={`
+              w-16 text-sm font-bold text-right px-1 py-0.5 rounded border
+              focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600
+              ${isPositive ? 'text-green-800 bg-green-50 border-green-200' : ''}
+              ${isNegative ? 'text-red-800 bg-red-50 border-red-200' : ''}
+              ${value === 0 ? 'text-gray-600 bg-gray-50 border-gray-200' : ''}
+              ${disabled ? 'cursor-not-allowed' : ''}
+            `}
+          />
+          <span className="text-xs text-gray-600">{unit}</span>
         </span>
       </div>
 
       {description && (
-        <p className="text-xs text-gray-500 mb-2">{description}</p>
+        <p className="text-xs text-gray-600 mb-2">{description}</p>
       )}
 
       <div className="relative">
@@ -65,15 +90,22 @@ function PolicySlider({
           />
         )}
 
-        {/* Actual slider input */}
+        {/* Actual slider input: visible keyboard focus ring on the track */}
         <input
           type="range"
           min={min}
           max={max}
           step={step}
           value={value}
+          disabled={disabled}
           onChange={(e) => onChange(parseFloat(e.target.value))}
-          className="absolute top-0 left-0 w-full h-2 opacity-0 cursor-pointer"
+          aria-label={label}
+          className={`
+            absolute top-0 left-0 w-full h-2 opacity-0
+            focus:outline-none focus-visible:opacity-100
+            focus-visible:accent-blue-600
+            ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}
+          `}
         />
 
         {/* Custom thumb (decorative: pointer-events-none so the real
@@ -92,7 +124,7 @@ function PolicySlider({
       </div>
 
       {/* Min/Max labels */}
-      <div className="flex justify-between mt-1 text-xs text-gray-400">
+      <div className="flex justify-between mt-1 text-xs text-gray-500">
         <span>{min}{unit}</span>
         <span>{max}{unit}</span>
       </div>

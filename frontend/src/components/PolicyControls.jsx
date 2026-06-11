@@ -1,6 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronDown, ChevronUp, Factory, Leaf, Building2, ShoppingBag, DollarSign, Settings } from 'lucide-react';
 import PolicySlider from './PolicySlider';
+import AssumptionsPopover from './AssumptionsPopover';
+import { getSectors } from '../services/api';
+
+// sectors below this share of the country's gross output are greyed out:
+// lever effects there produce meaningless decimals (e.g. Senegal's
+// automotive sector, 0.01% of output)
+const MICRO_SECTOR_THRESHOLD = 0.005;
 
 const SECTOR_GROUPS = {
   primary: {
@@ -47,6 +54,7 @@ const SECTOR_LABELS = {
 };
 
 function PolicyControls({
+  countryCode,
   params,
   onUpdateTariff,
   onUpdateSupport,
@@ -60,9 +68,31 @@ function PolicyControls({
   });
 
   const [activeTab, setActiveTab] = useState('tariffs'); // 'tariffs' | 'support' | 'other'
+  const [sectorInfo, setSectorInfo] = useState({});
+
+  useEffect(() => {
+    let alive = true;
+    getSectors(countryCode)
+      .then((data) => {
+        if (!alive) return;
+        const map = {};
+        (data.sectors || []).forEach((s) => { map[s.id] = s; });
+        setSectorInfo(map);
+      })
+      .catch(() => setSectorInfo({}));
+    return () => { alive = false; };
+  }, [countryCode]);
 
   const toggleGroup = (group) => {
     setExpandedGroups(prev => ({ ...prev, [group]: !prev[group] }));
+  };
+
+  const compositionTooltip = (sector) => {
+    const info = sectorInfo[sector];
+    if (!info || !info.icio_industries?.length) return undefined;
+    const items = info.icio_industries
+      .map((i) => `${i.code} ${i.description}`).join('; ');
+    return `Contains (OECD ICIO industries): ${items}`;
   };
 
   const renderSectorSliders = (values, onChange, { min, max, color, kind }) => (
@@ -72,33 +102,41 @@ function PolicyControls({
         <div key={groupKey} className="mb-3">
           <button
             onClick={() => toggleGroup(groupKey)}
-            className="w-full flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+            className="w-full flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
           >
             <div className="flex items-center space-x-2">
               <Icon className="w-5 h-5 text-gray-600" />
               <span className="font-medium text-gray-700">{group.label}</span>
             </div>
             {expandedGroups[groupKey] ? (
-              <ChevronUp className="w-5 h-5 text-gray-400" />
+              <ChevronUp className="w-5 h-5 text-gray-500" />
             ) : (
-              <ChevronDown className="w-5 h-5 text-gray-400" />
+              <ChevronDown className="w-5 h-5 text-gray-500" />
             )}
           </button>
 
           {expandedGroups[groupKey] && (
             <div className="mt-2 pl-4 border-l-2 border-gray-200">
-              {group.sectors.map((sector) => (
-                <PolicySlider
-                  key={sector}
-                  label={SECTOR_LABELS[sector]}
-                  value={values[sector] || 0}
-                  onChange={(val) => onChange(sector, val)}
-                  min={min}
-                  max={max}
-                  color={color || group.color}
-                  description={`${kind} for ${SECTOR_LABELS[sector].toLowerCase()}`}
-                />
-              ))}
+              {group.sectors.map((sector) => {
+                const share = sectorInfo[sector]?.output_share;
+                const isMicro = share !== undefined
+                  && share < MICRO_SECTOR_THRESHOLD;
+                return (
+                  <div key={sector} title={compositionTooltip(sector)}>
+                    <PolicySlider
+                      label={SECTOR_LABELS[sector]}
+                      value={values[sector] || 0}
+                      onChange={(val) => onChange(sector, val)}
+                      min={min}
+                      max={max}
+                      color={color || group.color}
+                      description={`${kind} for ${SECTOR_LABELS[sector].toLowerCase()}`}
+                      disabled={isMicro}
+                      disabledNote={`below 0.5% of this economy's output - results would be meaningless decimals`}
+                    />
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
@@ -146,10 +184,13 @@ function PolicyControls({
         {/* Tariffs Tab */}
         {activeTab === 'tariffs' && (
           <div>
-            <p className="text-sm text-gray-600 mb-4">
-              Raise import tariffs by sector. The model shows the protected-sector
-              gain against downstream input-cost and real-income losses.
-            </p>
+            <div className="flex items-start justify-between mb-4">
+              <p className="text-sm text-gray-700 pr-2">
+                Raise import tariffs by sector. The model shows the protected-sector
+                gain against downstream input-cost and real-income losses.
+              </p>
+              <AssumptionsPopover lever="tariffs" countryCode={countryCode} />
+            </div>
             {renderSectorSliders(params.tariff_changes, onUpdateTariff,
               { min: 0, max: 30, kind: 'Tariff increase' })}
           </div>
@@ -158,11 +199,14 @@ function PolicyControls({
         {/* Sector Support Tab */}
         {activeTab === 'support' && (
           <div>
-            <p className="text-sm text-gray-600 mb-4">
-              Government spending in support of a sector (as % of the sector's
-              output). With the financing drag on, the same amount is taken out
-              of household consumption (tax-financed).
-            </p>
+            <div className="flex items-start justify-between mb-4">
+              <p className="text-sm text-gray-700 pr-2">
+                Government spending in support of a sector (as % of the sector's
+                output). With the financing drag on, the same amount is taken out
+                of household consumption (tax-financed).
+              </p>
+              <AssumptionsPopover lever="support" countryCode={countryCode} />
+            </div>
             {renderSectorSliders(params.sector_support, onUpdateSupport,
               { min: 0, max: 20, color: 'green', kind: 'Government support' })}
           </div>
@@ -173,11 +217,14 @@ function PolicyControls({
           <div className="space-y-6">
             {/* SME Stimulus */}
             <div className="p-4 bg-orange-50 rounded-lg">
-              <div className="flex items-center space-x-2 mb-3">
-                <DollarSign className="w-5 h-5 text-orange-600" />
-                <h3 className="font-medium text-gray-800">SME / Demand Stimulus</h3>
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center space-x-2">
+                  <DollarSign className="w-5 h-5 text-orange-600" />
+                  <h3 className="font-medium text-gray-800">SME / Demand Stimulus</h3>
+                </div>
+                <AssumptionsPopover lever="stimulus" countryCode={countryCode} />
               </div>
-              <p className="text-sm text-gray-600 mb-4">
+              <p className="text-sm text-gray-700 mb-4">
                 Broad demand stimulus spread through household consumption
                 patterns, scaled by a cited first-round fiscal multiplier.
               </p>

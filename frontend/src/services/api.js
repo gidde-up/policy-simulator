@@ -55,8 +55,18 @@ export async function getMultipliers(countryCode) {
   return fetchApi(`/multipliers/${countryCode}`);
 }
 
-export async function getSectors() {
-  return fetchApi('/sectors');
+export async function getSectors(countryCode = null) {
+  const param = countryCode ? `?country_code=${countryCode}` : '';
+  return fetchApi(`/sectors${param}`);
+}
+
+export async function getAssumptions(countryCode = null) {
+  const param = countryCode ? `?country_code=${countryCode}` : '';
+  return fetchApi(`/assumptions${param}`);
+}
+
+export async function getLimitations() {
+  return fetchApi('/limitations');
 }
 
 // ============== Country Data API ==============
