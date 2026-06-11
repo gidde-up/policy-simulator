@@ -18,7 +18,7 @@
 - TiM employment cells: {'tim_exact': 48, 'tim_parent_residual': 2}
 - Type II propensity: 1.160 (capped at 1)
 - Economy-wide labour share (observed sectors): 0.503
-- Registry entries written: 5
+- Registry entries written: 6
 
 ## Type I / Type II employment multipliers (jobs per USD million of final demand)
 

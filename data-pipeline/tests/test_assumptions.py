@@ -25,7 +25,27 @@ def test_provenance_tags_resolve(country, country_data, registry):
 
 
 def test_no_orphan_entries(country_data, registry):
-    """Every registry entry belongs to a built country."""
-    built = set(country_data)
+    """Every registry entry belongs to a built country or is GLOBAL."""
+    built = set(country_data) | {assumptions.GLOBAL_COUNTRY}
     for e in registry["entries"]:
         assert e["country"] in built, f"orphan entry {e['id']}"
+
+
+def test_global_engine_parameters_present(registry):
+    """The engine's behavioural parameters must be registered with
+    citations before the engine can run."""
+    by_id = {e["id"]: e for e in registry["entries"]}
+    required = [
+        "GLOBAL-import-demand-elasticity-central",
+        "GLOBAL-import-demand-elasticity-low",
+        "GLOBAL-import-demand-elasticity-high",
+        "GLOBAL-own-price-demand-elasticity-central",
+        "GLOBAL-retaliation-share",
+        "GLOBAL-retaliation-top-sectors",
+        "GLOBAL-fiscal-multiplier-central",
+        "GLOBAL-fiscal-multiplier-low",
+        "GLOBAL-fiscal-multiplier-high",
+    ]
+    for rid in required:
+        assert rid in by_id, f"missing engine parameter {rid}"
+        assert by_id[rid]["citation"], f"{rid} must carry a citation"

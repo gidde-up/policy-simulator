@@ -25,18 +25,15 @@ class PolicyInterpretation:
 SYSTEM_PROMPT = """You are an economic policy advisor assistant for a job creation simulation tool.
 Your role is to help policymakers understand the employment effects of their policy choices.
 
-The simulation tool covers South Africa (ZAF), Tunisia (TUN), Viet Nam (VNM), Thailand (THA), and Mozambique (MOZ), and models these policy levers:
+The simulation tool covers South Africa (ZAF), Tunisia (TUN), Viet Nam (VNM), Thailand (THA), and Senegal (SEN), and models these policy levers:
 
 1. **Tariff changes** by sector: agriculture, mining, manufacturing, textiles, automotive,
    food_processing, chemicals, construction, utilities, trade, transport, finance,
    public_services, other_services
 
-2. **Subsidies** by sector (same sectors as above)
+2. **Sector support** (government spending) by sector (same sectors as above)
 
-3. **SME stimulus**: A percentage of GDP devoted to small and medium enterprise support
-
-4. **Industrial/productivity investment**: Investment in modernization and productivity
-   improvements in manufacturing sectors
+3. **SME / demand stimulus**: A percentage of GDP devoted to broad demand support
 
 When users describe policies, you should:
 1. Identify which policy levers are being discussed
@@ -48,27 +45,20 @@ Always respond with JSON in this format:
 {
     "understood": true/false,
     "policy_params": {
-        "country": "ZAF", "TUN", "VNM", "THA", or "MOZ",
+        "country": "ZAF", "TUN", "VNM", "THA", or "SEN",
         "tariff_changes": {"sector_name": percent_change, ...},
-        "subsidy_changes": {"sector_name": percent_change, ...},
-        "sme_stimulus": percent_of_gdp,
-        "productivity_investment": percent_increase,
-        "time_horizon": 1, 3, or 5
+        "sector_support": {"sector_name": percent_change, ...},
+        "sme_stimulus": percent_of_gdp
     },
     "clarification_needed": "question if clarification needed, else null",
     "explanation": "Brief explanation of how you interpreted the request"
 }
 
 Important economic context:
-- Tariff increases protect domestic industry but may raise prices and reduce efficiency
-- Subsidies can boost specific sectors but have fiscal costs
-- SME support is generally labor-intensive and creates jobs in services/trade
-- Productivity investment may reduce jobs short-term but increase quality jobs long-term
-- South Africa has high unemployment (>30%) and a large mining/manufacturing base
-- Tunisia has significant textiles/tourism sectors and moderate unemployment (~15%)
-- Viet Nam has fast GDP growth, large manufacturing/textiles workforce, high informality (~55%), low headline unemployment (~2%) but significant underemployment
-- Thailand has a strong automotive/manufacturing base, significant tourism sector (~12% GDP), moderate unemployment (~1-2%), aging workforce challenge
-- Mozambique is agriculture-dependent (70% employment), extremely high informality (95%), emerging LNG sector, structural transformation challenge from low-productivity agriculture to higher value-added sectors
+- Tariff increases protect the targeted sector but raise input costs downstream and reduce household real income; the model shows these channels separately
+- Sector support boosts demand for the supported sector but is tax-financed (a financing drag on household consumption can be toggled)
+- SME/demand stimulus is spread through household consumption patterns
+- Do not assert country-specific statistics; the simulation results and the country dashboard carry the data
 """
 
 
@@ -207,8 +197,6 @@ Provide a clear, concise explanation (2-3 paragraphs) suitable for a non-economi
         agg = results['aggregate']
 
         total_jobs = agg.get('total_jobs', 0) if isinstance(agg, dict) else getattr(agg, 'total_jobs', 0)
-        female_share = agg.get('female_share', 0) if isinstance(agg, dict) else getattr(agg, 'female_share', 0)
-        youth_share = agg.get('youth_share', 0) if isinstance(agg, dict) else getattr(agg, 'youth_share', 0)
 
         direction = "create" if total_jobs > 0 else "reduce"
 
@@ -216,16 +204,13 @@ Provide a clear, concise explanation (2-3 paragraphs) suitable for a non-economi
 **Summary of Employment Effects**
 
 This policy scenario is estimated to {direction} approximately {abs(total_jobs):,.0f} jobs
-over the {results.get('time_horizon', 'selected')} year time horizon.
-
-**Demographic Impact:**
-- Women would receive {female_share*100:.1f}% of the job effects
-- Youth (ages 15-24) would receive {youth_share*100:.1f}% of the job effects
+(comparative-static adjustment, not a forecast).
 
 **Important Caveats:**
-These projections are based on input-output analysis and historical employment elasticities.
-Actual outcomes depend on many factors including global economic conditions, implementation
-effectiveness, and behavioral responses not fully captured in the model.
+These results come from a demand-driven input-output model with cited
+behavioural parameters. Actual outcomes depend on many factors including
+global economic conditions, implementation effectiveness, and behavioural
+responses not captured in the model.
 """
         return explanation
 
@@ -240,18 +225,19 @@ effectiveness, and behavioral responses not fully captured in the model.
         if not self.is_available():
             return self._get_default_suggestions(country_code, goal)
 
-        prompt = f"""For {country_code} ({'South Africa' if country_code == 'ZAF' else 'Tunisia'}),
+        names = {"ZAF": "South Africa", "TUN": "Tunisia",
+                 "VNM": "Viet Nam", "THA": "Thailand", "SEN": "Senegal"}
+        prompt = f"""For {country_code} ({names.get(country_code, country_code)}),
 suggest policy combinations to achieve this goal: {goal}
 
 Consider the available policy levers:
 - Tariff changes by sector
-- Subsidies by sector
-- SME stimulus
-- Industrial/productivity investment
+- Government sector support by sector
+- SME / demand stimulus
 
-Provide 2-3 specific policy suggestions with expected effects on employment,
-considering the country's economic structure. Be concrete about sector targets
-and approximate percentages."""
+Provide 2-3 specific policy suggestions with expected effects on employment.
+Be concrete about sector targets and approximate percentages; do not assert
+country statistics."""
 
         try:
             response = self.client.messages.create(
@@ -266,32 +252,21 @@ and approximate percentages."""
             return self._get_default_suggestions(country_code, goal)
 
     def _get_default_suggestions(self, country_code: str, goal: str) -> str:
-        """Default policy suggestions without AI"""
-        if country_code == "ZAF":
-            return """
-**Policy Suggestions for South Africa:**
+        """Default policy suggestions without AI: generic lever guidance,
+        no country-specific factual claims."""
+        return """
+**Ways to explore this goal in the simulator:**
 
-1. **Manufacturing Support**: 10-15% tariff protection combined with
-   productivity investment could boost formal sector employment.
+1. **Sector support**: Direct government support (5-10%) to a sector you
+   expect to be labour-intensive; toggle the financing drag to compare
+   gross and net effects.
 
-2. **SME Development**: 1-2% GDP stimulus to SMEs, particularly in
-   trade and services sectors, tends to be highly labor-intensive.
+2. **Demand stimulus**: A broad SME/demand stimulus (1-2% of GDP) spread
+   through household consumption.
 
-3. **Youth Employment**: Targeted subsidies to labor-intensive sectors
-   (textiles, construction, services) with youth hiring incentives.
-"""
-        else:
-            return """
-**Policy Suggestions for Tunisia:**
-
-1. **Textile Sector Support**: Moderate tariff protection (10%) with
-   quality upgrading investments to maintain competitiveness.
-
-2. **Agro-processing Development**: Subsidies to food processing to
-   add value to agricultural output and create rural jobs.
-
-3. **Services Expansion**: SME stimulus (1-2% GDP) focused on tourism-
-   related services and IT/business services.
+3. **Tariff experiment**: A moderate tariff (10%) on a sector to see the
+   channel decomposition: protected-sector gain vs downstream cost and
+   real-income loss.
 """
 
 

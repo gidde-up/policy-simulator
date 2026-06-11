@@ -45,10 +45,16 @@ def aggregate_blocks(b: dict, S: np.ndarray, country: str) -> dict:
         )
     L_I = np.linalg.inv(np.eye(len(config.SECTORS_14)) - A_d)
 
-    # aggregation must preserve the column identity
+    # aggregation must preserve the column identity. Same absolute
+    # rounding floor as the native gates: gaps below 1e-6 of total
+    # output are source rounding (3-decimal published values), which
+    # inflates RELATIVE gaps on tiny sectors (e.g. SEN automotive,
+    # output 3.8 USD million).
     col_lhs = Z.sum(axis=0) + M.sum(axis=0) + tls + va
-    scale = np.maximum(np.abs(x), 1e-9)
-    rel = float(np.max(np.abs(col_lhs - x) / scale))
+    gap = np.abs(col_lhs - x)
+    abs_floor = 1e-6 * float(np.abs(x).sum())
+    gap = np.where(gap <= abs_floor, 0.0, gap)
+    rel = float(np.max(gap / np.maximum(np.abs(x), 1e-9)))
     if rel > config.TOL_COLUMN_IDENTITY:
         raise PipelineError(
             stage=f"aggregate.column_identity[{country}]",

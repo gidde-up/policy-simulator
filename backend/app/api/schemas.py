@@ -1,194 +1,176 @@
 """
-Pydantic schemas for API request/response validation
+Pydantic schemas for API request/response validation.
+
+v0.11.0 contract: the simulation runs on the Leontief engine over the
+verified country JSONs (OECD ICIO 2025). Removed from the old contract:
+wage effects, job-quality metrics, demographic shares, synergy effects,
+transmission paths (Sankey), cosmetic confidence intervals, the
+productivity lever and the time-horizon scaling (results are
+comparative-static).
 """
 
 from pydantic import BaseModel, Field, field_validator
 from typing import Dict, List, Optional, Any
-from enum import Enum
-
-
-class TimeHorizonEnum(str, Enum):
-    short = "short"
-    medium = "medium"
-    long = "long"
 
 
 class PolicyScenarioRequest(BaseModel):
-    """Request schema for policy simulation"""
-    country_code: str = Field(..., description="ISO3 country code (ZAF, TUN, VNM, or THA)")
+    """Request schema for policy simulation. All lever values in percent;
+    the API layer converts to fractions for the engine."""
+    country_code: str = Field(..., description="ISO3 country code")
     name: str = Field(default="Custom Scenario", description="Scenario name")
     tariff_changes: Dict[str, float] = Field(
         default_factory=dict,
-        description="Tariff changes by sector (% change, -50 to 100)"
+        description="Tariff increase by sector (percentage points, 0 to 50)"
     )
-    subsidy_changes: Dict[str, float] = Field(
+    sector_support: Dict[str, float] = Field(
         default_factory=dict,
-        description="Subsidy changes by sector (% change, 0 to 30)"
+        description="Government sector support by sector "
+                    "(% of sector gross output, 0 to 30)"
     )
     sme_stimulus: float = Field(
-        default=0.0,
-        ge=0,
-        le=10,
-        description="SME stimulus as % of GDP"
+        default=0.0, ge=0, le=10,
+        description="SME / demand stimulus as % of GDP"
     )
-    productivity_investment: float = Field(
-        default=0.0,
-        ge=0,
-        le=20,
-        description="Productivity investment target (%)"
+    include_type_ii: bool = Field(
+        default=False,
+        description="Include induced (Type II) effects -- shown as an "
+                    "upper-bound illustration"
     )
-    time_horizon: TimeHorizonEnum = Field(
-        default=TimeHorizonEnum.medium,
-        description="Time horizon for simulation"
+    include_retaliation: bool = Field(
+        default=False,
+        description="Stylised retaliation on top export sectors"
+    )
+    include_financing_drag: bool = Field(
+        default=True,
+        description="Tax-financed sector support: subtract the same "
+                    "amount from household consumption"
     )
 
     @field_validator('tariff_changes')
     @classmethod
     def validate_tariffs(cls, v: Dict[str, float]) -> Dict[str, float]:
         for sector, value in v.items():
-            if not (-50 <= value <= 100):
+            if not (0 <= value <= 50):
                 raise ValueError(
-                    f"Tariff for '{sector}' must be between -50% and 100%, got {value}"
+                    f"Tariff for '{sector}' must be between 0 and 50 "
+                    f"percentage points, got {value}"
                 )
         return v
 
-    @field_validator('subsidy_changes')
+    @field_validator('sector_support')
     @classmethod
-    def validate_subsidies(cls, v: Dict[str, float]) -> Dict[str, float]:
+    def validate_support(cls, v: Dict[str, float]) -> Dict[str, float]:
         for sector, value in v.items():
             if not (0 <= value <= 30):
                 raise ValueError(
-                    f"Subsidy for '{sector}' must be between 0% and 30%, got {value}"
+                    f"Sector support for '{sector}' must be between 0% "
+                    f"and 30%, got {value}"
                 )
         return v
 
 
-class EmploymentEffectResponse(BaseModel):
-    """Employment effect details"""
+class AggregateEffect(BaseModel):
+    """Aggregate employment effect with parameter-range bounds."""
     direct_jobs: float
     indirect_jobs: float
-    induced_jobs: float
+    induced_jobs: Optional[float] = Field(
+        default=None, description="Only when Type II is toggled on")
     total_jobs: float
-    male_share: float
-    female_share: float
-    youth_share: float
-    adult_share: float
-    formal_share: float
-    informal_share: float
-    avg_wage_effect: float
-    confidence_low: float
-    confidence_high: float
+    total_jobs_low: float = Field(
+        description="Lower bound over the registered parameter range")
+    total_jobs_high: float = Field(
+        description="Upper bound over the registered parameter range")
+    pct_of_baseline_employment: float = Field(
+        description="total_jobs as % of sector-sum baseline employment")
 
 
 class SectorEffectResponse(BaseModel):
-    """Sector-specific effect"""
     sector: str
-    output_change: float
-    employment_effect: EmploymentEffectResponse
-    value_added_change: float
+    direct_jobs: float
+    indirect_jobs: float
+    induced_jobs: Optional[float] = None
+    total_jobs: float
+    output_change_usd_million: float
+    value_added_change_usd_million: float
 
 
-class TransmissionPath(BaseModel):
-    """Sankey diagram path"""
-    source: str
-    target: str
-    value: float
-    type: str
+class ChannelEffect(BaseModel):
+    jobs: float
+    demand_usd_million: float
+
+
+class TariffChannels(BaseModel):
+    """Channel decomposition of the tariff levers."""
+    protected_sector_gain: Optional[ChannelEffect] = None
+    downstream_cost: Optional[ChannelEffect] = None
+    real_income_loss: Optional[ChannelEffect] = None
+    retaliation: Optional[ChannelEffect] = None
+
+
+class BaselineInfo(BaseModel):
+    sector_sum_employment_persons: float
+    reference_year: int
+    note: str
+
+
+class CostsResponse(BaseModel):
+    """Fiscal flows in USD million (annual, reference-year prices)."""
+    tariff_revenue_usd_million: float
+    spending_cost_usd_million: float
+    net_fiscal_usd_million: float
+    cost_per_job_fiscal_usd: Optional[float] = Field(
+        default=None, description="USD per job; only when spending > 0 "
+                                  "and net jobs > 0")
+    financing_drag_included: bool
+
+
+class UncertaintyInfo(BaseModel):
+    low: float
+    high: float
+    basis: str
+
+
+class DataSourceInfo(BaseModel):
+    """Actual citation of the datasets behind the simulation."""
+    citation: str
+    reference_year: int
+    notes: str
 
 
 class BaselineIndicator(BaseModel):
-    """Baseline indicator with projected change"""
+    """Baseline indicator with projected change (WDI)"""
     name: str
     current_value: float
     projected_value: float
     change: float
-    unit: str  # '%' or 'number'
+    unit: str
 
 
 class BaselineIndicators(BaseModel):
-    """Baseline and projected indicators"""
     unemployment_total: Optional[BaselineIndicator] = None
-    unemployment_youth: Optional[BaselineIndicator] = None
-    unemployment_female: Optional[BaselineIndicator] = None
-    unemployment_male: Optional[BaselineIndicator] = None
     labor_force: Optional[BaselineIndicator] = None
     employment_total: Optional[BaselineIndicator] = None
-    gov_expenditure_usd: Optional[float] = None  # Annual government expenditure in millions USD
-
-
-class DataSourceInfo(BaseModel):
-    """Information about data sources used in simulation"""
-    multiplier_source: str = Field(description="Source of employment multipliers")
-    reference_year: str = Field(description="Reference year for data")
-    quality: str = Field(description="Data quality level: 'research-grade' or 'illustrative'")
-    notes: str = Field(description="Additional notes about data sources")
-
-
-class JobQualityMetrics(BaseModel):
-    """Job quality indicators including working poverty, productivity, and formality"""
-    # Formal vs Informal breakdown
-    formal_jobs: float = Field(description="Number of formal jobs created")
-    informal_jobs: float = Field(description="Number of informal jobs created")
-    formalization_rate: float = Field(description="% of jobs that are formal (0-100)")
-
-    # Working poverty indicators
-    working_poverty_risk: float = Field(description="% of jobs at risk of working poverty (0-100)")
-    jobs_above_poverty_line: float = Field(description="Number of jobs above working poverty line")
-    jobs_below_poverty_line: float = Field(description="Number of jobs below working poverty line")
-
-    # Productivity indicators
-    avg_productivity_usd: float = Field(description="Average output per worker (USD/year)")
-    high_productivity_jobs: float = Field(description="Number of jobs in high-productivity sectors")
-    low_productivity_jobs: float = Field(description="Number of jobs in low-productivity sectors")
-    productivity_category: str = Field(description="Overall productivity level: low, medium, high")
-
-    # Sector composition
-    agriculture_jobs: float = Field(description="Jobs in agriculture sector")
-    manufacturing_jobs: float = Field(description="Jobs in manufacturing sector")
-    services_jobs: float = Field(description="Jobs in services sector")
-
-
-class PolicyCostsResponse(BaseModel):
-    """Fiscal and economic costs of the policy intervention (all figures are annual)"""
-    # Fiscal impacts (millions USD, per year)
-    tariff_revenue_gross: float = Field(description="Annual tariff revenue before import reduction")
-    tariff_revenue_net: float = Field(description="Annual tariff revenue after behavioral response")
-    subsidy_cost: float = Field(description="Annual subsidy spending")
-    sme_stimulus_cost: float = Field(description="Annual SME program spending")
-    productivity_cost: float = Field(description="Annual productivity investment spending")
-
-    # Net fiscal impact
-    net_fiscal_impact: float = Field(description="Net annual fiscal impact (positive = revenue)")
-
-    # Economic costs
-    tariff_deadweight_loss: float = Field(description="Annual efficiency loss from tariffs")
-    tariff_trade_reduction: float = Field(description="Annual value of foregone imports")
-    total_economic_cost: float = Field(description="Total annual economic cost")
-
-    # Per-job metrics (annual cost per job-year)
-    cost_per_job_fiscal: Optional[float] = Field(description="Annual fiscal cost per job (can be negative)")
-    cost_per_job_economic: Optional[float] = Field(description="Annual economic cost per job")
-
-    # Breakdown
-    cost_breakdown: Optional[Dict[str, Any]] = Field(default=None, description="Detailed breakdown by policy type")
+    gov_expenditure_usd: Optional[float] = None
 
 
 class SimulationResponse(BaseModel):
-    """Full simulation response"""
     scenario_name: str
     country: str
-    time_horizon: int
+    aggregate: AggregateEffect
+    baseline: BaselineInfo
     sector_effects: List[SectorEffectResponse]
-    aggregate: EmploymentEffectResponse
-    transmission_paths: List[TransmissionPath]
+    tariff_channels: Optional[TariffChannels] = None
+    other_channels: Optional[Dict[str, ChannelEffect]] = None
+    costs: CostsResponse
+    induced_note: Optional[str] = None
+    uncertainty: UncertaintyInfo
+    data_source: DataSourceInfo
+    assumptions_used: List[str]
     baseline_indicators: Optional[BaselineIndicators] = None
-    data_source: Optional[DataSourceInfo] = None
-    costs: Optional[PolicyCostsResponse] = None
-    job_quality: Optional[JobQualityMetrics] = None
 
 
 class ChatRequest(BaseModel):
-    """Chat/natural language request"""
+    """Chat/natural language request (feature dormant)"""
     message: str = Field(..., description="User's natural language query")
     country_code: str = Field(default="ZAF", description="Country context")
     current_params: Optional[Dict[str, Any]] = Field(
@@ -198,7 +180,6 @@ class ChatRequest(BaseModel):
 
 
 class ChatResponse(BaseModel):
-    """Chat response"""
     understood: bool
     message: str
     policy_params: Optional[Dict[str, Any]]
@@ -207,7 +188,7 @@ class ChatResponse(BaseModel):
 
 
 class CountryProfileResponse(BaseModel):
-    """Country economic profile"""
+    """Country economic profile (WDI)"""
     country_code: str
     country_name: str
     region: str
@@ -220,7 +201,6 @@ class CountryProfileResponse(BaseModel):
 
 
 class TimeSeriesRequest(BaseModel):
-    """Request for time series data"""
     indicator_key: str
     country_codes: List[str] = Field(default=["ZAF", "TUN"])
     start_year: int = Field(default=2010)
@@ -228,7 +208,8 @@ class TimeSeriesRequest(BaseModel):
 
 
 class MultiplierResponse(BaseModel):
-    """Employment multipliers by sector"""
+    """Employment multipliers by sector (jobs per USD million of final
+    demand), computed from the verified country JSON."""
     sector: str
     direct: float
     indirect: float
@@ -238,7 +219,6 @@ class MultiplierResponse(BaseModel):
 
 
 class PresetScenario(BaseModel):
-    """Preset policy scenario"""
     id: str
     name: str
     description: str

@@ -100,80 +100,66 @@ policy-simulator/
 
 ## Key Files Reference
 
-### Economic Model (`backend/app/models/economic_model.py`)
+### Engine (`backend/app/models/engine.py`) — new in 0.11.0
 
-The core simulation engine using Leontief Input-Output analysis.
+Pure numpy/json Leontief engine over the verified country JSONs
+(`backend/app/data/countries/{ISO3}.json`). No FastAPI imports; loadable
+by file path (the pipeline test suite does exactly that). Contains NO
+behavioural constants — an AST test asserts no numeric literal outside
+{0, 1, 2}; every parameter comes from `backend/app/data/assumptions.json`
+(GLOBAL-* entries plus per-country import demand elasticities from
+Kee/Nicita/Olarreaga 2008, Table 1).
 
-**Key Components:**
-- `gdp_millions`: Country GDP - South Africa = $400B, Tunisia = $50B
-- `sector_shares`: 14 sectors with approximate GDP proportions
-- `tech_coefficients`: Inter-industry linkage matrix (stylized)
-- `employment_coefficients`: Jobs per million USD output by sector
-- `leontief_inverse`: (I - A)^(-1) matrix for multiplier effects
+**Core:** `run_scenario(iso3, tariffs, sector_support, sme_stimulus,
+include_type_ii, include_retaliation, include_financing_drag)` —
+all rates as fractions; returns USD million / persons. dE = ê L dF with
+direct/indirect/induced decomposition (Type II = Miyazawa, labelled
+upper bound). Tariff channels computed separately: import substitution
+(bounded by the data-derived domestic absorption share), downstream
+cost-push (price-side Leontief, demand base includes exports),
+real-income loss, optional stylised retaliation.
 
-**Key Methods:**
-- `simulate_policy(scenario)`: Main entry point, returns employment effects
-- `_calculate_demand_shocks(scenario)`: Converts policy % to million USD
-- `_apply_employment_multipliers()`: Calculates direct/indirect/induced jobs
-- `calculate_employment_multipliers()`: Returns Type I and Type II multipliers
-
-**Policy Transmission:**
-```
-Policy Input → Demand Shock (million USD) → Leontief Inverse → Output Change → Employment Coefficients → Jobs
-```
-
-### Results Panel (`frontend/src/components/ResultsPanel.jsx`)
-
-Displays simulation results with multiple visualizations:
-- Total jobs created/lost with confidence interval
-- Job breakdown: direct, indirect, induced
-- Stacked bar chart: direct (blue) + indirect (purple) jobs by sector
-- Before/after unemployment indicators with visual bars
-- Demographic pie charts (gender, age, job quality)
-
-**Key Component:** `UnemploymentIndicator` - Shows current vs projected rates with color-coded improvement/worsening badges.
+**Unit conversions** (percent <-> fraction, USD million <-> USD) live in
+`routes.py`, never in the engine.
 
 ### API Routes (`backend/app/api/routes.py`)
 
-**Endpoints:**
-- `POST /api/simulate`: Run policy simulation
-- `GET /api/country/{code}/profile`: Fetch WDI indicators
-- `GET /api/multipliers/{code}`: Get employment multipliers
-- `POST /api/chat`: Natural language policy interpretation
-- `GET /api/presets`: Preset policy scenarios
-- `GET /api/comparison/{indicator}`: Compare countries over time
-
-**Helper Function:** `get_baseline_indicators()` - Fetches WDI data and calculates projected unemployment changes based on job effects.
-
-### Schemas (`backend/app/api/schemas.py`)
-
-**Key Models:**
-- `PolicyScenarioRequest`: Input parameters (tariffs, subsidies, etc.)
-- `SimulationResponse`: Full results including `baseline_indicators`
-- `BaselineIndicator`: current_value, projected_value, change, unit
-- `BaselineIndicators`: unemployment_total, youth, female, male
-- `EmploymentEffectResponse`: Jobs by type with demographic shares
+**Endpoints (paths unchanged, /simulate contract NEW in 0.11.0):**
+- `POST /api/simulate`: new request fields `tariff_changes` (0..50),
+  `sector_support` (0..30, replaces subsidy_changes), `sme_stimulus`,
+  `include_type_ii` / `include_retaliation` / `include_financing_drag`;
+  `productivity_investment` and `time_horizon` REMOVED.
+  Response: aggregate with parameter-range bounds, channel decomposition,
+  per-sector effects, costs, citation-based data_source, assumptions ids.
+- `GET /api/multipliers/{code}`, `GET /api/sectors` (now with ICIO
+  composition per sector), `GET /api/countries` (engine-driven)
+- WDI: `GET /api/country/{code}/profile`, `/api/indicators`,
+  `/api/timeseries`, `/api/comparison/{indicator}`
+- Chat endpoints exist but are dormant (UI hidden)
+- `GET /api/presets`: 15 presets (3 per country), lever settings only
 
 ### App Component (`frontend/src/App.jsx`)
 
-Main application with 4 tabs:
-1. **Policy Simulation**: Controls + Results + Sankey diagram
+3 tabs since 0.11.0 (AI Assistant tab hidden; Sankey, demographics,
+job-quality, wage panels removed — their data was not derivable from
+verified sources):
+1. **Policy Simulation**: presets + controls (+ 3 model toggles) +
+   results with channel decomposition
 2. **Country Data**: WDI indicators dashboard
-3. **AI Assistant**: Claude-powered chat interface
-4. **Methodology**: Comprehensive disclaimer and model documentation
+3. **Methodology**: truthful model + data description
 
 ---
 
 ## Data Sources
 
-### Status after the v0.10.0 audit (important)
+### Status after the v0.10.0 audit (resolved in 0.11.0)
 A code audit (June 2026) found that the multipliers hardcoded in
-`backend/app/data/tiva_multipliers.py` and the I-O coefficients generated
-in `economic_model.py` (np.random, seed 42) were NOT derived from the
-datasets they were labelled with. The running engine still uses them
-until the Phase 2 engine rebuild, but they must no longer be described
-as "OECD" or "research-grade". A multi-session overhaul is under way
-(see CHANGELOG 0.10.0).
+`tiva_multipliers.py` and the np.random I-O coefficients in
+`economic_model.py` were NOT derived from the datasets they were
+labelled with. Both files were DELETED in v0.11.0; the engine now runs
+exclusively on the pipeline-verified country JSONs. The permanent record
+of the old-vs-new comparison is
+`data-pipeline/reports/comparison_multipliers.md`.
 
 ### Verified country data files (new, pipeline-derived)
 `backend/app/data/countries/{ISO3}.json` — computed by `data-pipeline/`
@@ -188,9 +174,9 @@ from real datasets; full method and source manifest in
 - Substituted/capped cells registered in
   `backend/app/data/assumptions.json`
 
-Built and validated so far: **ZAF, TUN** (Session A; pending independent
-verification). Remaining: VNM, THA, SEN (Session B). The engine does NOT
-read these files yet (Phase 2).
+Built and validated: **ZAF, TUN, VNM, THA, SEN** (ZAF/TUN independently
+verified after Session A; VNM/THA/SEN built in Session B). The engine
+(`backend/app/models/engine.py`) reads ONLY these files since 0.11.0.
 
 ### Real data (World Bank WDI API), used by the dashboard
 - Unemployment rates (total, youth, female, male), labour force, GDP,
@@ -203,83 +189,51 @@ read these files yet (Phase 2).
 
 ---
 
-## Economic Model Details
+## Economic Model Details (v0.11.0 engine)
 
-### Leontief Input-Output Framework
+### Core
+Demand-driven Leontief model on the verified 14-sector country data:
+dE = ê L dF; direct = ê dF, indirect = ê (L_I − I) dF, induced =
+ê (L_II − L_I) dF (Type II toggle, Miyazawa closure, consumption
+propensity capped at 1, labelled an upper bound). dx = L dF;
+dVA = (VA/x) ∘ dx. Comparative-static: no time scaling.
 
-**Core Equation:**
-```
-X = (I - A)^(-1) × ΔD
-```
-Where:
-- X = Total output change
-- A = Technical coefficients matrix
-- ΔD = Final demand change (from policy)
-- (I - A)^(-1) = Leontief inverse
+### Policy levers
+- **Tariff** on sector s at rate t — four channels, decomposed in the
+  response: (i) import substitution = |ε_s|·t·imports_s·absorption_s
+  (imports and the domestic absorption share are data-derived per
+  country); (ii) downstream cost: dp' = dp_m' A_m (I−A_d)^-1, demand
+  falls by |η|·dp_j·F_j with F including exports; (iii) real-income loss
+  through the household price index; (iv) optional stylised retaliation
+  on the top-3 export sectors.
+- **Sector support** (replaces "subsidy"): dF_s += rate·x_s; financing
+  drag toggle (default on) subtracts the amount from household
+  consumption.
+- **SME/demand stimulus**: household-consumption-weighted injection ×
+  first-round fiscal multiplier.
+- Productivity lever REMOVED (0.11.0); time-horizon scaling REMOVED.
 
-**Employment Calculation:**
-```
-Jobs = Σ (output_change × employment_coefficient × time_scale)
-```
+### Behavioural parameters (assumptions.json, all cited)
+- Import demand elasticities: per-country import-weighted averages from
+  Kee/Nicita/Olarreaga (2008) Table 1 (ZAF −1.16, TUN −1.06, THA −1.08);
+  VNM −1.08 (not in KNO sample; global median); SEN −0.5 (calibrated to
+  the bottom of the cited range; KNO's own −1.05 violates the acceptance
+  constraint — reason recorded in the registry entry). Range for
+  uncertainty display: [−0.5, −1.67].
+- Own-price demand elasticity −0.5 [−0.25, −0.75] (USDA-ERS TB-1929),
+  treated as compensated.
+- Retaliation share 0.5, top-3 sectors (Fajgelbaum et al. 2020), toggle.
+- Fiscal multiplier 0.5 [0.1, 1.0] (IMF Batini et al. 2014 buckets).
 
-### Employment Multipliers
-
-| Type | Description |
-|------|-------------|
-| Direct | Jobs in targeted sectors |
-| Indirect | Jobs in supply chain (Type I = Direct + Indirect) |
-| Induced | Jobs from consumer spending (Type II = Type I + Induced) |
-
-### Policy Response Functions (Non-Linear)
-
-**Tariffs:**
-| Level | Effective Elasticity | Notes |
-|-------|---------------------|-------|
-| 0-10% | 0 → 0.35 (linear) | Optimal range |
-| 10-20% | 0.35 → 0.15 (decay) | Diminishing returns |
-| 20%+ | < 0.15, eventually negative | Retaliation, inefficiency |
-
-Export-oriented sectors (automotive, textiles, manufacturing, chemicals) face additional penalty above 15%.
-
-**Subsidies:**
-| Level | Elasticity | Constraint |
-|-------|------------|------------|
-| 0-5% | 0.9 | Full effectiveness |
-| 5-10% | 0.9 → 0.6 | Diminishing returns |
-| 10-15% | 0.6 → 0.3 | Rent-seeking |
-| 15%+ | 0.3 → 0.1 | Fiscal crowding-out if total >30% |
-
-**SME Stimulus:**
-| % of GDP | Fiscal Multiplier |
-|----------|------------------|
-| 0-1% | 1.0 |
-| 1-2% | 0.90 |
-| 2-3% | 0.82 |
-| 3%+ | ~0.75 (absorption constraints) |
-Source: IMF/World Bank empirical estimates for developing countries (v0.8.0)
-
-**Productivity Investment:**
-- Short-term (1yr): −0.15 multiplier (displacement effect dominates); no quality bonus
-- Medium-term (3yr): +0.45 multiplier (competitiveness gains begin); +10% quality bonus
-- Long-term (5yr): +1.0 multiplier (expanded markets dominate); +20% quality bonus
-Source: Acemoglu & Restrepo (2018); direction corrected in v0.8.0
-
-**Import Elasticities (sector-specific):**
-agriculture −0.5, mining −0.6, manufacturing −1.5, textiles −2.0, automotive −1.8,
-food_processing −0.8, chemicals −1.3, construction −0.7, utilities −0.4,
-trade −1.0, transport −0.8, finance −0.5, public_services −0.3, other_services −0.6
-Source: Kee, Nicita & Olarreaga (2008); replaces universal −1.2 constant in v0.8.0
-
-**Policy Synergies:**
-- 2 policies: +5% effectiveness (base bonus 1.05)
-- 3 policies: +8% effectiveness (base bonus 1.08)
-- 4 policies: implementation complexity penalty applies
-- Complementary combos (subsidy + productivity, SME + moderate tariffs): additional +5%
-- Non-complementary combos: −10% penalty
-- Negative interaction: avg tariff >8% AND avg subsidy >8% triggers rent-seeking penalty (v0.8.0)
+### Acceptance constraint (tested per country)
+10% manufacturing tariff at defaults: net employment ≤ +0.05% of
+baseline (actual: ZAF −0.011%, TUN −0.485%, VNM −0.732%, THA −0.226%,
+SEN −0.019%); strictly negative with retaliation; protected-sector
+gains ≥ 60% offset.
 
 ### 14 Sectors
 agriculture, mining, manufacturing, textiles, automotive, food_processing, chemicals, construction, utilities, trade, transport, finance, public_services, other_services
+(ICIO composition of each sector is in the country JSON metadata and the /api/sectors response)
 
 ---
 
@@ -372,10 +326,13 @@ scripted. Pushing to main requires `pytest` green (CLAUDE.md rule 6).
 
 Open the project in Claude Code. CLAUDE.md at the project root is loaded automatically and contains workflow instructions. See CHANGELOG.md for version history and planned work.
 
-Next session (Session B of the overhaul): Phase 1 for VNM, THA, SEN
-(extend the TiM CSV exports to those countries first), then the Phase 2
-engine rebuild against the verified JSONs, Mozambique removal and Senegal
-addition.
+Sessions A+B of the post-audit overhaul are complete (data pipeline for
+all 5 countries + engine rebuild). The Session B deliverables for the
+external verifier: the three new country JSONs (VNM, THA, SEN) and
+`data-pipeline/reports/engine_zaf_tariff10.json` (ZAF 10% manufacturing
+tariff with channel decomposition). Next: **Session C** — Phase 3 UI
+rebuild (guided mode, curated scenario walkthroughs, assumptions
+popovers, accessibility), then Session D (CI, README rewrite, 1.0.0).
 
 ---
 

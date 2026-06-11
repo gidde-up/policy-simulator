@@ -88,6 +88,19 @@ def aggregator(mapping: dict[str, str], industries: list[str]) -> np.ndarray:
     return S
 
 
+def sector_composition() -> dict[str, list[dict]]:
+    """{sector: [{code, description}]} for JSON metadata / UI tooltips."""
+    comp: dict[str, list[dict]] = {s: [] for s in config.SECTORS_14}
+    with open(config.CONCORDANCE_CSV, newline="", encoding="utf-8-sig") as f:
+        for row in csv.DictReader(f):
+            code = row["icio_code"].strip()
+            if not code:
+                continue
+            comp[row["sector_14"].strip()].append(
+                {"code": code, "description": row["description"].strip()})
+    return comp
+
+
 def describe(mapping: dict[str, str]) -> str:
     lines = []
     for sector in config.SECTORS_14:

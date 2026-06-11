@@ -39,5 +39,5 @@ You are working on the ITCILO Economic Policy Simulator (FastAPI backend, React/
 - Keep the technical reference accurate and current; it is the primary onboarding document for resuming work.
 
 ## Project version
-Current version: **0.10.0** (2026-06-10)
-Next planned: **Session B** — Phase 1 for VNM, THA, SEN; Phase 2 engine rebuild against verified data
+Current version: **0.11.0** (2026-06-11)
+Next planned: **Session C** — Phase 3 UI rebuild (guided mode, scenario walkthroughs, assumptions popovers); then Session D (CI, README rewrite, 1.0.0)

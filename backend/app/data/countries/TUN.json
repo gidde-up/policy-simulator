@@ -27,8 +27,239 @@
    "households final demand = HFCE + NPISH",
    "inventories kept so that x = Z*1 + F*1 balances",
    "exports computed as residual: x - domestic intermediate use - domestic final demand",
-   "GDP proxy = sum(VA) + sum(TLS) (market prices)"
-  ]
+   "GDP proxy = sum(VA) + sum(TLS) (market prices); differs from the WDI dashboard GDP (different vintage and method)",
+   "employment denominator: use the sector-sum employment (TiM, national-accounts concept); the ILOSTAT national total (labour-force-survey concept) is stored in baseline_totals for cross-checking only"
+  ],
+  "sector_composition": {
+   "agriculture": [
+    {
+     "code": "A01",
+     "description": "Crop and animal production, hunting"
+    },
+    {
+     "code": "A02",
+     "description": "Forestry and logging"
+    },
+    {
+     "code": "A03",
+     "description": "Fishing and aquaculture"
+    }
+   ],
+   "mining": [
+    {
+     "code": "B05",
+     "description": "Mining of coal and lignite"
+    },
+    {
+     "code": "B06",
+     "description": "Extraction of crude petroleum and natural gas"
+    },
+    {
+     "code": "B07",
+     "description": "Mining of metal ores"
+    },
+    {
+     "code": "B08",
+     "description": "Other mining and quarrying"
+    },
+    {
+     "code": "B09",
+     "description": "Mining support service activities"
+    }
+   ],
+   "manufacturing": [
+    {
+     "code": "C16",
+     "description": "Wood and products of wood and cork"
+    },
+    {
+     "code": "C17_18",
+     "description": "Paper products and printing"
+    },
+    {
+     "code": "C23",
+     "description": "Other non-metallic mineral products"
+    },
+    {
+     "code": "C24A",
+     "description": "Basic metals: iron and steel"
+    },
+    {
+     "code": "C24B",
+     "description": "Basic metals: non-ferrous metals"
+    },
+    {
+     "code": "C25",
+     "description": "Fabricated metal products"
+    },
+    {
+     "code": "C26",
+     "description": "Computer, electronic and optical products"
+    },
+    {
+     "code": "C27",
+     "description": "Electrical equipment"
+    },
+    {
+     "code": "C28",
+     "description": "Machinery and equipment n.e.c."
+    },
+    {
+     "code": "C301",
+     "description": "Building of ships and boats"
+    },
+    {
+     "code": "C302T309",
+     "description": "Other transport equipment excl. ships"
+    },
+    {
+     "code": "C31T33",
+     "description": "Furniture; other manufacturing; repair of machinery"
+    }
+   ],
+   "textiles": [
+    {
+     "code": "C13T15",
+     "description": "Textiles, wearing apparel, leather"
+    }
+   ],
+   "automotive": [
+    {
+     "code": "C29",
+     "description": "Motor vehicles, trailers and semi-trailers"
+    }
+   ],
+   "food_processing": [
+    {
+     "code": "C10T12",
+     "description": "Food products, beverages and tobacco"
+    }
+   ],
+   "chemicals": [
+    {
+     "code": "C19",
+     "description": "Coke and refined petroleum products"
+    },
+    {
+     "code": "C20",
+     "description": "Chemicals and chemical products"
+    },
+    {
+     "code": "C21",
+     "description": "Pharmaceuticals"
+    },
+    {
+     "code": "C22",
+     "description": "Rubber and plastic products"
+    }
+   ],
+   "construction": [
+    {
+     "code": "F",
+     "description": "Construction"
+    }
+   ],
+   "utilities": [
+    {
+     "code": "D",
+     "description": "Electricity, gas, steam and air conditioning"
+    },
+    {
+     "code": "E",
+     "description": "Water supply, sewerage, waste management"
+    }
+   ],
+   "trade": [
+    {
+     "code": "G",
+     "description": "Wholesale and retail trade; repair of motor vehicles"
+    }
+   ],
+   "transport": [
+    {
+     "code": "H49",
+     "description": "Land transport and transport via pipelines"
+    },
+    {
+     "code": "H50",
+     "description": "Water transport"
+    },
+    {
+     "code": "H51",
+     "description": "Air transport"
+    },
+    {
+     "code": "H52",
+     "description": "Warehousing and support activities for transportation"
+    },
+    {
+     "code": "H53",
+     "description": "Postal and courier activities"
+    }
+   ],
+   "finance": [
+    {
+     "code": "K",
+     "description": "Financial and insurance activities"
+    }
+   ],
+   "public_services": [
+    {
+     "code": "O",
+     "description": "Public administration and defence"
+    },
+    {
+     "code": "P",
+     "description": "Education"
+    },
+    {
+     "code": "Q",
+     "description": "Human health and social work activities"
+    }
+   ],
+   "other_services": [
+    {
+     "code": "I",
+     "description": "Accommodation and food service activities"
+    },
+    {
+     "code": "J58T60",
+     "description": "Publishing, audiovisual and broadcasting"
+    },
+    {
+     "code": "J61",
+     "description": "Telecommunications"
+    },
+    {
+     "code": "J62_63",
+     "description": "IT and other information services"
+    },
+    {
+     "code": "L",
+     "description": "Real estate activities"
+    },
+    {
+     "code": "M",
+     "description": "Professional, scientific and technical activities"
+    },
+    {
+     "code": "N",
+     "description": "Administrative and support service activities"
+    },
+    {
+     "code": "R",
+     "description": "Arts, entertainment and recreation"
+    },
+    {
+     "code": "S",
+     "description": "Other service activities"
+    },
+    {
+     "code": "T",
+     "description": "Activities of households as employers"
+    }
+   ]
+  }
  },
  "sectors": [
   "agriculture",
@@ -1224,6 +1455,56 @@
    0.114229,
    0.005212,
    0.081527
+  ],
+  "domestic_absorption": [
+   0.837607,
+   0.364355,
+   0.290973,
+   0.289669,
+   0.080336,
+   0.656401,
+   0.061807,
+   0.991479,
+   0.986276,
+   0.559469,
+   0.719951,
+   0.890924,
+   0.993409,
+   0.90904
+  ]
+ },
+ "imports_by_product": {
+  "intermediate": [
+   818.374,
+   1608.214,
+   3415.185,
+   820.002,
+   236.914,
+   99.544,
+   3161.246,
+   18.148,
+   9.468,
+   1617.279,
+   1456.37,
+   132.578,
+   16.352,
+   455.969
+  ],
+  "final": [
+   738.64,
+   222.022,
+   2978.943,
+   1055.164,
+   1138.319,
+   995.555,
+   2959.633,
+   14.827,
+   9.222,
+   2077.34,
+   692.402,
+   192.394,
+   54.506,
+   647.149
   ]
  },
  "type_ii": {

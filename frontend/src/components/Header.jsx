@@ -7,7 +7,7 @@ function Header({ selectedCountry, onCountryChange }) {
     { code: 'TUN', name: 'Tunisia', flag: '🇹🇳' },
     { code: 'VNM', name: 'Viet Nam', flag: '🇻🇳' },
     { code: 'THA', name: 'Thailand', flag: '🇹🇭' },
-    { code: 'MOZ', name: 'Mozambique', flag: '🇲🇿' },
+    { code: 'SEN', name: 'Senegal', flag: '🇸🇳' },
   ];
 
   return (

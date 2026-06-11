@@ -6,7 +6,41 @@ The project is in pre-release (0.x.y); version 1.0.0 will mark the first product
 
 ---
 
-## [0.10.0] — 2026-06-11  ← current
+## [0.11.0] — 2026-06-11  ← current
+**Session 16 — Session B of the post-audit overhaul: Phase 1 completed (VNM, THA, SEN) and Phase 2 engine rebuild**
+
+External verification of the Session A deliverables passed (independent recomputation of all ZAF/TUN derived objects; four non-blocking follow-ups, all implemented below).
+
+### Data pipeline
+- VNM.json, THA.json, SEN.json built from OECD ICIO 2025 / TiM 2025 / ILOSTAT; all validation gates pass (employment gap vs ILOSTAT: VNM 0.11%, THA 0.04%, SEN 9.49% — the SEN gap reflects the TiM national-accounts vs ILOSTAT LFS concept difference, documented in metadata)
+- Verifier follow-ups: per-sector ICIO-code composition added to JSON metadata (UI tooltips); employment-denominator and GDP concept notes added; product-side `imports_by_product` and data-derived `domestic_absorption` shares added; export-residual clips now registered in assumptions.json (finding: ZAF construction exports are genuinely ~0 in the source — the only clipped cell was sector T, households as employers)
+- Aggregate-level balance gate got the same absolute rounding floor as the native gates (SEN automotive: output USD 3.8m, gap USD −8,400 = source rounding)
+- ZAF/TUN regenerated for the metadata additions; all numeric arrays verified byte-identical
+
+### Backend — engine rebuild (Phase 2)
+- DELETED `backend/app/data/tiva_multipliers.py` and `backend/app/models/economic_model.py` (fabricated multipliers, np.random I-O matrices, invented wage/job-quality/demographic/synergy functions). The new-vs-old record stays in `data-pipeline/reports/comparison_multipliers.md`
+- New `backend/app/models/engine.py`: pure numpy/json Leontief engine over the verified country JSONs; dE = ê L dF with direct/indirect/induced decomposition; Type II (Miyazawa) as a labelled upper-bound toggle; comparative-static (time-horizon scaling removed)
+- Tariff lever with four separately reported channels: import substitution (bounded by data-derived domestic absorption), downstream cost-push (price-side Leontief, demand base includes exports), real-income loss, stylised retaliation toggle (top-3 export sectors)
+- "Subsidy" lever replaced by government sector support with a financing-drag toggle (tax-financed, default on); SME stimulus spread by household consumption with a cited first-round fiscal multiplier; productivity lever dropped (decision recorded)
+- Every behavioural parameter lives in assumptions.json with full citations: per-country import demand elasticities (Kee/Nicita/Olarreaga 2008, Table 1 import-weighted averages: ZAF −1.16, TUN −1.06, THA −1.08; VNM −1.08 = study median, not in sample; SEN −0.5 calibrated to the bottom of the cited range because KNO's −1.05 leaves a 10% manufacturing tariff net employment-positive — reason recorded in the registry); own-price elasticity −0.5 (USDA-ERS TB-1929); retaliation 0.5/top-3 (Fajgelbaum et al. 2020); fiscal multiplier 0.5 [0.1, 1.0] (IMF Batini et al. 2014 — the overhaul doc's 0.6–1.0 was not supported by the source and was not used)
+- An AST test enforces that engine.py contains no numeric literal outside {0, 1, 2}; unit conversions live in the API layer
+- Acceptance constraint enforced per country (10% manufacturing tariff: ZAF −0.011%, TUN −0.485%, VNM −0.732%, THA −0.226%, SEN −0.019% of baseline employment; strictly negative with retaliation; gains ≥ 60% offset)
+- New API contract: aggregate effects with parameter-range bounds (never a single point), channel decomposition, % of sector-sum baseline employment (verifier item), citation-based data_source (the "research-grade" quality flag is gone); removed: wage effects, job-quality metrics, demographic shares, synergy, Sankey transmission paths, cosmetic confidence intervals
+- Mozambique removed / Senegal added: wdi_service, schemas, presets (15 presets rebuilt as lever-settings-only), chat prompts purged of country-fact claims (chat remains dormant)
+- Test suite now 140 tests (pipeline validation + engine: 3-sector hand-check, linearity, decomposition/channel sums, per-country lever smoke, acceptance gates, no-literal AST test, registry integrity)
+
+### Frontend (minimal surgery; full UI rebuild is Session C)
+- Country selector and dashboard: MOZ out, SEN in
+- ResultsPanel rebuilt for the new contract: net effect with parameter range, % of baseline employment, channel decomposition bars, direct/indirect/induced, sector bar chart, fiscal flows, citation footer; removed: demographic pies, job-quality panel, wage effect, Sankey, data-quality badge, confidence intervals
+- PolicyControls: productivity slider removed, Subsidies renamed Sector Support, three model toggles added (Type II, retaliation, financing drag); time-horizon buttons removed (comparative-static engine)
+- Auto-fired `/api/explain` after each simulation removed; AI Assistant tab hidden (backend chat endpoints stay dormant)
+- PolicySlider dead-knob fix: decorative thumb now `pointer-events-none`
+- Persistent banner: "Learning tool illustrating transmission channels of policy choices - not a forecast"; Methodology tab rewritten truthfully
+- Stale MOZAMBIQUE_*.md analysis documents deleted
+
+---
+
+## [0.10.0] — 2026-06-11
 **Session 15 — Phase 1 data pipeline (Session A of the post-audit overhaul): real OECD ICIO data for ZAF and TUN**
 
 ### Data pipeline (new top-level directory `data-pipeline/`)

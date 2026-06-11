@@ -76,13 +76,14 @@ function PolicySlider({
           className="absolute top-0 left-0 w-full h-2 opacity-0 cursor-pointer"
         />
 
-        {/* Custom thumb */}
+        {/* Custom thumb (decorative: pointer-events-none so the real
+            input underneath receives all mouse events) */}
         <div
           className={`
             absolute top-1/2 -translate-y-1/2 w-4 h-4
             ${colorClasses[color]} rounded-full shadow-md
-            border-2 border-white cursor-pointer
-            transition-all hover:scale-110
+            border-2 border-white pointer-events-none
+            transition-all
           `}
           style={{
             left: `calc(${((value - min) / (max - min)) * 100}% - 8px)`,

@@ -1,20 +1,20 @@
 import { useState, useCallback } from 'react';
-import { runSimulation, explainResults } from '../services/api';
+import { runSimulation } from '../services/api';
 
 const DEFAULT_PARAMS = {
   country_code: 'ZAF',
   name: 'Custom Scenario',
   tariff_changes: {},
-  subsidy_changes: {},
+  sector_support: {},
   sme_stimulus: 0,
-  productivity_investment: 0,
-  time_horizon: 'medium',
+  include_type_ii: false,
+  include_retaliation: false,
+  include_financing_drag: true,
 };
 
 export function useSimulation() {
   const [params, setParams] = useState(DEFAULT_PARAMS);
   const [results, setResults] = useState(null);
-  const [interpretation, setInterpretation] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -32,11 +32,11 @@ export function useSimulation() {
     }));
   }, []);
 
-  const updateSubsidy = useCallback((sector, value) => {
+  const updateSupport = useCallback((sector, value) => {
     setParams(prev => ({
       ...prev,
-      subsidy_changes: {
-        ...prev.subsidy_changes,
+      sector_support: {
+        ...prev.sector_support,
         [sector]: value,
       },
     }));
@@ -49,8 +49,6 @@ export function useSimulation() {
     try {
       const result = await runSimulation(params);
       setResults(result);
-      setInterpretation(null);
-      explainResults(result).then(resp => setInterpretation(resp.explanation)).catch(() => {});
       return result;
     } catch (err) {
       setError(err.message);
@@ -70,19 +68,17 @@ export function useSimulation() {
   const reset = useCallback(() => {
     setParams(DEFAULT_PARAMS);
     setResults(null);
-    setInterpretation(null);
     setError(null);
   }, []);
 
   return {
     params,
     results,
-    interpretation,
     loading,
     error,
     updateParam,
     updateTariff,
-    updateSubsidy,
+    updateSupport,
     simulate,
     loadPreset,
     reset,

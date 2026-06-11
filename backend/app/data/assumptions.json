@@ -96,7 +96,30 @@
       "notes": ""
     },
     {
-      "id": "ZAF-2022-consumption_propensity-cap-5",
+      "id": "ZAF-2022-export_clip-T-5",
+      "country": "ZAF",
+      "reference_year": 2022,
+      "scope": "other",
+      "sector": "other_services",
+      "field": "exports",
+      "icio_codes": [
+        "T"
+      ],
+      "value": -5.1159,
+      "unit": "USD million",
+      "method": "clip",
+      "basis": "export residual x - domestic intermediate use - domestic final demand was marginally negative (source rounding); clipped to 0",
+      "source": {
+        "dataset": "OECD ICIO 2025 (derived)",
+        "url": "https://www.oecd.org/en/data/datasets/inter-country-input-output-tables.html",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "ZAF-2022-consumption_propensity-cap-6",
       "country": "ZAF",
       "reference_year": 2022,
       "scope": "consumption_propensity",
@@ -209,7 +232,30 @@
       "notes": ""
     },
     {
-      "id": "TUN-2022-consumption_propensity-cap-5",
+      "id": "TUN-2022-export_clip-T-5",
+      "country": "TUN",
+      "reference_year": 2022,
+      "scope": "other",
+      "sector": "other_services",
+      "field": "exports",
+      "icio_codes": [
+        "T"
+      ],
+      "value": -0.0182,
+      "unit": "USD million",
+      "method": "clip",
+      "basis": "export residual x - domestic intermediate use - domestic final demand was marginally negative (source rounding); clipped to 0",
+      "source": {
+        "dataset": "OECD ICIO 2025 (derived)",
+        "url": "https://www.oecd.org/en/data/datasets/inter-country-input-output-tables.html",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "TUN-2022-consumption_propensity-cap-6",
       "country": "TUN",
       "reference_year": 2022,
       "scope": "consumption_propensity",
@@ -228,6 +274,729 @@
       },
       "citation": "",
       "notes": "Households consume out of non-labour income too; the closure only recycles labour income."
+    },
+    {
+      "id": "VNM-2022-employment-C24A-1",
+      "country": "VNM",
+      "reference_year": 2022,
+      "scope": "employment",
+      "sector": "manufacturing",
+      "field": "employment",
+      "icio_codes": [
+        "C24A"
+      ],
+      "value": 114020.4715,
+      "unit": "persons",
+      "method": "proportional_allocation",
+      "basis": "TiM C24 minus filled siblings, allocated by ICIO output share 0.737",
+      "source": {
+        "dataset": "OECD TiM 2025 (DSD_TIM_2025@DF_TIM_2025)",
+        "url": "https://sdmx.oecd.org/public/rest/data/OECD.STI.PIE,DSD_TIM_2025@DF_TIM_2025,1.0/{measure}.{countries}....A",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "VNM-2022-employment-C24B-2",
+      "country": "VNM",
+      "reference_year": 2022,
+      "scope": "employment",
+      "sector": "manufacturing",
+      "field": "employment",
+      "icio_codes": [
+        "C24B"
+      ],
+      "value": 40679.5285,
+      "unit": "persons",
+      "method": "proportional_allocation",
+      "basis": "TiM C24 minus filled siblings, allocated by ICIO output share 0.263",
+      "source": {
+        "dataset": "OECD TiM 2025 (DSD_TIM_2025@DF_TIM_2025)",
+        "url": "https://sdmx.oecd.org/public/rest/data/OECD.STI.PIE,DSD_TIM_2025@DF_TIM_2025,1.0/{measure}.{countries}....A",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "VNM-2022-labour_compensation-C24A-3",
+      "country": "VNM",
+      "reference_year": 2022,
+      "scope": "labour_compensation",
+      "sector": "manufacturing",
+      "field": "compensation",
+      "icio_codes": [
+        "C24A"
+      ],
+      "value": 1420.1334,
+      "unit": "USD million",
+      "method": "proportional_allocation",
+      "basis": "TiM C24 minus filled siblings, allocated by ICIO output share 0.737",
+      "source": {
+        "dataset": "OECD TiM 2025 (DSD_TIM_2025@DF_TIM_2025)",
+        "url": "https://sdmx.oecd.org/public/rest/data/OECD.STI.PIE,DSD_TIM_2025@DF_TIM_2025,1.0/{measure}.{countries}....A",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "VNM-2022-labour_compensation-C24B-4",
+      "country": "VNM",
+      "reference_year": 2022,
+      "scope": "labour_compensation",
+      "sector": "manufacturing",
+      "field": "compensation",
+      "icio_codes": [
+        "C24B"
+      ],
+      "value": 506.6666,
+      "unit": "USD million",
+      "method": "proportional_allocation",
+      "basis": "TiM C24 minus filled siblings, allocated by ICIO output share 0.263",
+      "source": {
+        "dataset": "OECD TiM 2025 (DSD_TIM_2025@DF_TIM_2025)",
+        "url": "https://sdmx.oecd.org/public/rest/data/OECD.STI.PIE,DSD_TIM_2025@DF_TIM_2025,1.0/{measure}.{countries}....A",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "VNM-2022-export_clip-T-5",
+      "country": "VNM",
+      "reference_year": 2022,
+      "scope": "other",
+      "sector": "other_services",
+      "field": "exports",
+      "icio_codes": [
+        "T"
+      ],
+      "value": -0.0583,
+      "unit": "USD million",
+      "method": "clip",
+      "basis": "export residual x - domestic intermediate use - domestic final demand was marginally negative (source rounding); clipped to 0",
+      "source": {
+        "dataset": "OECD ICIO 2025 (derived)",
+        "url": "https://www.oecd.org/en/data/datasets/inter-country-input-output-tables.html",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "THA-2022-employment-C24A-1",
+      "country": "THA",
+      "reference_year": 2022,
+      "scope": "employment",
+      "sector": "manufacturing",
+      "field": "employment",
+      "icio_codes": [
+        "C24A"
+      ],
+      "value": 96241.4545,
+      "unit": "persons",
+      "method": "proportional_allocation",
+      "basis": "TiM C24 minus filled siblings, allocated by ICIO output share 0.681",
+      "source": {
+        "dataset": "OECD TiM 2025 (DSD_TIM_2025@DF_TIM_2025)",
+        "url": "https://sdmx.oecd.org/public/rest/data/OECD.STI.PIE,DSD_TIM_2025@DF_TIM_2025,1.0/{measure}.{countries}....A",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "THA-2022-employment-C24B-2",
+      "country": "THA",
+      "reference_year": 2022,
+      "scope": "employment",
+      "sector": "manufacturing",
+      "field": "employment",
+      "icio_codes": [
+        "C24B"
+      ],
+      "value": 45058.5455,
+      "unit": "persons",
+      "method": "proportional_allocation",
+      "basis": "TiM C24 minus filled siblings, allocated by ICIO output share 0.319",
+      "source": {
+        "dataset": "OECD TiM 2025 (DSD_TIM_2025@DF_TIM_2025)",
+        "url": "https://sdmx.oecd.org/public/rest/data/OECD.STI.PIE,DSD_TIM_2025@DF_TIM_2025,1.0/{measure}.{countries}....A",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "THA-2022-labour_compensation-C24A-3",
+      "country": "THA",
+      "reference_year": 2022,
+      "scope": "labour_compensation",
+      "sector": "manufacturing",
+      "field": "compensation",
+      "icio_codes": [
+        "C24A"
+      ],
+      "value": 570.4332,
+      "unit": "USD million",
+      "method": "proportional_allocation",
+      "basis": "TiM C24 minus filled siblings, allocated by ICIO output share 0.681",
+      "source": {
+        "dataset": "OECD TiM 2025 (DSD_TIM_2025@DF_TIM_2025)",
+        "url": "https://sdmx.oecd.org/public/rest/data/OECD.STI.PIE,DSD_TIM_2025@DF_TIM_2025,1.0/{measure}.{countries}....A",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "THA-2022-labour_compensation-C24B-4",
+      "country": "THA",
+      "reference_year": 2022,
+      "scope": "labour_compensation",
+      "sector": "manufacturing",
+      "field": "compensation",
+      "icio_codes": [
+        "C24B"
+      ],
+      "value": 267.0668,
+      "unit": "USD million",
+      "method": "proportional_allocation",
+      "basis": "TiM C24 minus filled siblings, allocated by ICIO output share 0.319",
+      "source": {
+        "dataset": "OECD TiM 2025 (DSD_TIM_2025@DF_TIM_2025)",
+        "url": "https://sdmx.oecd.org/public/rest/data/OECD.STI.PIE,DSD_TIM_2025@DF_TIM_2025,1.0/{measure}.{countries}....A",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "THA-2022-export_clip-T-5",
+      "country": "THA",
+      "reference_year": 2022,
+      "scope": "other",
+      "sector": "other_services",
+      "field": "exports",
+      "icio_codes": [
+        "T"
+      ],
+      "value": -0.0851,
+      "unit": "USD million",
+      "method": "clip",
+      "basis": "export residual x - domestic intermediate use - domestic final demand was marginally negative (source rounding); clipped to 0",
+      "source": {
+        "dataset": "OECD ICIO 2025 (derived)",
+        "url": "https://www.oecd.org/en/data/datasets/inter-country-input-output-tables.html",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "THA-2022-consumption_propensity-cap-6",
+      "country": "THA",
+      "reference_year": 2022,
+      "scope": "consumption_propensity",
+      "sector": "all",
+      "field": "household_consumption_column",
+      "icio_codes": [],
+      "value": 1.0,
+      "unit": "ratio",
+      "method": "cap",
+      "basis": "implied propensity to consume out of labour income 1.365 > 1; consumption column scaled to propensity 1 in the Miyazawa closure",
+      "source": {
+        "dataset": "derived from OECD ICIO 2025 + TiM 2025",
+        "url": "https://www.oecd.org/en/data/datasets/inter-country-input-output-tables.html",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": "Households consume out of non-labour income too; the closure only recycles labour income."
+    },
+    {
+      "id": "SEN-2022-employment-C24A-1",
+      "country": "SEN",
+      "reference_year": 2022,
+      "scope": "employment",
+      "sector": "manufacturing",
+      "field": "employment",
+      "icio_codes": [
+        "C24A"
+      ],
+      "value": 4946.0837,
+      "unit": "persons",
+      "method": "proportional_allocation",
+      "basis": "TiM C24 minus filled siblings, allocated by ICIO output share 0.824",
+      "source": {
+        "dataset": "OECD TiM 2025 (DSD_TIM_2025@DF_TIM_2025)",
+        "url": "https://sdmx.oecd.org/public/rest/data/OECD.STI.PIE,DSD_TIM_2025@DF_TIM_2025,1.0/{measure}.{countries}....A",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "SEN-2022-employment-C24B-2",
+      "country": "SEN",
+      "reference_year": 2022,
+      "scope": "employment",
+      "sector": "manufacturing",
+      "field": "employment",
+      "icio_codes": [
+        "C24B"
+      ],
+      "value": 1053.9163,
+      "unit": "persons",
+      "method": "proportional_allocation",
+      "basis": "TiM C24 minus filled siblings, allocated by ICIO output share 0.176",
+      "source": {
+        "dataset": "OECD TiM 2025 (DSD_TIM_2025@DF_TIM_2025)",
+        "url": "https://sdmx.oecd.org/public/rest/data/OECD.STI.PIE,DSD_TIM_2025@DF_TIM_2025,1.0/{measure}.{countries}....A",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "SEN-2022-labour_compensation-C24A-3",
+      "country": "SEN",
+      "reference_year": 2022,
+      "scope": "labour_compensation",
+      "sector": "manufacturing",
+      "field": "compensation",
+      "icio_codes": [
+        "C24A"
+      ],
+      "value": 32.1495,
+      "unit": "USD million",
+      "method": "proportional_allocation",
+      "basis": "TiM C24 minus filled siblings, allocated by ICIO output share 0.824",
+      "source": {
+        "dataset": "OECD TiM 2025 (DSD_TIM_2025@DF_TIM_2025)",
+        "url": "https://sdmx.oecd.org/public/rest/data/OECD.STI.PIE,DSD_TIM_2025@DF_TIM_2025,1.0/{measure}.{countries}....A",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "SEN-2022-labour_compensation-C24B-4",
+      "country": "SEN",
+      "reference_year": 2022,
+      "scope": "labour_compensation",
+      "sector": "manufacturing",
+      "field": "compensation",
+      "icio_codes": [
+        "C24B"
+      ],
+      "value": 6.8505,
+      "unit": "USD million",
+      "method": "proportional_allocation",
+      "basis": "TiM C24 minus filled siblings, allocated by ICIO output share 0.176",
+      "source": {
+        "dataset": "OECD TiM 2025 (DSD_TIM_2025@DF_TIM_2025)",
+        "url": "https://sdmx.oecd.org/public/rest/data/OECD.STI.PIE,DSD_TIM_2025@DF_TIM_2025,1.0/{measure}.{countries}....A",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "SEN-2022-export_clip-T-5",
+      "country": "SEN",
+      "reference_year": 2022,
+      "scope": "other",
+      "sector": "other_services",
+      "field": "exports",
+      "icio_codes": [
+        "T"
+      ],
+      "value": -0.0157,
+      "unit": "USD million",
+      "method": "clip",
+      "basis": "export residual x - domestic intermediate use - domestic final demand was marginally negative (source rounding); clipped to 0",
+      "source": {
+        "dataset": "OECD ICIO 2025 (derived)",
+        "url": "https://www.oecd.org/en/data/datasets/inter-country-input-output-tables.html",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "SEN-2022-consumption_propensity-cap-6",
+      "country": "SEN",
+      "reference_year": 2022,
+      "scope": "consumption_propensity",
+      "sector": "all",
+      "field": "household_consumption_column",
+      "icio_codes": [],
+      "value": 1.0,
+      "unit": "ratio",
+      "method": "cap",
+      "basis": "implied propensity to consume out of labour income 1.965 > 1; consumption column scaled to propensity 1 in the Miyazawa closure",
+      "source": {
+        "dataset": "derived from OECD ICIO 2025 + TiM 2025",
+        "url": "https://www.oecd.org/en/data/datasets/inter-country-input-output-tables.html",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": "Households consume out of non-labour income too; the closure only recycles labour income."
+    },
+    {
+      "id": "GLOBAL-import-demand-elasticity-central",
+      "country": "GLOBAL",
+      "reference_year": 2022,
+      "scope": "elasticity",
+      "sector": "all",
+      "field": "import_demand_elasticity",
+      "icio_codes": [],
+      "value": -1.08,
+      "unit": "elasticity",
+      "method": "authored_constant",
+      "basis": "median import demand elasticity across 315,451 HS6-level estimates in 117 countries ('the simple average across all countries and goods is about -1.67 and the median is -1.08'); the median is preferred to the mean (SD 2.47, right-skewed magnitudes) as the representative central value for aggregated didactic sectors",
+      "source": {
+        "dataset": "published literature",
+        "url": "",
+        "accessed": "2026-06-11",
+        "reference_period": "n/a"
+      },
+      "citation": "Kee, H.L., Nicita, A. and Olarreaga, M. (2008), 'Import Demand Elasticities and Trade Distortions', Review of Economics and Statistics 90(4), 666-682.",
+      "notes": "uniform across sectors: the paper's HS6-level estimates do not map verifiably onto the 14 didactic sectors; the old per-sector table in tiva_multipliers.py had no reproducible derivation and was removed"
+    },
+    {
+      "id": "GLOBAL-import-demand-elasticity-low",
+      "country": "GLOBAL",
+      "reference_year": 2022,
+      "scope": "elasticity",
+      "sector": "all",
+      "field": "import_demand_elasticity",
+      "icio_codes": [],
+      "value": -0.5,
+      "unit": "elasticity",
+      "method": "authored_constant",
+      "basis": "lower-magnitude sensitivity bound; the least price-elastic goods in the source cluster near -0.5 and differentiated goods are systematically less elastic",
+      "source": {
+        "dataset": "published literature",
+        "url": "",
+        "accessed": "2026-06-11",
+        "reference_period": "n/a"
+      },
+      "citation": "Kee, H.L., Nicita, A. and Olarreaga, M. (2008), 'Import Demand Elasticities and Trade Distortions', Review of Economics and Statistics 90(4), 666-682.",
+      "notes": ""
+    },
+    {
+      "id": "GLOBAL-import-demand-elasticity-high",
+      "country": "GLOBAL",
+      "reference_year": 2022,
+      "scope": "elasticity",
+      "sector": "all",
+      "field": "import_demand_elasticity",
+      "icio_codes": [],
+      "value": -1.67,
+      "unit": "elasticity",
+      "method": "authored_constant",
+      "basis": "upper-magnitude sensitivity bound = the source's sample mean",
+      "source": {
+        "dataset": "published literature",
+        "url": "",
+        "accessed": "2026-06-11",
+        "reference_period": "n/a"
+      },
+      "citation": "Kee, H.L., Nicita, A. and Olarreaga, M. (2008), 'Import Demand Elasticities and Trade Distortions', Review of Economics and Statistics 90(4), 666-682.",
+      "notes": ""
+    },
+    {
+      "id": "GLOBAL-own-price-demand-elasticity-central",
+      "country": "GLOBAL",
+      "reference_year": 2022,
+      "scope": "elasticity",
+      "sector": "all",
+      "field": "own_price_demand_elasticity",
+      "icio_codes": [],
+      "value": -0.5,
+      "unit": "elasticity",
+      "method": "authored_constant",
+      "basis": "mid-range of compensated (Slutsky) own-price elasticities for broad consumption categories across 144 countries, which cluster roughly between -0.2 and -0.8 for middle-income economies",
+      "source": {
+        "dataset": "published literature",
+        "url": "",
+        "accessed": "2026-06-11",
+        "reference_period": "n/a"
+      },
+      "citation": "Muhammad, A., Seale, J.L., Meade, B. and Regmi, A. (2011), 'International Evidence on Food Consumption Patterns: An Update Using 2005 International Comparison Program Data', USDA-ERS Technical Bulletin 1929.",
+      "notes": "treated as a compensated elasticity: the income effect of the tariff price rise is carried separately by the real-income channel; any residual overlap biases the net employment effect downward, the conservative direction for the acceptance constraint"
+    },
+    {
+      "id": "GLOBAL-own-price-demand-elasticity-low",
+      "country": "GLOBAL",
+      "reference_year": 2022,
+      "scope": "elasticity",
+      "sector": "all",
+      "field": "own_price_demand_elasticity",
+      "icio_codes": [],
+      "value": -0.25,
+      "unit": "elasticity",
+      "method": "authored_constant",
+      "basis": "lower-magnitude sensitivity bound (least responsive broad categories)",
+      "source": {
+        "dataset": "published literature",
+        "url": "",
+        "accessed": "2026-06-11",
+        "reference_period": "n/a"
+      },
+      "citation": "Muhammad, A., Seale, J.L., Meade, B. and Regmi, A. (2011), 'International Evidence on Food Consumption Patterns: An Update Using 2005 International Comparison Program Data', USDA-ERS Technical Bulletin 1929.",
+      "notes": ""
+    },
+    {
+      "id": "GLOBAL-own-price-demand-elasticity-high",
+      "country": "GLOBAL",
+      "reference_year": 2022,
+      "scope": "elasticity",
+      "sector": "all",
+      "field": "own_price_demand_elasticity",
+      "icio_codes": [],
+      "value": -0.75,
+      "unit": "elasticity",
+      "method": "authored_constant",
+      "basis": "upper-magnitude sensitivity bound (most responsive broad categories)",
+      "source": {
+        "dataset": "published literature",
+        "url": "",
+        "accessed": "2026-06-11",
+        "reference_period": "n/a"
+      },
+      "citation": "Muhammad, A., Seale, J.L., Meade, B. and Regmi, A. (2011), 'International Evidence on Food Consumption Patterns: An Update Using 2005 International Comparison Program Data', USDA-ERS Technical Bulletin 1929.",
+      "notes": ""
+    },
+    {
+      "id": "GLOBAL-retaliation-share",
+      "country": "GLOBAL",
+      "reference_year": 2022,
+      "scope": "other",
+      "sector": "all",
+      "field": "retaliation_share",
+      "icio_codes": [],
+      "value": 0.5,
+      "unit": "ratio",
+      "method": "authored_constant",
+      "basis": "in the 2018-19 US-China episode retaliatory tariffs covered roughly 40 percent of the originally tariffed trade value; 0.5 is used as a round illustrative default",
+      "source": {
+        "dataset": "published literature",
+        "url": "",
+        "accessed": "2026-06-11",
+        "reference_period": "n/a"
+      },
+      "citation": "Fajgelbaum, P., Goldberg, P., Kennedy, P. and Khandelwal, A. (2020), 'The Return to Protectionism', Quarterly Journal of Economics 135(1), 1-55.",
+      "notes": "stylised toggle, default OFF; labelled illustrative in the UI"
+    },
+    {
+      "id": "GLOBAL-retaliation-top-sectors",
+      "country": "GLOBAL",
+      "reference_year": 2022,
+      "scope": "other",
+      "sector": "all",
+      "field": "retaliation_top_n",
+      "icio_codes": [],
+      "value": 3.0,
+      "unit": "sectors",
+      "method": "authored_constant",
+      "basis": "retaliation is concentrated on the country's top export sectors, mirroring the targeted retaliation lists of the 2018-19 episode; 3 is a didactic concentration choice",
+      "source": {
+        "dataset": "published literature",
+        "url": "",
+        "accessed": "2026-06-11",
+        "reference_period": "n/a"
+      },
+      "citation": "Fajgelbaum, P., Goldberg, P., Kennedy, P. and Khandelwal, A. (2020), 'The Return to Protectionism', Quarterly Journal of Economics 135(1), 1-55.",
+      "notes": ""
+    },
+    {
+      "id": "GLOBAL-fiscal-multiplier-central",
+      "country": "GLOBAL",
+      "reference_year": 2022,
+      "scope": "other",
+      "sector": "all",
+      "field": "fiscal_multiplier",
+      "icio_codes": [],
+      "value": 0.5,
+      "unit": "ratio",
+      "method": "authored_constant",
+      "basis": "midpoint of the source's medium first-year multiplier bucket (0.4-0.6); the bucket approach assigns countries to low (0.1-0.3), medium (0.4-0.6) and high (0.7-1.0) buckets",
+      "source": {
+        "dataset": "published literature",
+        "url": "",
+        "accessed": "2026-06-11",
+        "reference_period": "n/a"
+      },
+      "citation": "Batini, N., Eyraud, L., Forni, L. and Weber, A. (2014), 'Fiscal Multipliers: Size, Determinants, and Use in Macroeconomic Projections', IMF Technical Notes and Manuals 14/04.",
+      "notes": "interpreted as the first-round translation of the fiscal injection into domestic final demand (import/saving leakages); the I-O Leontief multiplier is applied on top by the engine, so this scalar must NOT embed second-round effects. The overhaul specification suggested 0.6-1.0; the source's bucket ranges do not support that span for developing economies, so the registered range follows the source"
+    },
+    {
+      "id": "GLOBAL-fiscal-multiplier-low",
+      "country": "GLOBAL",
+      "reference_year": 2022,
+      "scope": "other",
+      "sector": "all",
+      "field": "fiscal_multiplier",
+      "icio_codes": [],
+      "value": 0.1,
+      "unit": "ratio",
+      "method": "authored_constant",
+      "basis": "bottom of the source's low bucket",
+      "source": {
+        "dataset": "published literature",
+        "url": "",
+        "accessed": "2026-06-11",
+        "reference_period": "n/a"
+      },
+      "citation": "Batini, N., Eyraud, L., Forni, L. and Weber, A. (2014), 'Fiscal Multipliers: Size, Determinants, and Use in Macroeconomic Projections', IMF Technical Notes and Manuals 14/04.",
+      "notes": ""
+    },
+    {
+      "id": "GLOBAL-fiscal-multiplier-high",
+      "country": "GLOBAL",
+      "reference_year": 2022,
+      "scope": "other",
+      "sector": "all",
+      "field": "fiscal_multiplier",
+      "icio_codes": [],
+      "value": 1.0,
+      "unit": "ratio",
+      "method": "authored_constant",
+      "basis": "top of the source's high bucket",
+      "source": {
+        "dataset": "published literature",
+        "url": "",
+        "accessed": "2026-06-11",
+        "reference_period": "n/a"
+      },
+      "citation": "Batini, N., Eyraud, L., Forni, L. and Weber, A. (2014), 'Fiscal Multipliers: Size, Determinants, and Use in Macroeconomic Projections', IMF Technical Notes and Manuals 14/04.",
+      "notes": ""
+    },
+    {
+      "id": "ZAF-import-demand-elasticity-central",
+      "country": "ZAF",
+      "reference_year": 2022,
+      "scope": "elasticity",
+      "sector": "all",
+      "field": "import_demand_elasticity",
+      "icio_codes": [],
+      "value": -1.16,
+      "unit": "elasticity",
+      "method": "authored_constant",
+      "basis": "KNO (2008) Table 1, import-weighted average, South Africa",
+      "source": {
+        "dataset": "published literature",
+        "url": "",
+        "accessed": "2026-06-11",
+        "reference_period": "n/a"
+      },
+      "citation": "Kee, H.L., Nicita, A. and Olarreaga, M. (2008), 'Import Demand Elasticities and Trade Distortions', Review of Economics and Statistics 90(4), 666-682.",
+      "notes": ""
+    },
+    {
+      "id": "TUN-import-demand-elasticity-central",
+      "country": "TUN",
+      "reference_year": 2022,
+      "scope": "elasticity",
+      "sector": "all",
+      "field": "import_demand_elasticity",
+      "icio_codes": [],
+      "value": -1.06,
+      "unit": "elasticity",
+      "method": "authored_constant",
+      "basis": "KNO (2008) Table 1, import-weighted average, Tunisia",
+      "source": {
+        "dataset": "published literature",
+        "url": "",
+        "accessed": "2026-06-11",
+        "reference_period": "n/a"
+      },
+      "citation": "Kee, H.L., Nicita, A. and Olarreaga, M. (2008), 'Import Demand Elasticities and Trade Distortions', Review of Economics and Statistics 90(4), 666-682.",
+      "notes": ""
+    },
+    {
+      "id": "THA-import-demand-elasticity-central",
+      "country": "THA",
+      "reference_year": 2022,
+      "scope": "elasticity",
+      "sector": "all",
+      "field": "import_demand_elasticity",
+      "icio_codes": [],
+      "value": -1.08,
+      "unit": "elasticity",
+      "method": "authored_constant",
+      "basis": "KNO (2008) Table 1, import-weighted average, Thailand",
+      "source": {
+        "dataset": "published literature",
+        "url": "",
+        "accessed": "2026-06-11",
+        "reference_period": "n/a"
+      },
+      "citation": "Kee, H.L., Nicita, A. and Olarreaga, M. (2008), 'Import Demand Elasticities and Trade Distortions', Review of Economics and Statistics 90(4), 666-682.",
+      "notes": ""
+    },
+    {
+      "id": "VNM-import-demand-elasticity-central",
+      "country": "VNM",
+      "reference_year": 2022,
+      "scope": "elasticity",
+      "sector": "all",
+      "field": "import_demand_elasticity",
+      "icio_codes": [],
+      "value": -1.08,
+      "unit": "elasticity",
+      "method": "authored_constant",
+      "basis": "Viet Nam not in the KNO (2008) sample; global median of the study applied",
+      "source": {
+        "dataset": "published literature",
+        "url": "",
+        "accessed": "2026-06-11",
+        "reference_period": "n/a"
+      },
+      "citation": "Kee, H.L., Nicita, A. and Olarreaga, M. (2008), 'Import Demand Elasticities and Trade Distortions', Review of Economics and Statistics 90(4), 666-682.",
+      "notes": ""
+    },
+    {
+      "id": "SEN-import-demand-elasticity-central",
+      "country": "SEN",
+      "reference_year": 2022,
+      "scope": "elasticity",
+      "sector": "all",
+      "field": "import_demand_elasticity",
+      "icio_codes": [],
+      "value": -0.5,
+      "unit": "elasticity",
+      "method": "authored_constant",
+      "basis": "calibrated: KNO (2008) Table 1 gives -1.05 for Senegal, but at that value a 10% manufacturing tariff is net employment-positive (acceptance constraint, CLAUDE.md ground rule 4); set to the bottom of the cited literature range [-0.5, -1.67], consistent with KNO's finding that differentiated goods have the least elastic import demand",
+      "source": {
+        "dataset": "published literature",
+        "url": "",
+        "accessed": "2026-06-11",
+        "reference_period": "n/a"
+      },
+      "citation": "Kee, H.L., Nicita, A. and Olarreaga, M. (2008), 'Import Demand Elasticities and Trade Distortions', Review of Economics and Statistics 90(4), 666-682.",
+      "notes": ""
     }
   ]
 }

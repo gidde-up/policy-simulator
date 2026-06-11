@@ -9,18 +9,18 @@
       "method": "manual"
     },
     "tim_empn_2022": {
-      "url": "https://sdmx.oecd.org/public/rest/data/OECD.STI.PIE,DSD_TIM_2025@DF_TIM_2025,1.0/EMPN.ZAF+TUN....A?startPeriod=2022&endPeriod=2022&format=csvfilewithlabels",
+      "url": "https://sdmx.oecd.org/public/rest/data/OECD.STI.PIE,DSD_TIM_2025@DF_TIM_2025,1.0/EMPN.ZAF+TUN+VNM+THA+SEN....A?startPeriod=2022&endPeriod=2022&format=csvfilewithlabels",
       "filename": "TIM_EMPN_2022.csv",
-      "sha256": "442a8562955570d3941cb3145348e25c76c98d48d16f81d9f7b0fd329c42680a",
-      "bytes": 38877,
+      "sha256": "353da6ad2e39bf9384b266b7d1271fd3c4cc05ae2492605c2dc347256cd0f2fa",
+      "bytes": 96401,
       "access_date": "2026-06-11",
       "method": "manual"
     },
     "tim_labr_2022": {
-      "url": "https://sdmx.oecd.org/public/rest/data/OECD.STI.PIE,DSD_TIM_2025@DF_TIM_2025,1.0/LABR.ZAF+TUN....A?startPeriod=2022&endPeriod=2022&format=csvfilewithlabels",
+      "url": "https://sdmx.oecd.org/public/rest/data/OECD.STI.PIE,DSD_TIM_2025@DF_TIM_2025,1.0/LABR.ZAF+TUN+VNM+THA+SEN....A?startPeriod=2022&endPeriod=2022&format=csvfilewithlabels",
       "filename": "TIM_LABR_2022.csv",
-      "sha256": "e87332afd47b2e32828cf352968e84b10adef387dacb5a9b52ab0cd467612626",
-      "bytes": 85530,
+      "sha256": "0af256401b62b90945846871f3ec51bff8e4495d2b04b7f5e9d944488c6ecfbe",
+      "bytes": 212509,
       "access_date": "2026-06-11",
       "method": "manual"
     },
@@ -53,6 +53,54 @@
       "filename": "ILOSTAT_EAP_TEAP_SEX_AGE_NB_A_TUN.csv",
       "sha256": "937d6493b398e08088467b8e624b62817eead957eb1b7f654c8c377993311001",
       "bytes": 11359,
+      "access_date": "2026-06-11",
+      "method": "script"
+    },
+    "ilostat_emp_temp_sex_eco_nb_a_vnm": {
+      "url": "https://rplumber.ilo.org/data/indicator/?id=EMP_TEMP_SEX_ECO_NB_A&ref_area=VNM&format=.csv&sex=SEX_T&timefrom=2018",
+      "filename": "ILOSTAT_EMP_TEMP_SEX_ECO_NB_A_VNM.csv",
+      "sha256": "0114caa8e870698c9854c69fadd12605804aeb7a726f25d275e13baa09e8c6ec",
+      "bytes": 23401,
+      "access_date": "2026-06-11",
+      "method": "script"
+    },
+    "ilostat_eap_teap_sex_age_nb_a_vnm": {
+      "url": "https://rplumber.ilo.org/data/indicator/?id=EAP_TEAP_SEX_AGE_NB_A&ref_area=VNM&format=.csv&sex=SEX_T&timefrom=2018",
+      "filename": "ILOSTAT_EAP_TEAP_SEX_AGE_NB_A_VNM.csv",
+      "sha256": "b9ae75993637cd3d6f8099fd27ec8624757e81e5622364d8dc987318700a4107",
+      "bytes": 19484,
+      "access_date": "2026-06-11",
+      "method": "script"
+    },
+    "ilostat_emp_temp_sex_eco_nb_a_tha": {
+      "url": "https://rplumber.ilo.org/data/indicator/?id=EMP_TEMP_SEX_ECO_NB_A&ref_area=THA&format=.csv&sex=SEX_T&timefrom=2018",
+      "filename": "ILOSTAT_EMP_TEMP_SEX_ECO_NB_A_THA.csv",
+      "sha256": "8b349586a671c78d48115fad61f5947a4561b03758c2ff776f882c732874b19f",
+      "bytes": 23286,
+      "access_date": "2026-06-11",
+      "method": "script"
+    },
+    "ilostat_eap_teap_sex_age_nb_a_tha": {
+      "url": "https://rplumber.ilo.org/data/indicator/?id=EAP_TEAP_SEX_AGE_NB_A&ref_area=THA&format=.csv&sex=SEX_T&timefrom=2018",
+      "filename": "ILOSTAT_EAP_TEAP_SEX_AGE_NB_A_THA.csv",
+      "sha256": "c55c5c0c27f583dd0078d2f0e694d6fd2d3f1cc673d9a354a094c804c09baef1",
+      "bytes": 18999,
+      "access_date": "2026-06-11",
+      "method": "script"
+    },
+    "ilostat_emp_temp_sex_eco_nb_a_sen": {
+      "url": "https://rplumber.ilo.org/data/indicator/?id=EMP_TEMP_SEX_ECO_NB_A&ref_area=SEN&format=.csv&sex=SEX_T&timefrom=2018",
+      "filename": "ILOSTAT_EMP_TEMP_SEX_ECO_NB_A_SEN.csv",
+      "sha256": "cc12463f773576de3e535db581e7dbd22bf294dc175e11d1e53e12f4f230ef19",
+      "bytes": 13528,
+      "access_date": "2026-06-11",
+      "method": "script"
+    },
+    "ilostat_eap_teap_sex_age_nb_a_sen": {
+      "url": "https://rplumber.ilo.org/data/indicator/?id=EAP_TEAP_SEX_AGE_NB_A&ref_area=SEN&format=.csv&sex=SEX_T&timefrom=2018",
+      "filename": "ILOSTAT_EAP_TEAP_SEX_AGE_NB_A_SEN.csv",
+      "sha256": "58557e0e86d3aa5ff415367622fb1ead8699863eb2c82f159cb369a549f74e8b",
+      "bytes": 11033,
       "access_date": "2026-06-11",
       "method": "script"
     }

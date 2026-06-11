@@ -59,7 +59,7 @@ function CountryDashboard({ countryCode }) {
   const prepareChartData = () => {
     if (!comparison?.data) return [];
 
-    const countries = ['ZAF', 'TUN', 'VNM', 'THA', 'MOZ'];
+    const countries = ['ZAF', 'TUN', 'VNM', 'THA', 'SEN'];
     const yearMap = new Map();
 
     countries.forEach(code => {
@@ -306,6 +306,15 @@ function CountryDashboard({ countryCode }) {
                   strokeWidth={2}
                   dot={{ r: 3 }}
                   strokeDasharray="5 5"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="SEN"
+                  name="Senegal"
+                  stroke="#00853F"
+                  strokeWidth={2}
+                  dot={{ r: 3 }}
+                  strokeDasharray="3 3"
                 />
               </LineChart>
             </ResponsiveContainer>

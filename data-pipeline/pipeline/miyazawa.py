@@ -32,7 +32,7 @@ def build_type_ii(country: str, year: int, industries: list[str],
                   fd_vectors: dict):
     """Returns dict with L_typeII, compensation by sector, provenance."""
     labr_path = download.acquire_tim(config.TIM_MEASURE_COMPENSATION,
-                                     ["ZAF", "TUN"], year)
+                                     config.COUNTRIES, year)
     labr = employment.load_tim_csv(labr_path, config.TIM_MEASURE_COMPENSATION,
                                    country, year)
 

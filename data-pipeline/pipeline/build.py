@@ -104,6 +104,23 @@ def build_country(country: str, struct=None):
         if sector in prov_by_sector:
             prov_by_sector[sector].append(entry_id)
 
+    # export-clip audit trail (verifier item: register clipped residuals)
+    for code, raw_value in b.get("export_clips", []):
+        counter += 1
+        sector = mapping.get(code, code)
+        entry_id = f"{country}-{year}-export_clip-{code}-{counter}"
+        entries.append(assumptions.make_entry(
+            entry_id=entry_id, country=country, scope="other", sector=sector,
+            field="exports", icio_codes=[code], value=raw_value,
+            unit="USD million", method="clip",
+            basis=("export residual x - domestic intermediate use - domestic "
+                   "final demand was marginally negative (source rounding); "
+                   "clipped to 0"),
+            source={"dataset": "OECD ICIO 2025 (derived)",
+                    "url": config.ICIO_DATASET_PAGE,
+                    "accessed": datetime.date.today().isoformat(),
+                    "reference_period": str(year)}))
+
     if t2["propensity_capped"]:
         counter += 1
         entry_id = f"{country}-{year}-consumption_propensity-cap-{counter}"
@@ -138,6 +155,16 @@ def build_country(country: str, struct=None):
                     ["households", "government", "gfcf", "inventories"])
     imp_share_final = f_imp_tot / np.maximum(f_imp_tot + f_dom_tot, 1e-9)
 
+    # product-side imports (supplying-industry orientation; row sums of M
+    # plus imported final demand): what the engine's tariff levers act on
+    imports_intermediate_by_product = agg["M"].sum(axis=1)
+    imports_final_by_product = f_imp_tot
+    imports_by_product = (imports_intermediate_by_product
+                          + imports_final_by_product)
+    dom_absorb = x - agg["exports"]
+    domestic_absorption_share = dom_absorb / np.maximum(
+        dom_absorb + imports_by_product, 1e-9)
+
     coverage = emp["coverage"]
     fallback_used = any(k != "tim_exact" for k in coverage)
     emp_source = "OECD TiM 2025 (EMPN)"
@@ -169,8 +196,14 @@ def build_country(country: str, struct=None):
                 "inventories kept so that x = Z*1 + F*1 balances",
                 "exports computed as residual: x - domestic intermediate "
                 "use - domestic final demand",
-                "GDP proxy = sum(VA) + sum(TLS) (market prices)",
+                "GDP proxy = sum(VA) + sum(TLS) (market prices); differs "
+                "from the WDI dashboard GDP (different vintage and method)",
+                "employment denominator: use the sector-sum employment "
+                "(TiM, national-accounts concept); the ILOSTAT national "
+                "total (labour-force-survey concept) is stored in "
+                "baseline_totals for cross-checking only",
             ],
+            "sector_composition": concordance.sector_composition(),
         },
         "sectors": config.SECTORS_14,
         "A_d": _round(agg["A_d"]),
@@ -193,6 +226,11 @@ def build_country(country: str, struct=None):
         "import_shares": {
             "intermediate": _round(imp_share_intermediate),
             "final": _round(imp_share_final),
+            "domestic_absorption": _round(domestic_absorption_share),
+        },
+        "imports_by_product": {
+            "intermediate": _round(imports_intermediate_by_product, 3),
+            "final": _round(imports_final_by_product, 3),
         },
         "type_ii": {
             "compensation_of_employees": _round(t2["compensation_14"], 3),
@@ -234,9 +272,10 @@ def build_country(country: str, struct=None):
     final = config.OUTPUT_DIR / f"{country}.json"
     os.replace(staged, final)
 
-    # registry update (idempotent per country)
+    # registry update (idempotent per country; authored engine
+    # parameters for this country are preserved)
     registry = assumptions.load_registry()
-    assumptions.replace_country_entries(registry, country, entries)
+    assumptions.replace_pipeline_entries(registry, country, entries)
     assumptions.write_registry(registry)
 
     # report

@@ -26,7 +26,7 @@ Expected manual files in `raw/`:
 
 - `2016-2022_SML.zip` (the ICIO bundle, ~160 MB)
 - `TIM_EMPN_2022.csv` — from
-  `https://sdmx.oecd.org/public/rest/data/OECD.STI.PIE,DSD_TIM_2025@DF_TIM_2025,1.0/EMPN.ZAF+TUN....A?startPeriod=2022&endPeriod=2022&format=csvfilewithlabels`
+  `https://sdmx.oecd.org/public/rest/data/OECD.STI.PIE,DSD_TIM_2025@DF_TIM_2025,1.0/EMPN.ZAF+TUN+VNM+THA+SEN....A?startPeriod=2022&endPeriod=2022&format=csvfilewithlabels`
 - `TIM_LABR_2022.csv` — same with `LABR.` instead of `EMPN.`
 
 ## Commands
@@ -37,9 +37,10 @@ python -m venv .venv
 .venv\Scripts\python -m pip install -r requirements.txt
 
 .venv\Scripts\python run_pipeline.py --inspect   # structure discovery
-.venv\Scripts\python run_pipeline.py ZAF TUN     # build country JSONs
-.venv\Scripts\python make_comparison.py          # new-vs-old multiplier table
-.venv\Scripts\python -m pytest                   # validation suite
+.venv\Scripts\python run_pipeline.py ZAF TUN VNM THA SEN   # build country JSONs
+.venv\Scripts\python register_engine_params.py   # engine parameters -> registry
+.venv\Scripts\python make_verifier_output.py     # ZAF tariff scenario deliverable
+.venv\Scripts\python -m pytest                   # validation + engine suite
 ```
 
 Runtime: the first build parses the 2022 CSV inside the zip (~2 min);
@@ -86,17 +87,30 @@ seconds. Building a country writes:
    exceeded (registered). `L_typeII` = industry block of the inverse of
    the augmented matrix.
 
-## Validation (pytest, 34 tests)
+## Validation and engine tests (pytest)
 
+Data checks per country:
 1. `colsum(A_d) + colsum(A_m) + VA/x + TLS/x ≈ 1` (±1%)
 2. all coefficients ≥ 0 (negative inventory cells permitted, flagged)
 3. spectral radius of `A_d` < 1
 4. Type I output multipliers: hard bounds (1.0, 3.5), flagged outside
    [1.1, 2.5]
 5. Σ sectoral employment within 10% of ILOSTAT national employment
-6. comparison table new vs old hardcoded multipliers
-   (`reports/comparison_multipliers.md`, asserted current)
    plus schema, identity, Type II dominance and registry-integrity tests.
+
+Engine tests (the engine at `backend/app/models/engine.py` is pure
+numpy/json and is loaded here by file path): 3-sector hand-checked toy
+example; linearity; decomposition and channel sums; per-country lever
+smoke tests; the tariff acceptance gate (10% manufacturing tariff must
+not be net employment-positive, strictly negative with retaliation,
+gains ≥ 60% offset); an AST test asserting engine.py contains no
+numeric literal outside {0, 1, 2} (all parameters live in
+`backend/app/data/assumptions.json` with citations).
+
+The Session A new-vs-old multiplier comparison is preserved at
+`reports/comparison_multipliers.md` (the old hardcoded values were
+deleted with `tiva_multipliers.py` in Session B; the report is the
+permanent record).
 
 ## Adding a country
 

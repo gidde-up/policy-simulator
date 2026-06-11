@@ -1,26 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Bookmark, Play, ChevronRight, Factory, Users, Leaf, Building } from 'lucide-react';
+import { Bookmark, Play, ChevronRight, Factory, Leaf, Building, DollarSign } from 'lucide-react';
 import { getPresets } from '../services/api';
 
-const PRESET_ICONS = {
-  manufacturing: Factory,
-  youth: Users,
-  green: Leaf,
-  textile: Factory,
-  agro: Leaf,
-  services: Building,
-  electronics: Factory,
-  auto: Factory,
-  tourism: Building,
-  rural: Leaf,
-  food: Leaf,
-  extractives: Factory,
-  transformation: Building,
-};
+// icon picked from the preset id keywords; purely decorative
+function presetIcon(id) {
+  if (/agri|food|rural/.test(id)) return Leaf;
+  if (/construction|services|trade|demand|stimulus/.test(id)) return Building;
+  if (/stimulus|demand/.test(id)) return DollarSign;
+  return Factory;
+}
 
 function PresetScenarios({ countryCode, onSelectPreset }) {
   const [presets, setPresets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState(null);
 
   useEffect(() => {
@@ -29,249 +22,17 @@ function PresetScenarios({ countryCode, onSelectPreset }) {
 
   const loadPresets = async () => {
     setLoading(true);
+    setLoadError(false);
     try {
       const data = await getPresets(countryCode);
-      setPresets(data);
+      setPresets(data.presets || []);
     } catch (err) {
       console.error('Error loading presets:', err);
-      // Use fallback presets
-      setPresets(getFallbackPresets(countryCode));
+      setPresets([]);
+      setLoadError(true);
     } finally {
       setLoading(false);
     }
-  };
-
-  const getFallbackPresets = (country) => {
-    if (country === 'ZAF') {
-      return [
-        {
-          id: 'zaf_manufacturing',
-          name: 'Manufacturing Boost',
-          description: 'Protect and develop domestic manufacturing through tariffs and subsidies',
-          icon: 'manufacturing',
-          params: {
-            country_code: 'ZAF',
-            tariff_changes: { manufacturing: 15, automotive: 20 },
-            subsidy_changes: { manufacturing: 5 },
-            sme_stimulus: 0.5,
-            productivity_investment: 3,
-            time_horizon: 'medium',
-          },
-        },
-        {
-          id: 'zaf_youth',
-          name: 'Youth Employment',
-          description: 'Focus on labor-intensive sectors for youth job creation',
-          icon: 'youth',
-          params: {
-            country_code: 'ZAF',
-            tariff_changes: {},
-            subsidy_changes: { trade: 8, other_services: 10 },
-            sme_stimulus: 2.0,
-            productivity_investment: 0,
-            time_horizon: 'short',
-          },
-        },
-        {
-          id: 'zaf_green',
-          name: 'Green Transition',
-          description: 'Support shift from mining to sustainable industries',
-          icon: 'green',
-          params: {
-            country_code: 'ZAF',
-            tariff_changes: { utilities: -5 },
-            subsidy_changes: { utilities: 15, construction: 10 },
-            sme_stimulus: 1.0,
-            productivity_investment: 5,
-            time_horizon: 'long',
-          },
-        },
-      ];
-    } else if (country === 'VNM') {
-      return [
-        {
-          id: 'vnm_electronics',
-          name: 'Electronics Hub',
-          description: 'Support electronics and manufacturing upgrading',
-          icon: 'electronics',
-          params: {
-            country_code: 'VNM',
-            tariff_changes: { manufacturing: 10, automotive: 12 },
-            subsidy_changes: { manufacturing: 8, chemicals: 4 },
-            sme_stimulus: 0.5,
-            productivity_investment: 5,
-            time_horizon: 'medium',
-          },
-        },
-        {
-          id: 'vnm_textile',
-          name: 'Textile Export',
-          description: 'Strengthen textile and garment sector for export markets',
-          icon: 'textile',
-          params: {
-            country_code: 'VNM',
-            tariff_changes: { textiles: 8 },
-            subsidy_changes: { textiles: 12, food_processing: 4 },
-            sme_stimulus: 1.5,
-            productivity_investment: 3,
-            time_horizon: 'medium',
-          },
-        },
-        {
-          id: 'vnm_rural',
-          name: 'Rural Development',
-          description: 'Agricultural modernization and rural SME support',
-          icon: 'rural',
-          params: {
-            country_code: 'VNM',
-            tariff_changes: {},
-            subsidy_changes: { agriculture: 10, food_processing: 8, trade: 5 },
-            sme_stimulus: 2.5,
-            productivity_investment: 1,
-            time_horizon: 'short',
-          },
-        },
-      ];
-    } else if (country === 'THA') {
-      return [
-        {
-          id: 'tha_auto',
-          name: 'Automotive Hub',
-          description: 'Strengthen automotive manufacturing and EV transition',
-          icon: 'auto',
-          params: {
-            country_code: 'THA',
-            tariff_changes: { automotive: 15, manufacturing: 8 },
-            subsidy_changes: { automotive: 10, chemicals: 4 },
-            sme_stimulus: 0.5,
-            productivity_investment: 6,
-            time_horizon: 'medium',
-          },
-        },
-        {
-          id: 'tha_tourism',
-          name: 'Tourism Recovery',
-          description: 'Support tourism recovery and hospitality services',
-          icon: 'tourism',
-          params: {
-            country_code: 'THA',
-            tariff_changes: {},
-            subsidy_changes: { other_services: 12, transport: 6, food_processing: 4 },
-            sme_stimulus: 2.0,
-            productivity_investment: 1,
-            time_horizon: 'short',
-          },
-        },
-        {
-          id: 'tha_food',
-          name: 'Food Processing',
-          description: 'Strengthen food processing exports and agriculture',
-          icon: 'food',
-          params: {
-            country_code: 'THA',
-            tariff_changes: { food_processing: 10, agriculture: 5 },
-            subsidy_changes: { food_processing: 10, agriculture: 8 },
-            sme_stimulus: 1.5,
-            productivity_investment: 3,
-            time_horizon: 'long',
-          },
-        },
-      ];
-    } else if (country === 'MOZ') {
-      return [
-        {
-          id: 'moz_agriculture',
-          name: 'Agricultural Focus',
-          description: 'Strengthen agriculture productivity and rural value chains (cashews, sugar, cotton)',
-          icon: 'agro',
-          params: {
-            country_code: 'MOZ',
-            tariff_changes: { agriculture: 10, food_processing: 8 },
-            subsidy_changes: { agriculture: 15, food_processing: 10 },
-            sme_stimulus: 1.5,
-            productivity_investment: 2,
-            time_horizon: 'medium',
-          },
-        },
-        {
-          id: 'moz_extractives',
-          name: 'Commodity Extraction',
-          description: 'Develop natural gas, coal, and mineral extraction sectors',
-          icon: 'extractives',
-          params: {
-            country_code: 'MOZ',
-            tariff_changes: { mining: 0 },
-            subsidy_changes: { mining: 12, utilities: 8, transport: 6 },
-            sme_stimulus: 0.5,
-            productivity_investment: 5,
-            time_horizon: 'long',
-          },
-        },
-        {
-          id: 'moz_industrialization',
-          name: 'Industrialization Drive',
-          description: 'Push for manufacturing, textiles, and higher value-added production',
-          icon: 'manufacturing',
-          params: {
-            country_code: 'MOZ',
-            tariff_changes: { manufacturing: 20, textiles: 18, food_processing: 12, construction: 10 },
-            subsidy_changes: { manufacturing: 25, textiles: 20, food_processing: 15, construction: 12 },
-            sme_stimulus: 2.5,
-            productivity_investment: 7,
-            time_horizon: 'long',
-          },
-        },
-      ];
-    } else {
-      return [
-        {
-          id: 'tun_textile',
-          name: 'Textile Revival',
-          description: 'Revive textile sector competitiveness with quality upgrading',
-          icon: 'textile',
-          params: {
-            country_code: 'TUN',
-            tariff_changes: { textiles: 12 },
-            subsidy_changes: { textiles: 10 },
-            sme_stimulus: 0.5,
-            productivity_investment: 4,
-            time_horizon: 'medium',
-          },
-        },
-        {
-          id: 'tun_agro',
-          name: 'Agro-Processing',
-          description: 'Develop food processing to add value to agriculture',
-          icon: 'agro',
-          params: {
-            country_code: 'TUN',
-            tariff_changes: { food_processing: 8 },
-            subsidy_changes: { food_processing: 12, agriculture: 5 },
-            sme_stimulus: 1.5,
-            productivity_investment: 2,
-            time_horizon: 'medium',
-          },
-        },
-        {
-          id: 'tun_services',
-          name: 'Services Expansion',
-          description: 'Expand tourism and business services',
-          icon: 'services',
-          params: {
-            country_code: 'TUN',
-            tariff_changes: {},
-            subsidy_changes: { other_services: 10, transport: 5 },
-            sme_stimulus: 2.5,
-            productivity_investment: 1,
-            time_horizon: 'short',
-          },
-        },
-      ];
-    }
-  };
-
-  const handlePresetClick = (preset) => {
-    setSelectedPreset(preset.id);
   };
 
   const handleApply = (preset) => {
@@ -301,9 +62,20 @@ function PresetScenarios({ countryCode, onSelectPreset }) {
         Quick-start with pre-configured policy packages
       </p>
 
+      {loadError && (
+        <p className="text-sm text-amber-600">
+          Presets could not be loaded from the server.
+        </p>
+      )}
+      {!loadError && presets.length === 0 && (
+        <p className="text-sm text-gray-500">
+          No presets available for this country yet.
+        </p>
+      )}
+
       <div className="space-y-3">
         {presets.map((preset) => {
-          const Icon = PRESET_ICONS[preset.icon] || Factory;
+          const Icon = presetIcon(preset.id);
           const isSelected = selectedPreset === preset.id;
 
           return (
@@ -316,7 +88,7 @@ function PresetScenarios({ countryCode, onSelectPreset }) {
             >
               <div
                 className="p-3 flex items-center justify-between"
-                onClick={() => handlePresetClick(preset)}
+                onClick={() => setSelectedPreset(preset.id)}
               >
                 <div className="flex items-center space-x-3">
                   <div className={`p-2 rounded-lg ${isSelected ? 'bg-blue-100' : 'bg-gray-100'}`}>
@@ -339,28 +111,23 @@ function PresetScenarios({ countryCode, onSelectPreset }) {
                       <div>
                         <span className="font-medium">Tariffs:</span>{' '}
                         {Object.entries(preset.params.tariff_changes)
-                          .map(([s, v]) => `${s.replace('_', ' ')} ${v > 0 ? '+' : ''}${v}%`)
+                          .map(([s, v]) => `${s.replace('_', ' ')} +${v}pp`)
                           .join(', ')}
                       </div>
                     )}
-                    {preset.params.subsidy_changes && Object.keys(preset.params.subsidy_changes).length > 0 && (
+                    {preset.params.sector_support && Object.keys(preset.params.sector_support).length > 0 && (
                       <div>
-                        <span className="font-medium">Subsidies:</span>{' '}
-                        {Object.entries(preset.params.subsidy_changes)
+                        <span className="font-medium">Sector support:</span>{' '}
+                        {Object.entries(preset.params.sector_support)
                           .map(([s, v]) => `${s.replace('_', ' ')} +${v}%`)
                           .join(', ')}
                       </div>
                     )}
                     {preset.params.sme_stimulus > 0 && (
                       <div>
-                        <span className="font-medium">SME Stimulus:</span> {preset.params.sme_stimulus}% GDP
+                        <span className="font-medium">Demand stimulus:</span> {preset.params.sme_stimulus}% of GDP
                       </div>
                     )}
-                    <div>
-                      <span className="font-medium">Time Horizon:</span>{' '}
-                      {preset.params.time_horizon === 'short' ? '1 Year' :
-                       preset.params.time_horizon === 'medium' ? '3 Years' : '5 Years'}
-                    </div>
                   </div>
 
                   <button

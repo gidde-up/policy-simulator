@@ -234,7 +234,7 @@ class WDIService:
         'TUN': {'name': 'Tunisia', 'region': 'Middle East & North Africa'},
         'VNM': {'name': 'Viet Nam', 'region': 'East Asia & Pacific'},
         'THA': {'name': 'Thailand', 'region': 'East Asia & Pacific'},
-        'MOZ': {'name': 'Mozambique', 'region': 'Sub-Saharan Africa'},
+        'SEN': {'name': 'Senegal', 'region': 'Sub-Saharan Africa'},
     }
 
     def __init__(self):

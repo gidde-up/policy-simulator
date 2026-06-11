@@ -8,7 +8,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import config  # noqa: E402
 
-BUILT_COUNTRIES = ["ZAF", "TUN"]
+BUILT_COUNTRIES = list(config.COUNTRIES)  # all five since Session B
 
 
 @pytest.fixture(scope="session", params=BUILT_COUNTRIES)
@@ -36,6 +36,12 @@ def registry():
 
 
 @pytest.fixture(scope="session")
-def old_multipliers():
-    import make_comparison
-    return make_comparison.load_old_multipliers()
+def engine():
+    """The backend engine, loaded by file path (pure numpy/json module;
+    avoids importing the FastAPI app package)."""
+    import importlib.util
+    path = (config.REPO_ROOT / "backend" / "app" / "models" / "engine.py")
+    spec = importlib.util.spec_from_file_location("engine", path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod

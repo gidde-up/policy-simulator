@@ -1,19 +1,4 @@
-"""Data module for employment multipliers and I-O coefficients."""
-
-from .tiva_multipliers import (
-    get_multipliers,
-    is_tiva_available,
-    get_data_source_info,
-    SectorMultipliers,
-    SOUTH_AFRICA_TIVA,
-    TUNISIA_STYLIZED,
-)
-
-__all__ = [
-    'get_multipliers',
-    'is_tiva_available',
-    'get_data_source_info',
-    'SectorMultipliers',
-    'SOUTH_AFRICA_TIVA',
-    'TUNISIA_STYLIZED',
-]
+"""Data directory: verified country JSONs (countries/) computed by
+/data-pipeline from OECD ICIO 2025 + TiM 2025 + ILOSTAT, and the
+assumptions registry (assumptions.json). No Python data modules: typed-in
+coefficients were removed in v0.11.0 (see CHANGELOG)."""

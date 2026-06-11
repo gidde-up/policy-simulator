@@ -300,7 +300,7 @@ def build_employment(country: str, industries: list[str],
     """Full employment block: native persons, 14-sector persons,
     coefficients, provenance cells, coverage stats."""
     tim_path = download.acquire_tim(config.TIM_MEASURE_EMPLOYMENT,
-                                    ["ZAF", "TUN"], year)
+                                    config.COUNTRIES, year)
     tim = load_tim_csv(tim_path, config.TIM_MEASURE_EMPLOYMENT, country, year)
     persons, cells = match_industries(tim, industries, x_native, country, year)
 

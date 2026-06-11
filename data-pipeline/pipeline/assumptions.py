@@ -14,7 +14,11 @@ SCHEMA_VERSION = "1.0"
 VALID_SCOPES = {"employment", "labour_compensation", "manufacturing_split",
                 "consumption_propensity", "elasticity", "other"}
 VALID_METHODS = {"ILOSTAT_fallback", "child_sum", "proportional_allocation",
-                 "authored_constant", "cap", "economy_share"}
+                 "authored_constant", "cap", "clip", "economy_share"}
+
+# country code used for engine-wide behavioural parameters that are not
+# tied to a single economy (import demand elasticity, fiscal multiplier...)
+GLOBAL_COUNTRY = "GLOBAL"
 
 
 def new_registry():
@@ -69,4 +73,17 @@ def replace_country_entries(registry: dict, country: str,
     """Idempotent rebuild: drop this country's entries, append new ones."""
     registry["entries"] = [e for e in registry["entries"]
                            if e.get("country") != country] + entries
+    return registry
+
+
+def replace_pipeline_entries(registry: dict, country: str,
+                             entries: list[dict]):
+    """Like replace_country_entries, but preserves authored engine
+    parameters (method=authored_constant) registered for the country --
+    a data rebuild must not delete cited behavioural parameters."""
+    registry["entries"] = [
+        e for e in registry["entries"]
+        if e.get("country") != country
+        or e.get("method") == "authored_constant"
+    ] + entries
     return registry

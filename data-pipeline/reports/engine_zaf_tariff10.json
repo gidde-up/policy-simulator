@@ -1,0 +1,630 @@
+{
+ "scenario": "ZAF, 10% tariff on manufacturing, default parameters",
+ "engine_parameters": {
+  "GLOBAL-import-demand-elasticity-central": -1.08,
+  "GLOBAL-import-demand-elasticity-low": -0.5,
+  "GLOBAL-import-demand-elasticity-high": -1.67,
+  "GLOBAL-own-price-demand-elasticity-central": -0.5,
+  "GLOBAL-own-price-demand-elasticity-low": -0.25,
+  "GLOBAL-own-price-demand-elasticity-high": -0.75,
+  "GLOBAL-retaliation-share": 0.5,
+  "GLOBAL-retaliation-top-sectors": 3.0,
+  "GLOBAL-fiscal-multiplier-central": 0.5,
+  "GLOBAL-fiscal-multiplier-low": 0.1,
+  "GLOBAL-fiscal-multiplier-high": 1.0,
+  "ZAF-import-demand-elasticity-central": -1.16,
+  "TUN-import-demand-elasticity-central": -1.06,
+  "THA-import-demand-elasticity-central": -1.08,
+  "VNM-import-demand-elasticity-central": -1.08,
+  "SEN-import-demand-elasticity-central": -0.5
+ },
+ "retaliation_off": {
+  "country": "ZAF",
+  "sectors": [
+   "agriculture",
+   "mining",
+   "manufacturing",
+   "textiles",
+   "automotive",
+   "food_processing",
+   "chemicals",
+   "construction",
+   "utilities",
+   "trade",
+   "transport",
+   "finance",
+   "public_services",
+   "other_services"
+  ],
+  "aggregate": {
+   "direct_jobs": -9955.14795225695,
+   "indirect_jobs": 8261.67506387626,
+   "induced_jobs": null,
+   "total_jobs": -1693.472888380682,
+   "total_jobs_low": -15514.461032318912,
+   "total_jobs_high": 5920.492552608992,
+   "share_of_baseline_employment": -0.00010764374266667612
+  },
+  "baseline": {
+   "sector_sum_employment_persons": 15732200.0,
+   "reference_year": 2022,
+   "note": "denominator = sector-sum employment (TiM, national-accounts concept); ILOSTAT LFS total differs (see country metadata)"
+  },
+  "sector_effects": [
+   {
+    "sector": "agriculture",
+    "direct_jobs": -953.156510181862,
+    "indirect_jobs": -599.7958220734125,
+    "induced_jobs": null,
+    "total_jobs": -1552.9523322552745,
+    "output_change_usd_million": -52.708677267056885,
+    "value_added_change_usd_million": -15.009447549562237
+   },
+   {
+    "sector": "mining",
+    "direct_jobs": -382.8266075126561,
+    "indirect_jobs": 2363.613584630467,
+    "induced_jobs": null,
+    "total_jobs": 1980.7869771178107,
+    "output_change_usd_million": 299.4957885573971,
+    "value_added_change_usd_million": 111.58927078515282
+   },
+   {
+    "sector": "manufacturing",
+    "direct_jobs": 18559.679007308565,
+    "indirect_jobs": 2711.7916734162714,
+    "induced_jobs": null,
+    "total_jobs": 21271.470680724837,
+    "output_change_usd_million": 2017.0293668202967,
+    "value_added_change_usd_million": 590.030089051018
+   },
+   {
+    "sector": "textiles",
+    "direct_jobs": -541.981421341103,
+    "indirect_jobs": -9.66529968118089,
+    "induced_jobs": null,
+    "total_jobs": -551.6467210222838,
+    "output_change_usd_million": -12.914783414933538,
+    "value_added_change_usd_million": -4.177946392419692
+   },
+   {
+    "sector": "automotive",
+    "direct_jobs": -519.7312808382858,
+    "indirect_jobs": -13.306174538088868,
+    "induced_jobs": null,
+    "total_jobs": -533.0374553763746,
+    "output_change_usd_million": -114.13789873754251,
+    "value_added_change_usd_million": -19.456716743969945
+   },
+   {
+    "sector": "food_processing",
+    "direct_jobs": -974.1577913208706,
+    "indirect_jobs": -253.01528158275522,
+    "induced_jobs": null,
+    "total_jobs": -1227.1730729036258,
+    "output_change_usd_million": -108.40062053505659,
+    "value_added_change_usd_million": -30.928939348114657
+   },
+   {
+    "sector": "chemicals",
+    "direct_jobs": -152.29264752612457,
+    "indirect_jobs": 204.31763556535606,
+    "induced_jobs": null,
+    "total_jobs": 52.02498803923149,
+    "output_change_usd_million": 9.948118335544411,
+    "value_added_change_usd_million": 2.294657314786717
+   },
+   {
+    "sector": "construction",
+    "direct_jobs": -5450.391430324383,
+    "indirect_jobs": -167.81252137292466,
+    "induced_jobs": null,
+    "total_jobs": -5618.203951697307,
+    "output_change_usd_million": -103.91206686946923,
+    "value_added_change_usd_million": -34.88557719436679
+   },
+   {
+    "sector": "utilities",
+    "direct_jobs": -204.49449357262725,
+    "indirect_jobs": 170.4840934511497,
+    "induced_jobs": null,
+    "total_jobs": -34.010400121477545,
+    "output_change_usd_million": -6.6911540720884215,
+    "value_added_change_usd_million": -2.5060331773364357
+   },
+   {
+    "sector": "trade",
+    "direct_jobs": -3434.226662486633,
+    "indirect_jobs": 3059.935131113183,
+    "induced_jobs": null,
+    "total_jobs": -374.29153137344974,
+    "output_change_usd_million": -8.738107514992674,
+    "value_added_change_usd_million": -4.0245197611056485
+   },
+   {
+    "sector": "transport",
+    "direct_jobs": -785.0871849186178,
+    "indirect_jobs": 1151.692566877144,
+    "induced_jobs": null,
+    "total_jobs": 366.6053819585261,
+    "output_change_usd_million": 13.985416848514827,
+    "value_added_change_usd_million": 4.2723827973155455
+   },
+   {
+    "sector": "finance",
+    "direct_jobs": -442.1990108681476,
+    "indirect_jobs": 173.42523004662846,
+    "induced_jobs": null,
+    "total_jobs": -268.77378082151915,
+    "output_change_usd_million": -31.500904429205967,
+    "value_added_change_usd_million": -28.1979966905486
+   },
+   {
+    "sector": "public_services",
+    "direct_jobs": -5713.509771535316,
+    "indirect_jobs": -113.98008854374218,
+    "induced_jobs": null,
+    "total_jobs": -5827.489860079058,
+    "output_change_usd_million": -206.9149245333198,
+    "value_added_change_usd_million": -51.86396044542562
+   },
+   {
+    "sector": "other_services",
+    "direct_jobs": -8960.772147138885,
+    "indirect_jobs": -416.0096634318348,
+    "induced_jobs": null,
+    "total_jobs": -9376.78181057072,
+    "output_change_usd_million": -441.82748144044484,
+    "value_added_change_usd_million": -319.24740537816723
+   }
+  ],
+  "tariff_channels": {
+   "protected_sector_gain": {
+    "jobs": 48000.97556946891,
+    "demand_usd_million": 1997.444979673104
+   },
+   "downstream_cost": {
+    "jobs": -26979.823498070928,
+    "demand_usd_million": -779.6066734334745
+   },
+   "real_income_loss": {
+    "jobs": -22714.624959778666,
+    "demand_usd_million": -715.4180603043231
+   },
+   "retaliation": null
+  },
+  "other_channels": null,
+  "costs": {
+   "tariff_revenue_usd_million": 2769.6289296,
+   "spending_cost_usd_million": 0.0,
+   "net_fiscal_usd_million": 2769.6289296,
+   "cost_per_job_fiscal_usd_million": null,
+   "financing_drag_included": false
+  },
+  "induced_note": null,
+  "uncertainty": {
+   "low": -15514.461032318912,
+   "high": 5920.492552608992,
+   "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+  },
+  "data_source": {
+   "citation": "OECD ICIO 2025 (rev. Jan 2026), year 2022; employment: OECD TiM 2025 (EMPN); fallbacks: tim_parent_residual (see assumptions registry)",
+   "reference_year": 2022,
+   "notes": "households final demand = HFCE + NPISH; inventories kept so that x = Z*1 + F*1 balances; exports computed as residual: x - domestic intermediate use - domestic final demand; GDP proxy = sum(VA) + sum(TLS) (market prices); differs from the WDI dashboard GDP (different vintage and method); employment denominator: use the sector-sum employment (TiM, national-accounts concept); the ILOSTAT national total (labour-force-survey concept) is stored in baseline_totals for cross-checking only"
+  },
+  "assumptions_used": [
+   "ZAF-import-demand-elasticity-central",
+   "GLOBAL-own-price-demand-elasticity-central",
+   "GLOBAL-retaliation-share",
+   "GLOBAL-retaliation-top-sectors",
+   "GLOBAL-fiscal-multiplier-central"
+  ]
+ },
+ "retaliation_on": {
+  "country": "ZAF",
+  "sectors": [
+   "agriculture",
+   "mining",
+   "manufacturing",
+   "textiles",
+   "automotive",
+   "food_processing",
+   "chemicals",
+   "construction",
+   "utilities",
+   "trade",
+   "transport",
+   "finance",
+   "public_services",
+   "other_services"
+  ],
+  "aggregate": {
+   "direct_jobs": -39292.47866515665,
+   "indirect_jobs": -38708.45734436316,
+   "induced_jobs": null,
+   "total_jobs": -78000.93600951979,
+   "total_jobs_low": -91821.92415345804,
+   "total_jobs_high": -70386.97056853015,
+   "share_of_baseline_employment": -0.004958043757994419
+  },
+  "baseline": {
+   "sector_sum_employment_persons": 15732200.0,
+   "reference_year": 2022,
+   "note": "denominator = sector-sum employment (TiM, national-accounts concept); ILOSTAT LFS total differs (see country metadata)"
+  },
+  "sector_effects": [
+   {
+    "sector": "agriculture",
+    "direct_jobs": -953.156510181862,
+    "indirect_jobs": -1620.481380243475,
+    "induced_jobs": null,
+    "total_jobs": -2573.637890425337,
+    "output_change_usd_million": -87.35171463485688,
+    "value_added_change_usd_million": -24.874480771606372
+   },
+   {
+    "sector": "mining",
+    "direct_jobs": -12549.127208780106,
+    "indirect_jobs": -3181.5423283909495,
+    "induced_jobs": null,
+    "total_jobs": -15730.669537171056,
+    "output_change_usd_million": -2378.483568397703,
+    "value_added_change_usd_million": -886.2002642855277
+   },
+   {
+    "sector": "manufacturing",
+    "direct_jobs": 4698.941255696563,
+    "indirect_jobs": -1203.330452714192,
+    "induced_jobs": null,
+    "total_jobs": 3495.610802982371,
+    "output_change_usd_million": 331.4650759422461,
+    "value_added_change_usd_million": 96.96158692216513
+   },
+   {
+    "sector": "textiles",
+    "direct_jobs": -541.981421341103,
+    "indirect_jobs": -321.0516782932808,
+    "induced_jobs": null,
+    "total_jobs": -863.0330996343838,
+    "output_change_usd_million": -20.20475267403354,
+    "value_added_change_usd_million": -6.536259326393432
+   },
+   {
+    "sector": "automotive",
+    "direct_jobs": -519.7312808382858,
+    "indirect_jobs": -73.71675644717662,
+    "induced_jobs": null,
+    "total_jobs": -593.4480372854624,
+    "output_change_usd_million": -127.07345666329252,
+    "value_added_change_usd_million": -21.661799273702457
+   },
+   {
+    "sector": "food_processing",
+    "direct_jobs": -974.1577913208706,
+    "indirect_jobs": -428.2198374975135,
+    "induced_jobs": null,
+    "total_jobs": -1402.377628818384,
+    "output_change_usd_million": -123.87707043530659,
+    "value_added_change_usd_million": -35.3446906411081
+   },
+   {
+    "sector": "chemicals",
+    "direct_jobs": -3462.585007546375,
+    "indirect_jobs": -1748.7297128824598,
+    "induced_jobs": null,
+    "total_jobs": -5211.314720428834,
+    "output_change_usd_million": -996.4975961839057,
+    "value_added_change_usd_million": -229.85457361124605
+   },
+   {
+    "sector": "construction",
+    "direct_jobs": -5450.391430324383,
+    "indirect_jobs": -473.50129530817924,
+    "induced_jobs": null,
+    "total_jobs": -5923.892725632562,
+    "output_change_usd_million": -109.56596491081925,
+    "value_added_change_usd_million": -36.783715711988236
+   },
+   {
+    "sector": "utilities",
+    "direct_jobs": -204.49449357262725,
+    "indirect_jobs": -722.8369403155933,
+    "induced_jobs": null,
+    "total_jobs": -927.3314338882205,
+    "output_change_usd_million": -182.44176716163847,
+    "value_added_change_usd_million": -68.32978534243401
+   },
+   {
+    "sector": "trade",
+    "direct_jobs": -3434.226662486633,
+    "indirect_jobs": -9875.345800078045,
+    "induced_jobs": null,
+    "total_jobs": -13309.572462564678,
+    "output_change_usd_million": -310.72163115664273,
+    "value_added_change_usd_million": -143.1094024246436
+   },
+   {
+    "sector": "transport",
+    "direct_jobs": -785.0871849186178,
+    "indirect_jobs": -4737.773570641247,
+    "induced_jobs": null,
+    "total_jobs": -5522.860755559865,
+    "output_change_usd_million": -210.6884232036352,
+    "value_added_change_usd_million": -64.36287202868311
+   },
+   {
+    "sector": "finance",
+    "direct_jobs": -442.1990108681476,
+    "indirect_jobs": -2093.0354586088624,
+    "induced_jobs": null,
+    "total_jobs": -2535.23446947701,
+    "output_change_usd_million": -297.13530272380603,
+    "value_added_change_usd_million": -265.9803086505296
+   },
+   {
+    "sector": "public_services",
+    "direct_jobs": -5713.509771535316,
+    "indirect_jobs": -1344.072713530709,
+    "induced_jobs": null,
+    "total_jobs": -7057.582485066025,
+    "output_change_usd_million": -250.5914522973198,
+    "value_added_change_usd_million": -62.81163719447933
+   },
+   {
+    "sector": "other_services",
+    "direct_jobs": -8960.772147138885,
+    "indirect_jobs": -10884.819419411475,
+    "induced_jobs": null,
+    "total_jobs": -19845.59156655036,
+    "output_change_usd_million": -935.110565296495,
+    "value_added_change_usd_million": -675.6746337718632
+   }
+  ],
+  "tariff_channels": {
+   "protected_sector_gain": {
+    "jobs": 48000.97556946891,
+    "demand_usd_million": 1997.444979673104
+   },
+   "downstream_cost": {
+    "jobs": -26979.823498070928,
+    "demand_usd_million": -779.6066734334745
+   },
+   "real_income_loss": {
+    "jobs": -22714.624959778666,
+    "demand_usd_million": -715.4180603043231
+   },
+   "retaliation": {
+    "jobs": -76307.46312113912,
+    "demand_usd_million": -3786.8571
+   }
+  },
+  "other_channels": null,
+  "costs": {
+   "tariff_revenue_usd_million": 2769.6289296,
+   "spending_cost_usd_million": 0.0,
+   "net_fiscal_usd_million": 2769.6289296,
+   "cost_per_job_fiscal_usd_million": null,
+   "financing_drag_included": false
+  },
+  "induced_note": null,
+  "uncertainty": {
+   "low": -91821.92415345804,
+   "high": -70386.97056853015,
+   "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+  },
+  "data_source": {
+   "citation": "OECD ICIO 2025 (rev. Jan 2026), year 2022; employment: OECD TiM 2025 (EMPN); fallbacks: tim_parent_residual (see assumptions registry)",
+   "reference_year": 2022,
+   "notes": "households final demand = HFCE + NPISH; inventories kept so that x = Z*1 + F*1 balances; exports computed as residual: x - domestic intermediate use - domestic final demand; GDP proxy = sum(VA) + sum(TLS) (market prices); differs from the WDI dashboard GDP (different vintage and method); employment denominator: use the sector-sum employment (TiM, national-accounts concept); the ILOSTAT national total (labour-force-survey concept) is stored in baseline_totals for cross-checking only"
+  },
+  "assumptions_used": [
+   "ZAF-import-demand-elasticity-central",
+   "GLOBAL-own-price-demand-elasticity-central",
+   "GLOBAL-retaliation-share",
+   "GLOBAL-retaliation-top-sectors",
+   "GLOBAL-fiscal-multiplier-central"
+  ]
+ },
+ "type_ii_variant": {
+  "country": "ZAF",
+  "sectors": [
+   "agriculture",
+   "mining",
+   "manufacturing",
+   "textiles",
+   "automotive",
+   "food_processing",
+   "chemicals",
+   "construction",
+   "utilities",
+   "trade",
+   "transport",
+   "finance",
+   "public_services",
+   "other_services"
+  ],
+  "aggregate": {
+   "direct_jobs": -9955.14795225695,
+   "indirect_jobs": 8261.67506387626,
+   "induced_jobs": 3911.057817871578,
+   "total_jobs": 2217.584929490891,
+   "total_jobs_low": -25194.56343807432,
+   "total_jobs_high": 18562.420330302695,
+   "share_of_baseline_employment": 0.00014095834845036874
+  },
+  "baseline": {
+   "sector_sum_employment_persons": 15732200.0,
+   "reference_year": 2022,
+   "note": "denominator = sector-sum employment (TiM, national-accounts concept); ILOSTAT LFS total differs (see country metadata)"
+  },
+  "sector_effects": [
+   {
+    "sector": "agriculture",
+    "direct_jobs": -953.156510181862,
+    "indirect_jobs": -599.7958220734125,
+    "induced_jobs": 245.32754677108343,
+    "total_jobs": -1307.624785484191,
+    "output_change_usd_million": -44.382027299187634,
+    "value_added_change_usd_million": -12.638331019297691
+   },
+   {
+    "sector": "mining",
+    "direct_jobs": -382.8266075126561,
+    "indirect_jobs": 2363.613584630467,
+    "induced_jobs": 14.988014297717283,
+    "total_jobs": 1995.774991415528,
+    "output_change_usd_million": 301.7619823545393,
+    "value_added_change_usd_million": 112.43363295297834
+   },
+   {
+    "sector": "manufacturing",
+    "direct_jobs": 18559.679007308565,
+    "indirect_jobs": 2711.7916734162714,
+    "induced_jobs": 78.97074593079567,
+    "total_jobs": 21350.441426655634,
+    "output_change_usd_million": 2024.517627319673,
+    "value_added_change_usd_million": 592.2205871577706
+   },
+   {
+    "sector": "textiles",
+    "direct_jobs": -541.981421341103,
+    "indirect_jobs": -9.66529968118089,
+    "induced_jobs": 80.90386175451664,
+    "total_jobs": -470.7428592677672,
+    "output_change_usd_million": -11.02071641122683,
+    "value_added_change_usd_million": -3.5652136697023025
+   },
+   {
+    "sector": "automotive",
+    "direct_jobs": -519.7312808382858,
+    "indirect_jobs": -13.306174538088868,
+    "induced_jobs": 6.298674735057401,
+    "total_jobs": -526.7387806413172,
+    "output_change_usd_million": -112.78918019658545,
+    "value_added_change_usd_million": -19.226805076513337
+   },
+   {
+    "sector": "food_processing",
+    "direct_jobs": -974.1577913208706,
+    "indirect_jobs": -253.01528158275522,
+    "induced_jobs": 148.33195526204491,
+    "total_jobs": -1078.841117641581,
+    "output_change_usd_million": -95.2979243053075,
+    "value_added_change_usd_million": -27.190469079343252
+   },
+   {
+    "sector": "chemicals",
+    "direct_jobs": -152.29264752612457,
+    "indirect_jobs": 204.31763556535606,
+    "induced_jobs": 37.278782043508976,
+    "total_jobs": 89.30377008274047,
+    "output_change_usd_million": 17.076495470280875,
+    "value_added_change_usd_million": 3.9389062252904803
+   },
+   {
+    "sector": "construction",
+    "direct_jobs": -5450.391430324383,
+    "indirect_jobs": -167.81252137292466,
+    "induced_jobs": 21.08457486133214,
+    "total_jobs": -5597.119376835975,
+    "output_change_usd_million": -103.52209495464703,
+    "value_added_change_usd_million": -34.75465500459595
+   },
+   {
+    "sector": "utilities",
+    "direct_jobs": -204.49449357262725,
+    "indirect_jobs": 170.4840934511497,
+    "induced_jobs": 34.9913701859125,
+    "total_jobs": 0.9809700644349562,
+    "output_change_usd_million": 0.19299454924954063,
+    "value_added_change_usd_million": 0.07228211131498934
+   },
+   {
+    "sector": "trade",
+    "direct_jobs": -3434.226662486633,
+    "indirect_jobs": 3059.935131113183,
+    "induced_jobs": 646.2543594367232,
+    "total_jobs": 271.9628280632735,
+    "output_change_usd_million": 6.349169651202374,
+    "value_added_change_usd_million": 2.924244029274528
+   },
+   {
+    "sector": "transport",
+    "direct_jobs": -785.0871849186178,
+    "indirect_jobs": 1151.692566877144,
+    "induced_jobs": 193.7031572567406,
+    "total_jobs": 560.3085392152667,
+    "output_change_usd_million": 21.374886650175853,
+    "value_added_change_usd_million": 6.529780199471056
+   },
+   {
+    "sector": "finance",
+    "direct_jobs": -442.1990108681476,
+    "indirect_jobs": 173.42523004662846,
+    "induced_jobs": 155.24172973855593,
+    "total_jobs": -113.53205108296322,
+    "output_change_usd_million": -13.306217146199415,
+    "value_added_change_usd_million": -11.911044265268098
+   },
+   {
+    "sector": "public_services",
+    "direct_jobs": -5713.509771535316,
+    "indirect_jobs": -113.98008854374218,
+    "induced_jobs": 395.81980300879906,
+    "total_jobs": -5431.67005707026,
+    "output_change_usd_million": -192.86067019142584,
+    "value_added_change_usd_million": -48.341211697736505
+   },
+   {
+    "sector": "other_services",
+    "direct_jobs": -8960.772147138885,
+    "indirect_jobs": -416.0096634318348,
+    "induced_jobs": 1851.8632425887904,
+    "total_jobs": -7524.918567981929,
+    "output_change_usd_million": -354.5689647153615,
+    "value_added_change_usd_million": -256.1977848094992
+   }
+  ],
+  "tariff_channels": {
+   "protected_sector_gain": {
+    "jobs": 85587.22027622665,
+    "demand_usd_million": 1997.444979673104
+   },
+   "downstream_cost": {
+    "jobs": -42568.057372299896,
+    "demand_usd_million": -779.6066734334745
+   },
+   "real_income_loss": {
+    "jobs": -40801.57797443587,
+    "demand_usd_million": -715.4180603043231
+   },
+   "retaliation": null
+  },
+  "other_channels": null,
+  "costs": {
+   "tariff_revenue_usd_million": 2769.6289296,
+   "spending_cost_usd_million": 0.0,
+   "net_fiscal_usd_million": 2769.6289296,
+   "cost_per_job_fiscal_usd_million": null,
+   "financing_drag_included": false
+  },
+  "induced_note": "upper-bound illustration of induced effects; the household closure caps the consumption propensity at 1",
+  "uncertainty": {
+   "low": -25194.56343807432,
+   "high": 18562.420330302695,
+   "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+  },
+  "data_source": {
+   "citation": "OECD ICIO 2025 (rev. Jan 2026), year 2022; employment: OECD TiM 2025 (EMPN); fallbacks: tim_parent_residual (see assumptions registry)",
+   "reference_year": 2022,
+   "notes": "households final demand = HFCE + NPISH; inventories kept so that x = Z*1 + F*1 balances; exports computed as residual: x - domestic intermediate use - domestic final demand; GDP proxy = sum(VA) + sum(TLS) (market prices); differs from the WDI dashboard GDP (different vintage and method); employment denominator: use the sector-sum employment (TiM, national-accounts concept); the ILOSTAT national total (labour-force-survey concept) is stored in baseline_totals for cross-checking only"
+  },
+  "assumptions_used": [
+   "ZAF-import-demand-elasticity-central",
+   "GLOBAL-own-price-demand-elasticity-central",
+   "GLOBAL-retaliation-share",
+   "GLOBAL-retaliation-top-sectors",
+   "GLOBAL-fiscal-multiplier-central"
+  ]
+ }
+}

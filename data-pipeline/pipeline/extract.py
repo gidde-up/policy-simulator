@@ -80,7 +80,9 @@ def check_balances(b: dict, country: str):
         )
 
     # Exports residual: tiny negatives can arise from rounding; anything
-    # materially negative signals a parsing problem.
+    # materially negative signals a parsing problem. Clipped cells are
+    # recorded so build.py can register them in the assumptions registry
+    # (every adjustment leaves an audit trail).
     exports = b["exports"]
     floor = -0.001 * max(x.max(), 1.0)
     if exports.min() < floor:
@@ -91,6 +93,9 @@ def check_balances(b: dict, country: str):
             found=f"exports[{b['industries'][i]}] = {exports[i]:.1f}",
             action="Inspect domestic-use computation.",
         )
+    clips = [(b["industries"][i], float(exports[i]))
+             for i in np.where(exports < 0)[0]]
+    b["export_clips"] = clips
     np.clip(exports, 0.0, None, out=exports)
 
     # Spectral radius of native A_d
