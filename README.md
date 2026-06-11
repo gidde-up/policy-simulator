@@ -1,189 +1,144 @@
-# Economic Policy Simulator for Job Creation
+# Economic Policy Simulator
 
-An interactive, educational tool for policymakers to explore the employment effects of economic policy choices. Currently supports **South Africa** and **Tunisia**.
+A **didactic** simulator of the employment effects of economic policy
+choices, built for ITCILO training use. Learners (many of them policy
+makers) explore the **direction, transmission channels and rough
+magnitude** of policy effects in five economies: **South Africa,
+Tunisia, Viet Nam, Thailand and Senegal**.
 
-## Features
+It is **not** a forecasting or decision-support tool, and it says so on
+every screen.
 
-- **Policy Simulation**: Model tariff, subsidy, SME stimulus, and industrial policy effects on employment
-- **Input-Output Analysis**: Uses Leontief multipliers to calculate direct, indirect, and induced job effects
-- **Real Data Integration**: Fetches live data from World Bank WDI API
-- **Demographic Disaggregation**: Results broken down by gender, age (youth vs adult), and job quality (formal vs informal)
-- **Interactive Visualizations**: Sankey flow diagrams showing policy transmission mechanisms
-- **AI Assistant**: Natural language interface powered by Claude for policy interpretation
-- **Preset Scenarios**: Quick-start with pre-configured policy packages
+## What it does
 
-## Screenshots
+- **Guided Tour** (default view): 15 curated scenarios with step-by-step
+  walkthroughs of what each result teaches. Every factual claim in the
+  walkthroughs is enforced by automated tests against the model output.
+- **Free Exploration**: three policy levers —
+  - **Tariffs**, decomposed into four separately displayed channels:
+    protected-sector gain (import substitution), downstream input-cost
+    push, real-income loss, and an optional stylised retaliation toggle;
+  - **Government sector support**, with a financing-drag toggle
+    (tax-financed) so gross and net effects can be compared;
+  - **SME / demand stimulus**, spread through household consumption and
+    scaled by a cited first-round fiscal multiplier.
+- Results show net employment with a **parameter range** (never a single
+  point), direct/indirect/(induced) decomposition, per-sector effects,
+  output and value-added changes, and fiscal flows. Induced (Type II)
+  effects are an explicit toggle labelled as an upper bound. When the
+  range straddles zero, the headline says so: *net effect approximately
+  zero; the robust result is the gross reallocation*.
+- **Country Data**: live World Bank WDI dashboard (the one genuinely
+  real-time data source; everything in the model itself is static,
+  versioned and reproducible).
 
-The tool provides three main views:
-1. **Policy Simulation** - Adjust policy levers via sliders and see projected employment effects
-2. **Country Data** - View real economic indicators from World Bank WDI
-3. **AI Assistant** - Ask policy questions in natural language
+## Where the numbers come from
 
-## Tech Stack
+The model core is a demand-driven Leontief input-output model computed
+by a reproducible pipeline (`data-pipeline/`) from:
 
-- **Frontend**: React 18, Vite, TailwindCSS, Recharts
-- **Backend**: Python 3.11+, FastAPI, NumPy/Pandas
-- **Data Sources**: World Bank WDI API, OECD ICIO Tables
-- **AI**: Anthropic Claude API (optional)
+| Source | Edition | Used for |
+|---|---|---|
+| OECD Inter-Country Input-Output (ICIO) tables | 2025 edition (rev. Jan 2026), year 2022, regular version (80 economies + ROW) | inter-industry structure, final demand, imports, value added, Leontief inverses (Type I and Miyazawa Type II) |
+| OECD Trade in Employment (TiM) | 2025 edition | employment and labour compensation by industry |
+| ILOSTAT | bulk API | national employment cross-checks, labour force, per-cell fallbacks |
+| World Bank WDI | live API | dashboard indicators only (not used inside the model) |
 
-## Quick Start
+The 50 ICIO industries are aggregated to 14 didactic sectors by a
+committed concordance (`data-pipeline/concordance_icio_to_14.csv`, one
+row per industry with a rationale). Per-country model files live in
+`backend/app/data/countries/*.json` with full source metadata, hashes
+and access dates (`data-pipeline/sources.lock.json`).
 
-### Prerequisites
+**Ground rules** (enforced by tests):
 
-- Python 3.11+
-- Node.js 18+
-- npm or yarn
+- No invented numbers: every coefficient is computed from a named
+  dataset by reproducible code, or carries a full citation in the
+  assumptions registry (`backend/app/data/assumptions.json`). An AST
+  test asserts the engine contains no numeric literal outside {0, 1, 2}.
+- Behavioural parameters are cited and ranged: import demand
+  elasticities per country (Kee, Nicita & Olarreaga 2008, Table 1),
+  own-price demand elasticity (USDA-ERS TB-1929), retaliation share
+  (Fajgelbaum et al. 2020), fiscal multiplier (IMF Batini et al. 2014).
+- Acceptance constraint: under default parameters a unilateral tariff
+  increase is never net employment-positive, in any country (automated
+  per-country test, consistent with Flaaen & Pierce 2019 and Amiti,
+  Redding & Weinstein 2019).
+- The full audit trail of every substituted data cell and calibration
+  decision is in the assumptions registry, surfaced in the UI as
+  per-lever popovers.
 
-### Installation
+The project history is candid: versions before 0.10.0 used hardcoded
+multipliers falsely labelled as OECD data. They were deleted; the
+comparison record is preserved in
+`data-pipeline/reports/comparison_multipliers.md`.
 
-1. **Clone and navigate to the project:**
-   ```bash
-   cd policy-simulator
-   ```
+## What the model cannot tell you
 
-2. **Set up the backend:**
-   ```bash
-   cd backend
-   python -m venv venv
+Comparative-static accounting at fixed 2022 prices and technology: no
+supply constraints, no price/wage/exchange-rate responses, no dynamics,
+no net labour-market outcomes, no within-sector distribution. The full
+statement is in [`docs/model-limitations.md`](docs/model-limitations.md),
+served in-app via the "what the model can and cannot tell you" panel.
+Per-lever methodological notes: [`docs/levers/`](docs/levers/).
 
-   # Windows
-   venv\Scripts\activate
-   # macOS/Linux
-   source venv/bin/activate
+## Tech stack
 
-   pip install -r requirements.txt
-   ```
+- **Backend**: Python, FastAPI; the engine
+  (`backend/app/models/engine.py`) is pure numpy over the static country
+  JSONs — all data is loaded once at startup, runtime is matrix-vector
+  products.
+- **Frontend**: React 18, Vite, TailwindCSS, Recharts.
+- **Data pipeline**: Python (pandas/numpy), own venv, not deployed.
+- **AI assistant**: dormant. The backend chat endpoints exist but the UI
+  is hidden; no LLM call is made during simulations.
 
-3. **Set up the frontend:**
-   ```bash
-   cd ../frontend
-   npm install
-   ```
+## Quick start (local)
 
-4. **(Optional) Configure AI Assistant:**
-   Create a `.env` file in the backend folder:
-   ```
-   ANTHROPIC_API_KEY=your_api_key_here
-   ```
+```bash
+# backend (terminal 1)
+cd backend
+python -m venv venv
+venv\Scripts\activate            # macOS/Linux: source venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
 
-### Running the Application
-
-1. **Start the backend (terminal 1):**
-   ```bash
-   cd backend
-   venv\Scripts\activate  # or source venv/bin/activate
-   uvicorn app.main:app --reload --port 8000
-   ```
-
-2. **Start the frontend (terminal 2):**
-   ```bash
-   cd frontend
-   npm run dev
-   ```
-
-3. **Open your browser:**
-   Navigate to `http://localhost:5173`
-
-## Project Structure
-
-```
-policy-simulator/
-├── backend/
-│   ├── app/
-│   │   ├── api/           # FastAPI routes and schemas
-│   │   ├── models/        # Economic model (I-O analysis)
-│   │   ├── services/      # WDI API, Chat services
-│   │   └── main.py        # Application entry point
-│   └── requirements.txt
-│
-├── frontend/
-│   ├── src/
-│   │   ├── components/    # React components
-│   │   ├── hooks/         # Custom React hooks
-│   │   ├── services/      # API client
-│   │   └── App.jsx        # Main application
-│   └── package.json
-│
-└── README.md
-```
-
-## Economic Model
-
-### Input-Output Analysis
-
-The model uses **Leontief Input-Output analysis** to calculate employment multipliers:
-
-1. **Direct Effects**: Jobs created directly in the targeted sector
-2. **Indirect Effects**: Jobs created in upstream supply chain sectors
-3. **Induced Effects**: Jobs created from household spending of new wages
-
-### Policy Transmission
-
-```
-Policy Change → Sector Demand Shock → Output Multiplier → Employment Effect
-     ↓                                       ↓
-  Tariff/Subsidy                    Leontief Inverse Matrix
-  SME Stimulus                      Employment Coefficients
-  Industrial Policy                 Demographic Shares
+# frontend (terminal 2)
+cd frontend
+npm install
+npm run dev                       # open http://localhost:5173
 ```
 
-### Employment Multipliers
+No API keys are needed. `ANTHROPIC_API_KEY` in `backend/.env` is only
+relevant to the dormant chat endpoints.
 
-The model calculates two types of multipliers:
-- **Type I**: Direct + Indirect effects
-- **Type II**: Direct + Indirect + Induced effects
+## Reproducing the data
 
-### Key Assumptions
+See [`data-pipeline/README.md`](data-pipeline/README.md) for exact
+commands, source URLs and the manual-download fallback (OECD endpoints
+sit behind a bot challenge). Re-running the pipeline regenerates the
+country JSONs; the validation suite gates every output.
 
-| Parameter | Description | Source |
-|-----------|-------------|--------|
-| Employment coefficients | Jobs per $1M output by sector | ILO, OECD TiM |
-| Inter-industry flows | Technical coefficients matrix | OECD ICIO |
-| Induced multiplier | 1.4x for developing countries | Literature |
-| Tariff elasticity | 0.3 (10% tariff → 3% demand) | Trade studies |
+## Tests and CI
 
-## Data Sources
+```bash
+cd data-pipeline
+.venv\Scripts\python -m pytest    # validation + engine + preset suite
+```
 
-### World Bank WDI API
-- Base URL: `https://api.worldbank.org/v2/`
-- Indicators: Employment, unemployment, labor force, GDP, sectoral composition
-- Updates: Quarterly
+GitHub Actions (`.github/workflows/tests.yml`) runs the full pytest
+suite, a backend API-contract smoke (including the tariff acceptance
+constraint) and the frontend build on every push and pull request.
+House rule: push to `main` (which auto-deploys) only after the suite is
+green locally.
 
-### OECD ICIO Tables
-- Inter-Country Input-Output tables
-- 45 industries (ISIC Rev.4)
-- Both South Africa and Tunisia included
+## Deployment
 
-## API Endpoints
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/simulate` | POST | Run policy simulation |
-| `/api/multipliers/{country}` | GET | Get employment multipliers |
-| `/api/country/{code}/profile` | GET | Get country economic profile |
-| `/api/chat` | POST | Natural language policy query |
-| `/api/presets` | GET | Get preset scenarios |
-
-## Limitations & Caveats
-
-This is a **didactic tool** designed for educational purposes:
-
-1. **Simplified Model**: Uses stylized I-O coefficients, not full econometric estimation
-2. **Static Analysis**: Does not model dynamic adjustment processes
-3. **Partial Equilibrium**: Does not account for general equilibrium effects
-4. **No Behavioral Response**: Assumes fixed technical coefficients
-5. **Uncertainty**: Results include ±15-20% confidence intervals
-
-**Results should be interpreted as illustrative, not precise forecasts.**
-
-## Contributing
-
-Contributions welcome! Areas for improvement:
-- Add more countries
-- Integrate actual OECD ICIO data files
-- Add more policy levers (exchange rate, interest rate)
-- Improve demographic employment shares with micro-data
-- Add scenario comparison features
+Render.com, auto-deploy from `main` (see `render.yaml`, `Dockerfile`,
+[`DEPLOYMENT.md`](DEPLOYMENT.md)). Note for classroom use: on the Render
+free tier the instance spins down when idle and a cold start takes about
+a minute — use a paid instance or an external keep-alive ping before
+sessions. `/health` is exempt from authentication.
 
 ## License
 
@@ -191,6 +146,6 @@ MIT License
 
 ## Acknowledgments
 
-- World Bank for the WDI API
-- OECD for Input-Output methodology and tables
-- ILO for employment data standards
+- OECD (ICIO tables, Trade in Employment database)
+- ILO (ILOSTAT)
+- World Bank (WDI API)

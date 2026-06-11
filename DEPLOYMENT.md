@@ -10,7 +10,8 @@ Deploys the Economic Policy Simulator to a public URL, protected by a shared use
 
 - A **GitHub account** (https://github.com)
 - A **Render.com account** (https://render.com — sign up with GitHub)
-- Your **Anthropic API key** (for the AI chatbot; optional)
+- (`ANTHROPIC_API_KEY` is only relevant to the dormant chat endpoints;
+  the app needs no API keys)
 
 ---
 
@@ -103,11 +104,27 @@ They simply open the link, enter the credentials once, and use the app. No accou
 
 ## Important Notes
 
-### Free Tier Behaviour
+### Free Tier Behaviour and Classroom Delivery
 - The service **spins down after 15 minutes of inactivity**
-- First visit after inactivity has a **~30 second loading time**
-- After that, it responds normally
-- Upgrade to paid ($7/month) to keep it always on
+- The first visit after inactivity is a **cold start: typically 30-60
+  seconds** (container boot + the engine loading all five country files;
+  after boot, simulations are matrix-vector products and effectively
+  instant)
+- **For classroom or workshop delivery, do one of the following:**
+  1. **Recommended**: upgrade the service to a paid instance
+     ($7/month) for the training period - no spin-down, no cold starts;
+  2. or set up an **external keep-alive ping** hitting
+     `https://YOUR-APP.onrender.com/health` every 10 minutes (e.g. a
+     free uptime monitor such as UptimeRobot). `/health` is exempt from
+     the Basic Auth, so monitors work without credentials;
+  3. at minimum, open the app 5 minutes before the session starts.
+
+### Continuous Integration
+GitHub Actions (`.github/workflows/tests.yml`) runs the full test suite
+(data validation, engine tests including the tariff acceptance
+constraint, API contract smoke, frontend build) on every push. House
+rule: push to `main` only after the suite passes locally; the Action is
+the public record.
 
 ### Changing the Password
 1. Go to your Render dashboard > policy-simulator > Environment

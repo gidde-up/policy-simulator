@@ -340,12 +340,14 @@ scripted. Pushing to main requires `pytest` green (CLAUDE.md rule 6).
 
 Open the project in Claude Code. CLAUDE.md at the project root is loaded automatically and contains workflow instructions. See CHANGELOG.md for version history and planned work.
 
-Sessions A, B and C of the post-audit overhaul are complete (data
-pipeline for all 5 countries, engine rebuild, didactic UI rebuild; both
-external verifications passed). Next: **Session D** — Phase 4 hygiene:
-GitHub Action running the pytest suite, README rewrite (remove all
-stale claims), Render deployment notes (cold starts, keep-alive), bump
-to 1.0.0.
+The post-audit overhaul is COMPLETE (v1.0.0): verified data pipeline
+(Session A), engine rebuild with cited parameters and acceptance gates
+(Session B), didactic UI rebuild (Session C), CI + documentation
+hygiene (Session D). Both external verifications passed. CI:
+`.github/workflows/tests.yml` (pytest suite, API-contract smoke,
+frontend build). The project is in maintenance mode; for changes,
+follow the ground rules in CLAUDE.md (no invented numbers, registry
+citations, push only after pytest green).
 
 ---
 

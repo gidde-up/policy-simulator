@@ -9,13 +9,14 @@ You are working on the ITCILO Economic Policy Simulator (FastAPI backend, React/
 3. The model core is a demand-driven Leontief input-output model computed from the OECD ICIO 2025 edition tables, with employment from OECD Trade in Employment (TiM) and ILOSTAT. All behavioural extensions (elasticities, induced effects) must be explicit, sourced and toggleable.
 4. Acceptance constraint: under default parameters, a unilateral tariff increase must NOT produce a net positive aggregate employment effect (consistent with Flaaen and Pierce 2019; Amiti, Redding and Weinstein 2019). An automated test enforces this.
 5. If required data is missing, stop and report; never substitute a guessed value.
-6. Deployment discipline: commit freely, but push to main (which auto-deploys) ONLY after `pytest` passes locally. This replaces the previous "push immediately" rule.
+6. Deployment discipline: commit freely, but push to main (which auto-deploys) ONLY after `pytest` passes locally. The GitHub Action (`.github/workflows/tests.yml`) re-runs the suite, the API-contract smoke and the frontend build on every push; a red Action on main must be fixed immediately.
 7. Secrets only via environment variables. No em-dashes in user-facing text; use en-dashes with spaces.
 8. Maintain CHANGELOG.md and project_context.md as before (rules below).
 
 ## Deployment
 - Auto-deploy is active: `git push origin main` triggers Render.com rebuild.
-- Push only after `pytest` passes locally (ground rule 6).
+- Push only after `pytest` passes locally (ground rule 6); CI re-runs the suite on GitHub.
+- Classroom delivery: paid Render instance or /health keep-alive ping (see DEPLOYMENT.md).
 
 ## CHANGELOG.md — mandatory maintenance
 - **Update CHANGELOG.md at the end of every session** before committing and pushing.
@@ -39,5 +40,5 @@ You are working on the ITCILO Economic Policy Simulator (FastAPI backend, React/
 - Keep the technical reference accurate and current; it is the primary onboarding document for resuming work.
 
 ## Project version
-Current version: **0.12.0** (2026-06-11)
-Next planned: **Session D** — Phase 4 hygiene: GitHub Action CI, README rewrite, Render deployment notes, bump to 1.0.0
+Current version: **1.0.0** (2026-06-11)
+The post-audit overhaul (Phases 1-4) is complete. No next session planned; maintenance mode.

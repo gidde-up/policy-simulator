@@ -6,7 +6,30 @@ The project is in pre-release (0.x.y); version 1.0.0 will mark the first product
 
 ---
 
-## [0.12.0] — 2026-06-11  ← current
+## [1.0.0] — 2026-06-11  ← current
+**Session 18 — Session D of the post-audit overhaul: Phase 4 hygiene and deployment. First production-ready release.**
+
+The MAJOR bump marks completion of the four-phase overhaul: verified data pipeline (A), engine rebuild with cited parameters and acceptance gates (B), didactic UI rebuild (C), CI and documentation hygiene (D). Both external verifications passed.
+
+### Continuous integration
+- GitHub Action (`.github/workflows/tests.yml`): on every push/PR — the full pytest suite (142 tests: data validation, engine math, tariff acceptance gates, preset walkthrough verification, no-literal AST check), a backend API-contract smoke that re-asserts the acceptance constraint through the HTTP layer, and the frontend build
+- CLAUDE.md rule 6 extended: local pytest gate before push stays; a red Action on main must be fixed immediately
+
+### Documentation
+- README.md rewritten from scratch: removed every stale claim (live OECD integration, research-grade multipliers, confidence intervals, AI assistant, demographic disaggregation, Sankey); now documents the real pipeline, data editions, ground rules, the audit history (with pointer to the preserved old-vs-new comparison), and what the model cannot do
+- DEPLOYMENT.md: free-tier cold-start guidance for classroom delivery (paid instance recommended, or /health keep-alive ping — /health is auth-exempt); CI section; removed the stale chatbot API-key prerequisite
+- FastAPI self-description (OpenAPI) rewritten to match the real model
+
+### Performance
+- All five country files and engine parameters are loaded eagerly at startup (data problems surface at boot; per-request work is matrix-vector products only)
+- Frontend bundle split into react/recharts/app chunks so app changes do not invalidate the vendor cache
+
+### Hygiene
+- Stray `test_request.json` (old API contract) and `nul` artifact removed from the repo root
+
+---
+
+## [0.12.0] — 2026-06-11
 **Session 17 — Session C of the post-audit overhaul: Phase 3 didactic UI rebuild**
 
 External verification of Session B passed (full numerical reproduction of all five acceptance results and the ZAF channel decomposition); its two carry-over items are implemented here.

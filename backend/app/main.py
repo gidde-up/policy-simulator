@@ -18,7 +18,7 @@ import os
 import secrets
 from pathlib import Path
 
-__version__ = "0.12.0"
+__version__ = "1.0.0"
 
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
@@ -70,8 +70,15 @@ class BasicAuthMiddleware(BaseHTTPMiddleware):
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Startup and shutdown events"""
-    # Startup
-    print("Starting Economic Policy Simulator API...")
+    # Startup: load all verified country data and engine parameters once,
+    # so data problems surface at boot and the first request is fast.
+    # Runtime work per simulation is matrix-vector products only.
+    from .models import engine
+    countries = engine.available_countries()
+    for iso3 in countries:
+        engine.load_country(iso3)
+    engine.load_params("central")
+    print(f"Economic Policy Simulator API: loaded {countries}")
     yield
     # Shutdown
     service = get_wdi_service()
@@ -84,28 +91,23 @@ app = FastAPI(
     description="""
     ## Overview
 
-    This API powers an interactive tool for exploring the employment effects
-    of economic policy choices in South Africa, Tunisia, Viet Nam, and Thailand.
+    Didactic simulator of the employment effects of policy choices in
+    South Africa, Tunisia, Viet Nam, Thailand and Senegal. NOT a
+    forecasting or decision-support tool.
 
-    ## Features
+    ## Model
 
-    - **Policy Simulation**: Model tariff, subsidy, SME stimulus, and industrial policy effects
-    - **Employment Multipliers**: Input-Output based direct, indirect, and induced job effects
-    - **Demographic Disaggregation**: Results by gender, age (youth vs adult), and job quality
-    - **Real Data**: Live World Bank WDI indicators
-    - **AI Assistant**: Natural language policy interpretation
+    Demand-driven Leontief input-output model computed from the OECD ICIO
+    2025 edition (reference year 2022), with employment from OECD Trade in
+    Employment (TiM) 2025 and ILOSTAT. Tariffs are decomposed into four
+    transmission channels; sector support carries a financing-drag toggle;
+    induced (Type II) effects are an optional, upper-bound-labelled toggle.
+    Every behavioural parameter carries a citation in the assumptions
+    registry and results are reported with parameter ranges.
 
-    ## Methodology
-
-    The model uses Leontief Input-Output analysis to calculate employment effects:
-
-    1. Policy changes translate to sector demand shocks
-    2. Demand shocks propagate through inter-industry linkages
-    3. Employment coefficients convert output changes to job effects
-    4. Demographic shares disaggregate by gender, age, formality
-
-    **Note**: This is a didactic tool designed for policy education.
-    Results should be interpreted as illustrative, not precise forecasts.
+    Under default parameters a unilateral tariff increase is never net
+    employment-positive (automated acceptance test, per Flaaen & Pierce
+    2019 and Amiti, Redding & Weinstein 2019).
     """,
     version=__version__,
     lifespan=lifespan
