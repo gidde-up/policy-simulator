@@ -52,6 +52,10 @@ policy-simulator/
 │   │   │   ├── __init__.py
 │   │   │   ├── wdi_service.py     # World Bank API client
 │   │   │   └── chat_service.py    # Claude AI integration
+│   │   ├── data/
+│   │   │   ├── countries/         # NEW: verified country JSONs (ZAF, TUN)
+│   │   │   ├── assumptions.json   # NEW: registry of substituted values
+│   │   │   └── tiva_multipliers.py  # legacy hardcoded values (Phase 2: delete)
 │   │   └── main.py                # FastAPI app entry point
 │   ├── requirements.txt
 │   ├── .env                       # ANTHROPIC_API_KEY (create this)
@@ -75,10 +79,21 @@ policy-simulator/
 │   ├── vite.config.js
 │   ├── tailwind.config.js
 │   └── node_modules/
+├── data-pipeline/         # NEW (0.10.0): ICIO 2025 data pipeline (own venv, not deployed)
+│   ├── run_pipeline.py            # CLI: --inspect | build countries
+│   ├── make_comparison.py         # new-vs-old multiplier table
+│   ├── config.py                  # countries, year, URLs, tolerances
+│   ├── concordance_icio_to_14.csv # 50 ICIO industries -> 14 sectors
+│   ├── sources.lock.json          # provenance manifest (sha256, dates)
+│   ├── pipeline/                  # parse, extract, aggregate, employment,
+│   │                              #   miyazawa, validate, build modules
+│   ├── tests/                     # pytest validation suite (34 tests)
+│   ├── reports/                   # validation + comparison reports
+│   └── raw/                       # git-ignored source downloads + cache
 ├── start.bat              # Windows startup script
 ├── start.sh               # Linux/Mac startup script
 ├── SETUP.txt              # Manual setup instructions
-└── PROJECT_CONTEXT.md     # This file
+└── project_context.md     # This file
 ```
 
 ---
@@ -151,30 +166,40 @@ Main application with 4 tabs:
 
 ## Data Sources
 
-### Real Data (World Bank WDI API)
-Fetched in real-time:
-- Unemployment rates (total, youth, female, male)
-- Labor force size
-- GDP figures
-- Employment by sector (agriculture, industry, services)
-- Population data
+### Status after the v0.10.0 audit (important)
+A code audit (June 2026) found that the multipliers hardcoded in
+`backend/app/data/tiva_multipliers.py` and the I-O coefficients generated
+in `economic_model.py` (np.random, seed 42) were NOT derived from the
+datasets they were labelled with. The running engine still uses them
+until the Phase 2 engine rebuild, but they must no longer be described
+as "OECD" or "research-grade". A multi-session overhaul is under way
+(see CHANGELOG 0.10.0).
 
-### Employment Multipliers
-| Country | Source | Quality | Reference Year |
-|---------|--------|---------|----------------|
-| South Africa | OECD TiVA/ICIO 2023 | Research-grade | 2020 |
-| Viet Nam | OECD TiVA/ICIO 2023 | Research-grade | 2020 |
-| Thailand | OECD TiVA/ICIO 2023 | Research-grade | 2020 |
-| Tunisia | Stylized estimates | Illustrative | N/A |
-| Mozambique | World Bank WDI 2024 + ILO | Illustrative | 2023-2024 |
+### Verified country data files (new, pipeline-derived)
+`backend/app/data/countries/{ISO3}.json` — computed by `data-pipeline/`
+from real datasets; full method and source manifest in
+`data-pipeline/README.md` and `data-pipeline/sources.lock.json`:
+- **OECD ICIO 2025 edition** (rev. Jan 2026), regular SML version,
+  year 2022: A_d, A_m, Leontief inverses (Type I and Miyazawa Type II),
+  output, VA, final demand, import shares
+- **OECD Trade in Employment (TiM) 2025**: employment (EMPN) and
+  compensation of employees (LABR) by industry
+- **ILOSTAT**: national employment cross-check, labour force
+- Substituted/capped cells registered in
+  `backend/app/data/assumptions.json`
 
-ZAF multipliers: OECD ICIO + Stats SA Labour Force Survey. VNM: OECD ICIO + GSO Labour Force Survey. THA: OECD ICIO + NSO Labour Force Survey. MOZ: Stylized estimates based on WDI employment data (69.5% agriculture, 95% informality), ILO statistics, and regional patterns from comparable low-income Sub-Saharan African economies.
+Built and validated so far: **ZAF, TUN** (Session A; pending independent
+verification). Remaining: VNM, THA, SEN (Session B). The engine does NOT
+read these files yet (Phase 2).
 
-### Still Stylized/Approximated
-- **Technical Coefficients Matrix**: Inter-industry linkages not from national I-O tables; seeded (`np.random.seed(42)`) for reproducibility
-- **Sector GDP Shares**: Approximate proportions
-- **Policy Response Functions**: Non-linear effects are stylized, not econometrically estimated
-- **Confidence intervals**: OECD countries ±10–15%; stylized countries ±25–30% (data-quality-aware since v0.8.0)
+### Real data (World Bank WDI API), used by the dashboard
+- Unemployment rates (total, youth, female, male), labour force, GDP,
+  employment by broad sector, population
+
+### Legacy values still driving the engine (to be deleted in Phase 2)
+- `tiva_multipliers.py` hardcoded multipliers and demographic shares
+- np.random technical-coefficient matrices in `economic_model.py`
+- Stylized policy response functions and synergy multipliers
 
 ---
 
@@ -326,9 +351,31 @@ Render auto-redeploys in 3-5 minutes. See `DEPLOYMENT.md` for full details.
 
 ---
 
+## Data Pipeline (new in 0.10.0)
+
+`data-pipeline/` (own venv, not deployed) computes the verified country
+JSONs. Key commands (from `data-pipeline/`):
+```powershell
+.venv\Scripts\python run_pipeline.py --inspect   # ICIO structure discovery
+.venv\Scripts\python run_pipeline.py ZAF TUN     # build country JSONs
+.venv\Scripts\python -m pytest                   # 34-test validation suite
+```
+Raw OECD downloads live in `data-pipeline/raw/` (git-ignored). OECD
+endpoints are behind a Cloudflare bot challenge: the ICIO zip and the two
+TiM CSV exports must be downloaded in a normal browser into `raw/` (exact
+URLs and filenames in `data-pipeline/README.md`). ILOSTAT downloads are
+scripted. Pushing to main requires `pytest` green (CLAUDE.md rule 6).
+
+---
+
 ## Resume Instructions
 
 Open the project in Claude Code. CLAUDE.md at the project root is loaded automatically and contains workflow instructions. See CHANGELOG.md for version history and planned work.
+
+Next session (Session B of the overhaul): Phase 1 for VNM, THA, SEN
+(extend the TiM CSV exports to those countries first), then the Phase 2
+engine rebuild against the verified JSONs, Mozambique removal and Senegal
+addition.
 
 ---
 

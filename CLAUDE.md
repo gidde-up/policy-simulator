@@ -1,8 +1,21 @@
 # Project Instructions — Economic Policy Simulator
 
+You are working on the ITCILO Economic Policy Simulator (FastAPI backend, React/Vite frontend, deployed on Render). Its sole purpose is DIDACTIC: learners (many of them policy makers) explore the direction, transmission channels and rough magnitude of employment effects of policy choices. It is NOT a forecasting or decision-support tool.
+
+## Non-negotiable ground rules
+
+1. No invented numbers. Every coefficient must be computed from a real dataset by reproducible code, or carry a full citation in the assumptions registry (backend/app/data/assumptions.json). It is forbidden to type numeric matrices, multipliers, elasticities or shares directly into source code.
+2. No false provenance. Never label values "OECD", "TiVA", "research-grade" or similar unless they were programmatically derived from the named dataset by code in this repository.
+3. The model core is a demand-driven Leontief input-output model computed from the OECD ICIO 2025 edition tables, with employment from OECD Trade in Employment (TiM) and ILOSTAT. All behavioural extensions (elasticities, induced effects) must be explicit, sourced and toggleable.
+4. Acceptance constraint: under default parameters, a unilateral tariff increase must NOT produce a net positive aggregate employment effect (consistent with Flaaen and Pierce 2019; Amiti, Redding and Weinstein 2019). An automated test enforces this.
+5. If required data is missing, stop and report; never substitute a guessed value.
+6. Deployment discipline: commit freely, but push to main (which auto-deploys) ONLY after `pytest` passes locally. This replaces the previous "push immediately" rule.
+7. Secrets only via environment variables. No em-dashes in user-facing text; use en-dashes with spaces.
+8. Maintain CHANGELOG.md and project_context.md as before (rules below).
+
 ## Deployment
 - Auto-deploy is active: `git push origin main` triggers Render.com rebuild.
-- After any commit that changes functionality, push immediately — do not ask for confirmation.
+- Push only after `pytest` passes locally (ground rule 6).
 
 ## CHANGELOG.md — mandatory maintenance
 - **Update CHANGELOG.md at the end of every session** before committing and pushing.
@@ -26,5 +39,5 @@
 - Keep the technical reference accurate and current; it is the primary onboarding document for resuming work.
 
 ## Project version
-Current version: **0.9.0** (2026-03-16)
-Next planned: **0.10.0** — Learner/Didactic fixes continued (guided mode, scenario compare, policy lever anchoring)
+Current version: **0.10.0** (2026-06-10)
+Next planned: **Session B** — Phase 1 for VNM, THA, SEN; Phase 2 engine rebuild against verified data

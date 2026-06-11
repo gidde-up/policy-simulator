@@ -1,0 +1,51 @@
+icio_code,description,sector_14,rationale
+A01,"Crop and animal production, hunting",agriculture,ISIC A primary agriculture
+A02,Forestry and logging,agriculture,ISIC A primary sector
+A03,Fishing and aquaculture,agriculture,ISIC A primary sector
+B05,Mining of coal and lignite,mining,ISIC B extractive
+B06,Extraction of crude petroleum and natural gas,mining,ISIC B extractive
+B07,Mining of metal ores,mining,ISIC B extractive
+B08,Other mining and quarrying,mining,ISIC B extractive
+B09,Mining support service activities,mining,ISIC B extractive support
+C10T12,"Food products, beverages and tobacco",food_processing,dedicated didactic sector for agro-processing
+C13T15,"Textiles, wearing apparel, leather",textiles,dedicated didactic sector
+C16,Wood and products of wood and cork,manufacturing,residual manufacturing
+C17_18,Paper products and printing,manufacturing,residual manufacturing
+C19,Coke and refined petroleum products,chemicals,petrochemical value chain; judgement call documented here: grouped with chemicals rather than mining or residual manufacturing
+C20,Chemicals and chemical products,chemicals,core of the sector
+C21,Pharmaceuticals,chemicals,chemical value chain
+C22,Rubber and plastic products,chemicals,downstream of petrochemicals; common 'chemicals rubber plastics' grouping (as in WIOD aggregations)
+C23,Other non-metallic mineral products,manufacturing,cement glass ceramics; residual manufacturing
+C24A,Basic metals: iron and steel,manufacturing,heavy industry; residual manufacturing
+C24B,Basic metals: non-ferrous metals,manufacturing,heavy industry; residual manufacturing
+C25,Fabricated metal products,manufacturing,residual manufacturing
+C26,"Computer, electronic and optical products",manufacturing,residual manufacturing (no dedicated electronics sector in the 14)
+C27,Electrical equipment,manufacturing,residual manufacturing
+C28,Machinery and equipment n.e.c.,manufacturing,residual manufacturing
+C29,"Motor vehicles, trailers and semi-trailers",automotive,dedicated didactic sector
+C301,Building of ships and boats,manufacturing,other transport equipment; NOT automotive (automotive = motor vehicles only)
+C302T309,Other transport equipment excl. ships,manufacturing,other transport equipment; NOT automotive
+C31T33,"Furniture; other manufacturing; repair of machinery",manufacturing,residual manufacturing
+D,"Electricity, gas, steam and air conditioning",utilities,ISIC D
+E,"Water supply, sewerage, waste management",utilities,ISIC E grouped with D as utilities
+F,Construction,construction,ISIC F
+G,Wholesale and retail trade; repair of motor vehicles,trade,ISIC G
+H49,Land transport and transport via pipelines,transport,ISIC H
+H50,Water transport,transport,ISIC H
+H51,Air transport,transport,ISIC H
+H52,Warehousing and support activities for transportation,transport,ISIC H
+H53,Postal and courier activities,transport,ISIC H
+I,Accommodation and food service activities,other_services,tourism-related private services; no dedicated sector in the 14
+J58T60,"Publishing, audiovisual and broadcasting",other_services,information services; no dedicated ICT sector in the 14
+J61,Telecommunications,other_services,information services
+J62_63,IT and other information services,other_services,information services
+K,Financial and insurance activities,finance,ISIC K
+L,Real estate activities,other_services,judgement call documented here: market services grouped with other_services (large imputed-rent VA with low employment)
+M,"Professional, scientific and technical activities",other_services,market services
+N,Administrative and support service activities,other_services,market services
+O,Public administration and defence,public_services,ISIC O
+P,Education,public_services,ISIC P largely public provision in target countries
+Q,Human health and social work activities,public_services,ISIC Q largely public provision in target countries
+R,"Arts, entertainment and recreation",other_services,personal services
+S,Other service activities,other_services,personal services
+T,Activities of households as employers,other_services,domestic work grouped with other services

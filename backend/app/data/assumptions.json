@@ -1,0 +1,233 @@
+{
+  "schema_version": "1.0",
+  "pipeline_version": "1.0.0",
+  "updated": "2026-06-11",
+  "entries": [
+    {
+      "id": "ZAF-2022-employment-C24A-1",
+      "country": "ZAF",
+      "reference_year": 2022,
+      "scope": "employment",
+      "sector": "manufacturing",
+      "field": "employment",
+      "icio_codes": [
+        "C24A"
+      ],
+      "value": 65526.6209,
+      "unit": "persons",
+      "method": "proportional_allocation",
+      "basis": "TiM C24 minus filled siblings, allocated by ICIO output share 0.726",
+      "source": {
+        "dataset": "OECD TiM 2025 (DSD_TIM_2025@DF_TIM_2025)",
+        "url": "https://sdmx.oecd.org/public/rest/data/OECD.STI.PIE,DSD_TIM_2025@DF_TIM_2025,1.0/{measure}.{countries}....A",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "ZAF-2022-employment-C24B-2",
+      "country": "ZAF",
+      "reference_year": 2022,
+      "scope": "employment",
+      "sector": "manufacturing",
+      "field": "employment",
+      "icio_codes": [
+        "C24B"
+      ],
+      "value": 24673.3791,
+      "unit": "persons",
+      "method": "proportional_allocation",
+      "basis": "TiM C24 minus filled siblings, allocated by ICIO output share 0.274",
+      "source": {
+        "dataset": "OECD TiM 2025 (DSD_TIM_2025@DF_TIM_2025)",
+        "url": "https://sdmx.oecd.org/public/rest/data/OECD.STI.PIE,DSD_TIM_2025@DF_TIM_2025,1.0/{measure}.{countries}....A",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "ZAF-2022-labour_compensation-C24A-3",
+      "country": "ZAF",
+      "reference_year": 2022,
+      "scope": "labour_compensation",
+      "sector": "manufacturing",
+      "field": "compensation",
+      "icio_codes": [
+        "C24A"
+      ],
+      "value": 1598.7188,
+      "unit": "USD million",
+      "method": "proportional_allocation",
+      "basis": "TiM C24 minus filled siblings, allocated by ICIO output share 0.726",
+      "source": {
+        "dataset": "OECD TiM 2025 (DSD_TIM_2025@DF_TIM_2025)",
+        "url": "https://sdmx.oecd.org/public/rest/data/OECD.STI.PIE,DSD_TIM_2025@DF_TIM_2025,1.0/{measure}.{countries}....A",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "ZAF-2022-labour_compensation-C24B-4",
+      "country": "ZAF",
+      "reference_year": 2022,
+      "scope": "labour_compensation",
+      "sector": "manufacturing",
+      "field": "compensation",
+      "icio_codes": [
+        "C24B"
+      ],
+      "value": 601.9812,
+      "unit": "USD million",
+      "method": "proportional_allocation",
+      "basis": "TiM C24 minus filled siblings, allocated by ICIO output share 0.274",
+      "source": {
+        "dataset": "OECD TiM 2025 (DSD_TIM_2025@DF_TIM_2025)",
+        "url": "https://sdmx.oecd.org/public/rest/data/OECD.STI.PIE,DSD_TIM_2025@DF_TIM_2025,1.0/{measure}.{countries}....A",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "ZAF-2022-consumption_propensity-cap-5",
+      "country": "ZAF",
+      "reference_year": 2022,
+      "scope": "consumption_propensity",
+      "sector": "all",
+      "field": "household_consumption_column",
+      "icio_codes": [],
+      "value": 1.0,
+      "unit": "ratio",
+      "method": "cap",
+      "basis": "implied propensity to consume out of labour income 1.160 > 1; consumption column scaled to propensity 1 in the Miyazawa closure",
+      "source": {
+        "dataset": "derived from OECD ICIO 2025 + TiM 2025",
+        "url": "https://www.oecd.org/en/data/datasets/inter-country-input-output-tables.html",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": "Households consume out of non-labour income too; the closure only recycles labour income."
+    },
+    {
+      "id": "TUN-2022-employment-C24A-1",
+      "country": "TUN",
+      "reference_year": 2022,
+      "scope": "employment",
+      "sector": "manufacturing",
+      "field": "employment",
+      "icio_codes": [
+        "C24A"
+      ],
+      "value": 6408.2971,
+      "unit": "persons",
+      "method": "proportional_allocation",
+      "basis": "TiM C24 minus filled siblings, allocated by ICIO output share 0.599",
+      "source": {
+        "dataset": "OECD TiM 2025 (DSD_TIM_2025@DF_TIM_2025)",
+        "url": "https://sdmx.oecd.org/public/rest/data/OECD.STI.PIE,DSD_TIM_2025@DF_TIM_2025,1.0/{measure}.{countries}....A",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "TUN-2022-employment-C24B-2",
+      "country": "TUN",
+      "reference_year": 2022,
+      "scope": "employment",
+      "sector": "manufacturing",
+      "field": "employment",
+      "icio_codes": [
+        "C24B"
+      ],
+      "value": 4291.7029,
+      "unit": "persons",
+      "method": "proportional_allocation",
+      "basis": "TiM C24 minus filled siblings, allocated by ICIO output share 0.401",
+      "source": {
+        "dataset": "OECD TiM 2025 (DSD_TIM_2025@DF_TIM_2025)",
+        "url": "https://sdmx.oecd.org/public/rest/data/OECD.STI.PIE,DSD_TIM_2025@DF_TIM_2025,1.0/{measure}.{countries}....A",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "TUN-2022-labour_compensation-C24A-3",
+      "country": "TUN",
+      "reference_year": 2022,
+      "scope": "labour_compensation",
+      "sector": "manufacturing",
+      "field": "compensation",
+      "icio_codes": [
+        "C24A"
+      ],
+      "value": 43.3009,
+      "unit": "USD million",
+      "method": "proportional_allocation",
+      "basis": "TiM C24 minus filled siblings, allocated by ICIO output share 0.599",
+      "source": {
+        "dataset": "OECD TiM 2025 (DSD_TIM_2025@DF_TIM_2025)",
+        "url": "https://sdmx.oecd.org/public/rest/data/OECD.STI.PIE,DSD_TIM_2025@DF_TIM_2025,1.0/{measure}.{countries}....A",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "TUN-2022-labour_compensation-C24B-4",
+      "country": "TUN",
+      "reference_year": 2022,
+      "scope": "labour_compensation",
+      "sector": "manufacturing",
+      "field": "compensation",
+      "icio_codes": [
+        "C24B"
+      ],
+      "value": 28.9991,
+      "unit": "USD million",
+      "method": "proportional_allocation",
+      "basis": "TiM C24 minus filled siblings, allocated by ICIO output share 0.401",
+      "source": {
+        "dataset": "OECD TiM 2025 (DSD_TIM_2025@DF_TIM_2025)",
+        "url": "https://sdmx.oecd.org/public/rest/data/OECD.STI.PIE,DSD_TIM_2025@DF_TIM_2025,1.0/{measure}.{countries}....A",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "TUN-2022-consumption_propensity-cap-5",
+      "country": "TUN",
+      "reference_year": 2022,
+      "scope": "consumption_propensity",
+      "sector": "all",
+      "field": "household_consumption_column",
+      "icio_codes": [],
+      "value": 1.0,
+      "unit": "ratio",
+      "method": "cap",
+      "basis": "implied propensity to consume out of labour income 1.134 > 1; consumption column scaled to propensity 1 in the Miyazawa closure",
+      "source": {
+        "dataset": "derived from OECD ICIO 2025 + TiM 2025",
+        "url": "https://www.oecd.org/en/data/datasets/inter-country-input-output-tables.html",
+        "accessed": "2026-06-11",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": "Households consume out of non-labour income too; the closure only recycles labour income."
+    }
+  ]
+}

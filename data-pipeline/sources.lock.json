@@ -1,0 +1,60 @@
+{
+  "sources": {
+    "icio_2016_2022_sml": {
+      "url": "https://webfs-sti.oecd.org/files/STI-PIE/ICIO/2025/2016-2022_SML.zip",
+      "filename": "2016-2022_SML.zip",
+      "sha256": "46db55c45747e26dde5c1716d072b2aa74ace362a4424491ac646d2ab175befb",
+      "bytes": 166241019,
+      "access_date": "2026-06-11",
+      "method": "manual"
+    },
+    "tim_empn_2022": {
+      "url": "https://sdmx.oecd.org/public/rest/data/OECD.STI.PIE,DSD_TIM_2025@DF_TIM_2025,1.0/EMPN.ZAF+TUN....A?startPeriod=2022&endPeriod=2022&format=csvfilewithlabels",
+      "filename": "TIM_EMPN_2022.csv",
+      "sha256": "442a8562955570d3941cb3145348e25c76c98d48d16f81d9f7b0fd329c42680a",
+      "bytes": 38877,
+      "access_date": "2026-06-11",
+      "method": "manual"
+    },
+    "tim_labr_2022": {
+      "url": "https://sdmx.oecd.org/public/rest/data/OECD.STI.PIE,DSD_TIM_2025@DF_TIM_2025,1.0/LABR.ZAF+TUN....A?startPeriod=2022&endPeriod=2022&format=csvfilewithlabels",
+      "filename": "TIM_LABR_2022.csv",
+      "sha256": "e87332afd47b2e32828cf352968e84b10adef387dacb5a9b52ab0cd467612626",
+      "bytes": 85530,
+      "access_date": "2026-06-11",
+      "method": "manual"
+    },
+    "ilostat_emp_temp_sex_eco_nb_a_zaf": {
+      "url": "https://rplumber.ilo.org/data/indicator/?id=EMP_TEMP_SEX_ECO_NB_A&ref_area=ZAF&format=.csv&sex=SEX_T&timefrom=2018",
+      "filename": "ILOSTAT_EMP_TEMP_SEX_ECO_NB_A_ZAF.csv",
+      "sha256": "851ede9028c3ed684ec81defab3491d78d2906dfc350f3ec33ef2ed6ad49222e",
+      "bytes": 20207,
+      "access_date": "2026-06-11",
+      "method": "script"
+    },
+    "ilostat_eap_teap_sex_age_nb_a_zaf": {
+      "url": "https://rplumber.ilo.org/data/indicator/?id=EAP_TEAP_SEX_AGE_NB_A&ref_area=ZAF&format=.csv&sex=SEX_T&timefrom=2018",
+      "filename": "ILOSTAT_EAP_TEAP_SEX_AGE_NB_A_ZAF.csv",
+      "sha256": "f11e13836c4ac3c866a896fc1b8a355fe04e9d9debd747d1ba9b6c837d8b8441",
+      "bytes": 18964,
+      "access_date": "2026-06-11",
+      "method": "script"
+    },
+    "ilostat_emp_temp_sex_eco_nb_a_tun": {
+      "url": "https://rplumber.ilo.org/data/indicator/?id=EMP_TEMP_SEX_ECO_NB_A&ref_area=TUN&format=.csv&sex=SEX_T&timefrom=2018",
+      "filename": "ILOSTAT_EMP_TEMP_SEX_ECO_NB_A_TUN.csv",
+      "sha256": "c6d56cc999fb33e03496f2e723ddf2bb995e05080da7dca9a19105d92f30a04a",
+      "bytes": 13800,
+      "access_date": "2026-06-11",
+      "method": "script"
+    },
+    "ilostat_eap_teap_sex_age_nb_a_tun": {
+      "url": "https://rplumber.ilo.org/data/indicator/?id=EAP_TEAP_SEX_AGE_NB_A&ref_area=TUN&format=.csv&sex=SEX_T&timefrom=2018",
+      "filename": "ILOSTAT_EAP_TEAP_SEX_AGE_NB_A_TUN.csv",
+      "sha256": "937d6493b398e08088467b8e624b62817eead957eb1b7f654c8c377993311001",
+      "bytes": 11359,
+      "access_date": "2026-06-11",
+      "method": "script"
+    }
+  }
+}

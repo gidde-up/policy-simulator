@@ -6,7 +6,33 @@ The project is in pre-release (0.x.y); version 1.0.0 will mark the first product
 
 ---
 
-## [0.9.0] — 2026-03-16  ← current
+## [0.10.0] — 2026-06-11  ← current
+**Session 15 — Phase 1 data pipeline (Session A of the post-audit overhaul): real OECD ICIO data for ZAF and TUN**
+
+### Data pipeline (new top-level directory `data-pipeline/`)
+- New reproducible pipeline computing country model files from real datasets: OECD ICIO 2025 edition (rev. Jan 2026, regular "SML" version, 80 economies + ROW, year 2022), OECD Trade in Employment (TiM) 2025 (`EMPN` employment, `LABR` compensation of employees), ILOSTAT (national employment cross-check, labour force)
+- Structure discovery from the ICIO file itself (81 economies, 50 industries, FD categories HFCE/NPISH/GGFC/GFCF/INVNT/DPABR); nothing about the layout hardcoded; unknown labels stop the run
+- Committed concordance `data-pipeline/concordance_icio_to_14.csv`: 50 ICIO industries to the 14 didactic sectors, one row per code with rationale (judgement calls documented: C19 coke/petroleum and C22 rubber/plastics grouped with chemicals; C301/C302T309 other transport equipment NOT in automotive; real estate in other_services)
+- Per-country extraction at native detail with balance gates (column identity, OUT row/column consistency, derived VA vs VA row, exports residual >= 0, spectral radius < 1); aggregation to 14 sectors; `A_d`, `A_m`, `L_typeI = (I-A_d)^-1`
+- Employment matching cascade: TiM exact (48/50 industries for both countries) -> child-sum -> parent-residual (C24 split over C24A/C24B by output shares) -> ILOSTAT section residual; every non-exact cell registered
+- Type II (induced) via Miyazawa household endogenisation from TiM labour compensation; consumption propensity capped at 1 where exceeded (registered)
+- Output: `backend/app/data/countries/ZAF.json` and `TUN.json` (versioned schema with full source metadata and access dates); `backend/app/data/assumptions.json` registry (10 entries); validation reports and a new-vs-old multiplier comparison table in `data-pipeline/reports/`
+- Provenance lockfile `data-pipeline/sources.lock.json` (URL, SHA-256, bytes, access date, acquisition method per source file); OECD endpoints are Cloudflare-protected, so the ICIO zip and TiM CSVs were acquired via documented manual browser download
+- pytest suite (34 tests): coefficient sums, non-negativity, spectral radius, output multiplier ranges, employment vs ILOSTAT national totals, 3-sector hand-check of the Leontief identity, registry integrity, comparison-table freshness
+- Findings for the record: old hardcoded "research-grade" multipliers exceed the ICIO-derived values by roughly 2-4x in most sectors (e.g. ZAF agriculture direct: 127.3 typed in code vs 29.5 computed)
+
+### Project governance
+- CLAUDE.md replaced with the post-audit ground rules (no invented numbers, no false provenance, stop on missing data, push only after pytest passes)
+- .gitignore: added `data-pipeline/raw/`, `data-pipeline/.venv/`, `*.zip`
+
+### Unchanged this session (by design — Session A stops here)
+- Engine (`economic_model.py`, `tiva_multipliers.py`), API and frontend untouched; the app still runs on the old multipliers until the Phase 2 engine rebuild
+- Mozambique removal and Senegal addition deferred to Session B
+- ZAF.json / TUN.json now go to independent verification before Session B (VNM, THA, SEN + engine rebuild)
+
+---
+
+## [0.9.0] — 2026-03-16
 **Session 14 — Learner/Didactic fixes**
 
 ### Frontend

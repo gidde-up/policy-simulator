@@ -21,3 +21,8 @@ Thumbs.db
 
 # Claude Code
 .claude/
+
+# Data pipeline (raw downloads and local venv; large, reproducible via data-pipeline/README.md)
+data-pipeline/raw/
+data-pipeline/.venv/
+*.zip
