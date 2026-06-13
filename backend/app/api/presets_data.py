@@ -179,6 +179,11 @@ PRESETS = [
                      "of the same injection is strongly positive. The "
                      "lever's sign is decided by WHO PAYS, not by the "
                      "injection."},
+            {"title": "Read it as accounting, not a forecast",
+             "text": "This is a comparative-static input-output result "
+                     "at fixed prices and technology - the direction and "
+                     "rough magnitude of a reallocation, not a prediction "
+                     "of Viet Nam's employment."},
         ],
         "expected": {"net_sign": "negative", "has_tariff_channels": False},
     },
@@ -247,6 +252,11 @@ PRESETS = [
                      "labour-intensive activity. Net effect: negative, "
                      "despite real gains inside the automotive supply "
                      "chain."},
+            {"title": "Read it as accounting, not a forecast",
+             "text": "Comparative-static input-output result at fixed "
+                     "prices and technology - the direction and rough "
+                     "magnitude of a reallocation, not a prediction of "
+                     "Thailand's employment."},
         ],
         "expected": {"net_sign": "negative", "has_tariff_channels": True},
     },
@@ -338,5 +348,205 @@ PRESETS = [
         ],
         "expected": {"net_sign": "negative", "has_tariff_channels": True,
                      "gains_positive": True},
+    },
+
+    # ===== extension levers (Session F/H); group order in the UI puts
+    # industrial/sectoral and public-employment scenarios first =====
+    {
+        "id": "zaf_public_works",
+        "country_code": "ZAF",
+        "name": "Public Works (Labour-Based)",
+        "description": "An employment-intensive public works programme, "
+                       "1% of GDP",
+        "params": {"public_works": {"budget_pct_gdp": 1.0,
+                                    "method": "labour_based"}},
+        "walkthrough": [
+            {"title": "Maximising labour content",
+             "text": "Labour-based methods spend a much larger share of "
+                     "the budget on wages than equipment-based ones "
+                     "(ILO EIIP: 20-50% vs the construction sector's own "
+                     "~16%). The wage component creates direct job-years; "
+                     "the materials component flows through the "
+                     "construction supply chain."},
+            {"title": "Job-years, not permanent posts",
+             "text": "Results are job-years: one person employed for one "
+                     "year. Even net of the tax-financing drag, the "
+                     "labour intensity makes this strongly job-positive. "
+                     "Real programmes such as South Africa's EPWP use "
+                     "this approach (referenced as context; the tool does "
+                     "not model the EPWP's specific design)."},
+        ],
+        "expected": {"net_sign": "positive", "has_tariff_channels": False,
+                     "has_job_years": True},
+    },
+    {
+        "id": "tha_direct_public_employment",
+        "country_code": "THA",
+        "name": "Direct Public Hiring",
+        "description": "Government hiring in public services, 1% of GDP",
+        "params": {"direct_public_employment": {"budget_pct_gdp": 1.0}},
+        "walkthrough": [
+            {"title": "Wages plus operating costs",
+             "text": "The budget splits, data-derived, into a wage "
+                     "component (direct job-years at public-services pay) "
+                     "and a non-wage operating component flowing through "
+                     "the public-services input chain."},
+            {"title": "Net of financing",
+             "text": "With the tax-financing drag on, the net effect is "
+                     "close to zero here: public services are only "
+                     "moderately labour-intensive relative to the "
+                     "household basket the tax falls on. Toggle the drag "
+                     "off to see the gross programme effect."},
+        ],
+        "expected": {"net_sign": "negative", "has_tariff_channels": False,
+                     "has_job_years": True},
+    },
+    {
+        "id": "sen_production_subsidy_agri",
+        "country_code": "SEN",
+        "name": "Production Subsidy: Agriculture",
+        "description": "A 8% production subsidy to agriculture",
+        "params": {"production_subsidy": {"agriculture": 8}},
+        "walkthrough": [
+            {"title": "Subsidising a jobs-rich sector",
+             "text": "A production subsidy lowers the sector's price, "
+                     "raising demand for it and lifting household real "
+                     "income. Agriculture is the most labour-intensive "
+                     "sector in Senegal."},
+            {"title": "Net positive",
+             "text": "Because agriculture creates far more jobs per "
+                     "dollar than the household basket the tax falls on, "
+                     "the subsidy is net job-positive even with the "
+                     "financing drag - the mirror image of subsidising a "
+                     "capital-intensive sector."},
+        ],
+        "expected": {"net_sign": "positive", "has_tariff_channels": False},
+    },
+    {
+        "id": "tha_production_subsidy_auto",
+        "country_code": "THA",
+        "name": "Production vs Wage Subsidy: Automotive",
+        "description": "A 10% production subsidy to automotive - compare "
+                       "with the wage-subsidy variant",
+        "params": {"production_subsidy": {"automotive": 10}},
+        "walkthrough": [
+            {"title": "Subsidising a capital-intensive sector",
+             "text": "Automotive creates few jobs per dollar. A "
+                     "production subsidy on its full output is expensive, "
+                     "so the tax-financing drag on the labour-intensive "
+                     "household basket dominates: net negative."},
+            {"title": "Compare the wage subsidy",
+             "text": "Switch to a wage subsidy at the same rate: it costs "
+                     "only the labour share of output, a far smaller "
+                     "fiscal footprint and a much smaller net loss. Same "
+                     "sector, very different bill."},
+        ],
+        "expected": {"net_sign": "negative", "has_tariff_channels": False},
+    },
+    {
+        "id": "tha_wage_subsidy_auto",
+        "country_code": "THA",
+        "name": "Wage Subsidy: Automotive",
+        "description": "A 10% wage subsidy to automotive labour costs",
+        "params": {"wage_subsidy": {"automotive": 10}},
+        "walkthrough": [
+            {"title": "Cheaper than a production subsidy",
+             "text": "A wage subsidy covers only the labour share of "
+                     "cost, so the fiscal cost and its financing drag are "
+                     "much smaller than a production subsidy's. The net "
+                     "loss is correspondingly smaller."},
+            {"title": "What this leaves out",
+             "text": "This models only the demand-side effect of the "
+                     "lower cost. Hiring responses beyond that, "
+                     "displacement and deadweight are deliberately not "
+                     "modelled (see the assumptions panel)."},
+        ],
+        "expected": {"net_sign": "negative", "has_tariff_channels": False},
+    },
+    {
+        "id": "vnm_investment_incentive",
+        "country_code": "VNM",
+        "name": "Investment Tax Incentive",
+        "description": "A tax incentive costing 1% of GDP at 30% intensity",
+        "params": {"investment_tax_incentive":
+                   {"fiscal_cost_pct_gdp": 1.0, "intensity": 30}},
+        "walkthrough": [
+            {"title": "The windfall",
+             "text": "Investor surveys find most incentivised investment "
+                     "would have happened anyway. At the registered 75% "
+                     "redundancy, three-quarters of the spend is windfall "
+                     "- only the remaining quarter creates new demand."},
+            {"title": "Net negative",
+             "text": "The full revenue forgone carries the financing "
+                     "drag, while only the small additional investment "
+                     "adds jobs: the net effect is negative. The "
+                     "windfall is shown explicitly - it is the point."},
+        ],
+        "expected": {"net_sign": "negative", "has_tariff_channels": False,
+                     "has_windfall": True},
+    },
+    {
+        "id": "vnm_public_investment",
+        "country_code": "VNM",
+        "name": "Public Investment (Broad)",
+        "description": "Public investment of 1.5% of GDP by GFCF "
+                       "composition",
+        "params": {"public_investment": {"amount_pct_gdp": 1.5}},
+        "walkthrough": [
+            {"title": "Investment vs the basket that funds it",
+             "text": "Investment demand follows the capital-goods (GFCF) "
+                     "mix, which is less labour-intensive than Viet Nam's "
+                     "household consumption basket. Tax-financed, the "
+                     "drag on that jobs-rich basket outweighs the "
+                     "investment's job content."},
+            {"title": "Gross vs net",
+             "text": "Toggle the financing drag off to see the gross "
+                     "effect; the net result is the honest one for a "
+                     "tax-financed programme."},
+        ],
+        "expected": {"net_sign": "negative", "has_tariff_channels": False},
+    },
+    {
+        "id": "zaf_stimulus_government",
+        "country_code": "ZAF",
+        "name": "Stimulus Composition: Government",
+        "description": "A 2%-of-GDP stimulus via government consumption "
+                       "- compare with the household-transfer default",
+        "params": {"sme_stimulus": 2, "stimulus_target": "government"},
+        "walkthrough": [
+            {"title": "Composition matters",
+             "text": "Routed through government consumption, the stimulus "
+                     "enters demand at full value (its only leakage is "
+                     "the imported content of what government buys)."},
+            {"title": "Compare the transfer",
+             "text": "The household-transfer default is scaled by a "
+                     "first-round fiscal multiplier below 1 (transfers "
+                     "are partly saved or spent on imports), so it "
+                     "creates fewer jobs for the same budget. How you "
+                     "spend matters as much as how much."},
+        ],
+        "expected": {"net_sign": "positive", "has_tariff_channels": False},
+    },
+    {
+        "id": "tun_depreciation",
+        "country_code": "TUN",
+        "name": "Exchange-Rate Depreciation (Stylised)",
+        "description": "A 10% depreciation: export gains vs import-cost "
+                       "and real-income losses",
+        "params": {"depreciation": 10},
+        "walkthrough": [
+            {"title": "Two sides",
+             "text": "A depreciation makes exports cheaper abroad "
+                     "(export volumes expand) but raises the domestic "
+                     "price of all imports, lifting input costs and "
+                     "cutting household real income."},
+            {"title": "Import-dependent: net negative here",
+             "text": "Tunisia's high imported-input dependence means the "
+                     "cost and real-income losses outweigh the export "
+                     "gain. The sign is not forced - the country's "
+                     "structure decides it. Stylised: a pure relative-"
+                     "price shock, no monetary or inflation dynamics."},
+        ],
+        "expected": {"net_sign": "negative", "has_tariff_channels": False},
     },
 ]
