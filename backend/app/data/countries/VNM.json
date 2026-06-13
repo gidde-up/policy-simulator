@@ -1569,5 +1569,69 @@
   "labour_force_persons": 55895532.0,
   "labour_force_year": 2022,
   "source": "ILOSTAT (EMP_TEMP_SEX_ECO_NB_A, EAP_TEAP_SEX_AGE_NB_A)"
+ },
+ "informality": {
+  "indicator": "EMP_NIFL_SEX_ECO_NB_A",
+  "denominator_indicator": "EMP_TEMP_SEX_ECO_NB_A",
+  "classification": "ISIC Rev.4 sections",
+  "year_used": 2022,
+  "informal_share_of_employment": {
+   "agriculture": 0.9893,
+   "mining": 0.247,
+   "manufacturing": 0.3212,
+   "textiles": 0.3212,
+   "automotive": 0.3212,
+   "food_processing": 0.3212,
+   "chemicals": 0.3212,
+   "construction": 0.9091,
+   "utilities": 0.2414,
+   "trade": 0.7332,
+   "transport": 0.6237,
+   "finance": 0.1097,
+   "public_services": 0.0848,
+   "other_services": 0.7153
+  },
+  "coverage": {
+   "classifs_observed": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "TOTAL"
+   ]
+  },
+  "manufacturing_family_inherited_from_section_C": true,
+  "context": {
+   "note": "context indicators only; not used in simulation arithmetic",
+   "national_informal_employment_rate_pct": 68.5,
+   "national_informality_year": 2022,
+   "national_informality_indicator": "EMP_NIFL_SEX_RT_A",
+   "working_poverty_rate_pct": 1.9,
+   "working_poverty_year": 2022,
+   "working_poverty_indicator": "SDG_0111_SEX_AGE_RT_A"
+  },
+  "provenance": [
+   "VNM-informality-manufacturing",
+   "VNM-informality-textiles",
+   "VNM-informality-automotive",
+   "VNM-informality-food_processing",
+   "VNM-informality-chemicals"
+  ]
  }
 }

@@ -103,6 +103,126 @@
       "bytes": 11033,
       "access_date": "2026-06-11",
       "method": "script"
+    },
+    "ilostat_emp_nifl_sex_eco_nb_a_zaf": {
+      "url": "https://rplumber.ilo.org/data/indicator/?id=EMP_NIFL_SEX_ECO_NB_A&ref_area=ZAF&format=.csv&sex=SEX_T&timefrom=2015",
+      "filename": "ILOSTAT_EMP_NIFL_SEX_ECO_NB_A_ZAF.csv",
+      "sha256": "a0ac66bef5067fe0e893cf011acdf7cec532eb148508b14042bc9946c5d0f1bc",
+      "bytes": 28479,
+      "access_date": "2026-06-12",
+      "method": "script"
+    },
+    "ilostat_emp_nifl_sex_eco_nb_a_tun": {
+      "url": "https://rplumber.ilo.org/data/indicator/?id=EMP_NIFL_SEX_ECO_NB_A&ref_area=TUN&format=.csv&sex=SEX_T&timefrom=2015",
+      "filename": "ILOSTAT_EMP_NIFL_SEX_ECO_NB_A_TUN.csv",
+      "sha256": "0caa12bf2196c0b2865f3b3dd43588e6d9ad086d00e9c869054e95bedd8e870e",
+      "bytes": 3617,
+      "access_date": "2026-06-12",
+      "method": "script"
+    },
+    "ilostat_emp_nifl_sex_eco_nb_a_vnm": {
+      "url": "https://rplumber.ilo.org/data/indicator/?id=EMP_NIFL_SEX_ECO_NB_A&ref_area=VNM&format=.csv&sex=SEX_T&timefrom=2015",
+      "filename": "ILOSTAT_EMP_NIFL_SEX_ECO_NB_A_VNM.csv",
+      "sha256": "29a64f4b2612b234587790dd35201bb27811f0fb4b0b8f70621923be3a4ab749",
+      "bytes": 32866,
+      "access_date": "2026-06-12",
+      "method": "script"
+    },
+    "ilostat_emp_nifl_sex_eco_nb_a_tha": {
+      "url": "https://rplumber.ilo.org/data/indicator/?id=EMP_NIFL_SEX_ECO_NB_A&ref_area=THA&format=.csv&sex=SEX_T&timefrom=2015",
+      "filename": "ILOSTAT_EMP_NIFL_SEX_ECO_NB_A_THA.csv",
+      "sha256": "38657a0c35d9612f3b63d329f46fcb5e768b82d749c461187474170ad2c00331",
+      "bytes": 28094,
+      "access_date": "2026-06-12",
+      "method": "script"
+    },
+    "ilostat_emp_nifl_sex_eco_nb_a_sen": {
+      "url": "https://rplumber.ilo.org/data/indicator/?id=EMP_NIFL_SEX_ECO_NB_A&ref_area=SEN&format=.csv&sex=SEX_T&timefrom=2015",
+      "filename": "ILOSTAT_EMP_NIFL_SEX_ECO_NB_A_SEN.csv",
+      "sha256": "196259e2f82ba3194c165a63be4f567eb5902dec5ceed1c7d605ff440b4092c0",
+      "bytes": 20023,
+      "access_date": "2026-06-12",
+      "method": "script"
+    },
+    "ilostat_emp_nifl_sex_rt_a_zaf": {
+      "url": "https://rplumber.ilo.org/data/indicator/?id=EMP_NIFL_SEX_RT_A&ref_area=ZAF&format=.csv&sex=SEX_T&timefrom=2015",
+      "filename": "ILOSTAT_EMP_NIFL_SEX_RT_A_ZAF.csv",
+      "sha256": "2a7d0ec2c418c1cb7e4ed2c84983d124fd49d9effe4e4bc624cd87c69fcfc971",
+      "bytes": 773,
+      "access_date": "2026-06-12",
+      "method": "script"
+    },
+    "ilostat_sdg_0831_sex_eco_rt_a_tun": {
+      "url": "https://rplumber.ilo.org/data/indicator/?id=SDG_0831_SEX_ECO_RT_A&ref_area=TUN&format=.csv&sex=SEX_T&timefrom=2015",
+      "filename": "ILOSTAT_SDG_0831_SEX_ECO_RT_A_TUN.csv",
+      "sha256": "4f13e25011062db80cdcf2c82614d66d451ebf8e1ee293cc127349ca42493bb0",
+      "bytes": 1462,
+      "access_date": "2026-06-12",
+      "method": "script"
+    },
+    "ilostat_emp_nifl_sex_rt_a_vnm": {
+      "url": "https://rplumber.ilo.org/data/indicator/?id=EMP_NIFL_SEX_RT_A&ref_area=VNM&format=.csv&sex=SEX_T&timefrom=2015",
+      "filename": "ILOSTAT_EMP_NIFL_SEX_RT_A_VNM.csv",
+      "sha256": "c1a6fdc572a827df0e478b42701e2feff3bb601224c945674ab0c79f8b7399f2",
+      "bytes": 794,
+      "access_date": "2026-06-12",
+      "method": "script"
+    },
+    "ilostat_emp_nifl_sex_rt_a_tha": {
+      "url": "https://rplumber.ilo.org/data/indicator/?id=EMP_NIFL_SEX_RT_A&ref_area=THA&format=.csv&sex=SEX_T&timefrom=2015",
+      "filename": "ILOSTAT_EMP_NIFL_SEX_RT_A_THA.csv",
+      "sha256": "d2285445049dc2c01b3c30a478ff245ac89fa3fad19413916933406197d1b3b2",
+      "bytes": 724,
+      "access_date": "2026-06-12",
+      "method": "script"
+    },
+    "ilostat_emp_nifl_sex_rt_a_sen": {
+      "url": "https://rplumber.ilo.org/data/indicator/?id=EMP_NIFL_SEX_RT_A&ref_area=SEN&format=.csv&sex=SEX_T&timefrom=2015",
+      "filename": "ILOSTAT_EMP_NIFL_SEX_RT_A_SEN.csv",
+      "sha256": "600c39ea15d73ef4f6083b40de569c78c6e318574632633919929ee82fa66f72",
+      "bytes": 587,
+      "access_date": "2026-06-12",
+      "method": "script"
+    },
+    "ilostat_sdg_0111_sex_age_rt_a_zaf": {
+      "url": "https://rplumber.ilo.org/data/indicator/?id=SDG_0111_SEX_AGE_RT_A&ref_area=ZAF&format=.csv&sex=SEX_T&timefrom=2015",
+      "filename": "ILOSTAT_SDG_0111_SEX_AGE_RT_A_ZAF.csv",
+      "sha256": "638382b0d9942caa50c480a446a32d6d067609b9b9f0e580721ada34f48f1e0f",
+      "bytes": 2556,
+      "access_date": "2026-06-12",
+      "method": "script"
+    },
+    "ilostat_sdg_0111_sex_age_rt_a_tun": {
+      "url": "https://rplumber.ilo.org/data/indicator/?id=SDG_0111_SEX_AGE_RT_A&ref_area=TUN&format=.csv&sex=SEX_T&timefrom=2015",
+      "filename": "ILOSTAT_SDG_0111_SEX_AGE_RT_A_TUN.csv",
+      "sha256": "33ed41a138d293a333f464903ee8b2feadb2d60a9e9430269eb1a3165f28dcd0",
+      "bytes": 2506,
+      "access_date": "2026-06-12",
+      "method": "script"
+    },
+    "ilostat_sdg_0111_sex_age_rt_a_vnm": {
+      "url": "https://rplumber.ilo.org/data/indicator/?id=SDG_0111_SEX_AGE_RT_A&ref_area=VNM&format=.csv&sex=SEX_T&timefrom=2015",
+      "filename": "ILOSTAT_SDG_0111_SEX_AGE_RT_A_VNM.csv",
+      "sha256": "9506fbcdb07beef00bdeced3f48771af21130457c13cfc05875ce06cd2ece266",
+      "bytes": 2526,
+      "access_date": "2026-06-12",
+      "method": "script"
+    },
+    "ilostat_sdg_0111_sex_age_rt_a_tha": {
+      "url": "https://rplumber.ilo.org/data/indicator/?id=SDG_0111_SEX_AGE_RT_A&ref_area=THA&format=.csv&sex=SEX_T&timefrom=2015",
+      "filename": "ILOSTAT_SDG_0111_SEX_AGE_RT_A_THA.csv",
+      "sha256": "0e278fda967b32d0987f13fb6b44ed8750e3f3640e2050a8742b56876022b63b",
+      "bytes": 2507,
+      "access_date": "2026-06-12",
+      "method": "script"
+    },
+    "ilostat_sdg_0111_sex_age_rt_a_sen": {
+      "url": "https://rplumber.ilo.org/data/indicator/?id=SDG_0111_SEX_AGE_RT_A&ref_area=SEN&format=.csv&sex=SEX_T&timefrom=2015",
+      "filename": "ILOSTAT_SDG_0111_SEX_AGE_RT_A_SEN.csv",
+      "sha256": "8014820d91bd249376a6ebb8d025b27e76f711c77ace067ecfde0916f6fc9a3c",
+      "bytes": 2557,
+      "access_date": "2026-06-12",
+      "method": "script"
     }
   }
 }

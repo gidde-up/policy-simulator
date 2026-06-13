@@ -12,9 +12,15 @@ import config
 SCHEMA_VERSION = "1.0"
 
 VALID_SCOPES = {"employment", "labour_compensation", "manufacturing_split",
-                "consumption_propensity", "elasticity", "other"}
+                "consumption_propensity", "elasticity", "informality",
+                "labour_content", "other"}
 VALID_METHODS = {"ILOSTAT_fallback", "child_sum", "proportional_allocation",
-                 "authored_constant", "cap", "clip", "economy_share"}
+                 "authored_constant", "cap", "clip", "economy_share",
+                 "data_derived", "share_inheritance"}
+
+# scopes whose entries are written by extension scripts, not by the
+# country build -- a country rebuild must never delete them
+EXTENSION_SCOPES = {"informality", "labour_content"}
 
 # country code used for engine-wide behavioural parameters that are not
 # tied to a single economy (import demand elasticity, fiscal multiplier...)
@@ -79,11 +85,24 @@ def replace_country_entries(registry: dict, country: str,
 def replace_pipeline_entries(registry: dict, country: str,
                              entries: list[dict]):
     """Like replace_country_entries, but preserves authored engine
-    parameters (method=authored_constant) registered for the country --
-    a data rebuild must not delete cited behavioural parameters."""
+    parameters (method=authored_constant) and extension-scope entries
+    (informality, labour_content) registered for the country -- a data
+    rebuild must not delete cited behavioural parameters or
+    extension-script entries."""
     registry["entries"] = [
         e for e in registry["entries"]
         if e.get("country") != country
         or e.get("method") == "authored_constant"
+        or e.get("scope") in EXTENSION_SCOPES
+    ] + entries
+    return registry
+
+
+def replace_scope_entries(registry: dict, country: str, scope: str,
+                          entries: list[dict]):
+    """Idempotent re-registration of one scope for one country."""
+    registry["entries"] = [
+        e for e in registry["entries"]
+        if not (e.get("country") == country and e.get("scope") == scope)
     ] + entries
     return registry

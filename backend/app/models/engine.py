@@ -73,11 +73,20 @@ class CountryData:
     domestic_absorption: np.ndarray    # share, by product
     metadata: dict
     baseline_totals: dict
+    # Miyazawa household closure (optional; absent in toy fixtures).
+    # consumption column h_c and labour-income row h_r; used by
+    # DirectEmployment shocks to recycle programme wage bills through
+    # the Type II inverse.
+    consumption_coefficients: np.ndarray = None
+    labour_income_coefficients: np.ndarray = None
 
     @classmethod
     def from_dict(cls, d: dict) -> "CountryData":
         def arr(v):
             return np.asarray(v, dtype=float)
+        t2 = d.get("type_ii") or {}
+        cc = t2.get("consumption_coefficients")
+        li = t2.get("labour_income_coefficients")
         return cls(
             iso3=d["metadata"]["iso3"],
             name=d["metadata"]["country"],
@@ -98,6 +107,8 @@ class CountryData:
             domestic_absorption=arr(d["import_shares"]["domestic_absorption"]),
             metadata=d["metadata"],
             baseline_totals=d["baseline_totals"],
+            consumption_coefficients=arr(cc) if cc is not None else None,
+            labour_income_coefficients=arr(li) if li is not None else None,
         )
 
     @property
@@ -200,13 +211,65 @@ def _sector_index(cd: CountryData, sector: str) -> int:
         raise KeyError(f"unknown sector '{sector}'; valid: {cd.sectors}")
 
 
-def price_effects(cd: CountryData, tariffs: dict, p: EngineParams) -> np.ndarray:
-    """Fractional producer-price rises dp from imported-input cost push:
-    dp' = dp_m' A_m (I - A_d)^-1."""
+# --- generalised price-and-demand primitives ------------------------
+# Shared by every price-side lever (tariffs, and the Session F
+# production/wage subsidies and depreciation). The Leontief cost
+# identity p' = p' A_d + c' gives, for any unit-cost change dc,
+#   dp = (I - A_d)^-1' dc = L_I' dc.
+
+def _cost_push_prices(cd: CountryData, dc: np.ndarray) -> np.ndarray:
+    """Fractional producer-price change from a unit-cost change dc."""
+    return cd.L_I.T @ dc
+
+
+def _downstream_base(cd: CountryData) -> np.ndarray:
+    """Final demand exposed to producer-price changes: households,
+    government, GFCF and exports (NOT inventories)."""
+    return (cd.fd["households"] + cd.fd["government"] + cd.fd["gfcf"]
+            + cd.fd["exports"])
+
+
+def _downstream_dF(cd: CountryData, p: EngineParams,
+                   dp: np.ndarray) -> np.ndarray:
+    """Demand response to a producer-price change via the compensated
+    own-price elasticity (negative for a price rise, positive for a
+    cost cut)."""
+    return -abs(p.eta) * dp * _downstream_base(cd)
+
+
+def _hh_spread(cd: CountryData, amount: float) -> np.ndarray:
+    """Spread a household demand change across the domestic household
+    consumption vector."""
+    hh = cd.fd["households"]
+    return amount * hh / float(hh.sum())
+
+
+def _real_income_dF(cd: CountryData, dp: np.ndarray,
+                    dp_import_final: np.ndarray) -> np.ndarray:
+    """Household demand change from the consumer price index move: the
+    cost-push on domestic goods plus the direct price change on
+    imported final goods, spread over domestic consumption."""
+    hh_dom = cd.fd["households"]
+    hh_imp = cd.fd_imported["households"]
+    hh_total = float(hh_dom.sum() + hh_imp.sum())
+    pidx = float((hh_dom / hh_total) @ dp)
+    pidx += float((hh_imp / hh_total) @ dp_import_final)
+    loss = pidx * hh_total
+    return _hh_spread(cd, -loss)
+
+
+def _tariff_dp_m(cd: CountryData, tariffs: dict) -> np.ndarray:
+    """Imported-input price rise vector from tariff rates."""
     dp_m = np.zeros(len(cd.sectors))
     for s, t in tariffs.items():
         dp_m[_sector_index(cd, s)] = t
-    return cd.L_I.T @ (cd.A_m.T @ dp_m)
+    return dp_m
+
+
+def price_effects(cd: CountryData, tariffs: dict, p: EngineParams) -> np.ndarray:
+    """Fractional producer-price rises dp from imported-input cost push:
+    dp' = dp_m' A_m (I - A_d)^-1."""
+    return _cost_push_prices(cd, cd.A_m.T @ _tariff_dp_m(cd, tariffs))
 
 
 def tariff_substitution_dF(cd, tariffs, p):
@@ -219,23 +282,12 @@ def tariff_substitution_dF(cd, tariffs, p):
 
 
 def tariff_downstream_dF(cd, tariffs, p):
-    dp = price_effects(cd, tariffs, p)
-    f_base = (cd.fd["households"] + cd.fd["government"] + cd.fd["gfcf"]
-              + cd.fd["exports"])
-    return -abs(p.eta) * dp * f_base
+    return _downstream_dF(cd, p, price_effects(cd, tariffs, p))
 
 
 def tariff_real_income_dF(cd, tariffs, p):
-    dp = price_effects(cd, tariffs, p)
-    hh_dom = cd.fd["households"]
-    hh_imp = cd.fd_imported["households"]
-    hh_total = float(hh_dom.sum() + hh_imp.sum())
-    pidx = float((hh_dom / hh_total) @ dp)
-    for s, t in tariffs.items():
-        i = _sector_index(cd, s)
-        pidx += t * float(hh_imp[i]) / hh_total
-    loss = pidx * hh_total
-    return -loss * hh_dom / float(hh_dom.sum())
+    return _real_income_dF(cd, price_effects(cd, tariffs, p),
+                           _tariff_dp_m(cd, tariffs))
 
 
 def tariff_retaliation_dF(cd, tariffs, p):
@@ -298,24 +350,207 @@ def decompose(cd: CountryData, dF: np.ndarray, include_type_ii: bool) -> dict:
     }
 
 
-def _channel_dFs(cd, p, tariffs, sector_support, sme_stimulus,
-                 include_retaliation, include_financing_drag):
-    channels = {}
+def _va_coeff(cd: CountryData) -> np.ndarray:
+    with np.errstate(divide="ignore", invalid="ignore"):
+        return np.where(cd.x > 0, cd.va / cd.x, 0)
+
+
+def evaluate_scenario(cd: CountryData, p: EngineParams, shocks: list,
+                      include_type_ii: bool,
+                      include_financing_drag: bool = True) -> dict:
+    """General shock-list evaluator (used by Session F levers and the
+    DirectEmployment tests). Sums the demand channels, decomposes, then
+    layers in programme employment: jobs enter directly (no output-route
+    indirect effect), and when Type II is on their wage bill is recycled
+    through the household closure as consumption (e * L_II * h_c * W).
+    Returns aggregate decomposition vectors plus the channel dict."""
+    n = len(cd.sectors)
+    channels, direct_employment = _evaluate_channel_dFs(
+        cd, p, shocks, include_financing_drag)
+    dF = sum(channels.values(), np.zeros(n))
+    dec = decompose(cd, dF, include_type_ii)
+
+    direct = dec["direct"].copy()
+    indirect = dec["indirect"].copy()
+    induced = dec["induced"].copy()
+    dx = dec["dx"].copy()
+    dva = dec["dva"].copy()
+    va_coeff = _va_coeff(cd)
+
+    direct_channels: dict = {}
+    for de in direct_employment:
+        i = _sector_index(cd, de.sector)
+        direct[i] += de.jobs
+        ch_jobs = de.jobs
+        if include_type_ii:
+            if cd.consumption_coefficients is None:
+                raise ValueError(
+                    "Type II requested but the country has no Miyazawa "
+                    "consumption_coefficients (no type_ii block)")
+            dF_w = cd.consumption_coefficients * de.wage_bill
+            induced_w = cd.e * (cd.L_II @ dF_w)
+            induced += induced_w
+            dxw = cd.L_II @ dF_w
+            dx += dxw
+            dva += va_coeff * dxw
+            ch_jobs += float(induced_w.sum())
+        direct_channels[de.channel] = (
+            direct_channels.get(de.channel, 0.0) + ch_jobs)
+
+    total = direct + indirect + induced
+    return {
+        "channels": channels,
+        "direct_employment_channels": direct_channels,
+        "direct": direct,
+        "indirect": indirect,
+        "induced": induced,
+        "total": total,
+        "dx": dx,
+        "dva": dva,
+    }
+
+
+# --------------------------------------------------------------------
+# composable typed shocks
+#
+# Every lever compiles to a list of typed shocks; one evaluator turns
+# them into per-channel final-demand vectors (and, for programme
+# employment, direct jobs that bypass the output-employment route).
+# The v1 levers re-expressed this way reproduce their original numbers
+# (regression-locked); Session F levers reuse the same path.
+# --------------------------------------------------------------------
+
+@dataclass
+class DemandShock:
+    """A final-demand change (USD million), already computed."""
+    vector: np.ndarray
+    channel: str
+
+
+@dataclass
+class ImportPriceShock:
+    """A fractional import-price rise by product, propagated through the
+    domestic cost structure into downstream and real-income responses."""
+    dp_m: np.ndarray
+    channel_downstream: str
+    channel_real_income: str
+    dp_import_final: np.ndarray   # direct price change on imported final goods
+
+
+@dataclass
+class DomesticCostShock:
+    """A fractional unit-cost change by origin sector (e.g. a production
+    subsidy dc[j] = -s, or a wage subsidy dc[j] = -w*labour_share_j),
+    propagated through the same price model."""
+    dc: np.ndarray
+    channel_downstream: str
+    channel_real_income: str
+
+
+@dataclass
+class DirectEmployment:
+    """Programme jobs created outside the output-employment coefficient
+    route (public works wage component, direct public hiring)."""
+    jobs: float
+    wage_bill: float              # USD million
+    sector: str
+    channel: str
+
+
+@dataclass
+class FiscalCost:
+    """Spending that accumulates into costs and, when drag_eligible,
+    into the tax-financing drag on household consumption."""
+    amount: float                 # USD million
+    drag_eligible: bool
+
+
+def _evaluate_channel_dFs(cd, p, shocks, include_financing_drag):
+    """Single evaluation pass over a shock list, in emission order.
+    Returns (channels dict in insertion order, direct_employment list).
+    The financing-drag channel is reserved at the first drag-eligible
+    FiscalCost so its dict position matches the v1 channel order."""
+    n = len(cd.sectors)
+    channels: dict = {}
+    drag_total = 0.0
+    drag_reserved = False
+    direct_employment: list = []
+
+    def add(channel, vec):
+        channels[channel] = (channels[channel] + vec
+                             if channel in channels else vec)
+
+    for s in shocks:
+        if isinstance(s, DemandShock):
+            add(s.channel, s.vector)
+        elif isinstance(s, ImportPriceShock):
+            dp = _cost_push_prices(cd, cd.A_m.T @ s.dp_m)
+            add(s.channel_downstream, _downstream_dF(cd, p, dp))
+            add(s.channel_real_income,
+                _real_income_dF(cd, dp, s.dp_import_final))
+        elif isinstance(s, DomesticCostShock):
+            dp = _cost_push_prices(cd, s.dc)
+            add(s.channel_downstream, _downstream_dF(cd, p, dp))
+            add(s.channel_real_income,
+                _real_income_dF(cd, dp, np.zeros(n)))
+        elif isinstance(s, FiscalCost):
+            if s.drag_eligible and include_financing_drag:
+                drag_total += s.amount
+                if not drag_reserved:
+                    channels["financing_drag"] = np.zeros(n)  # reserve slot
+                    drag_reserved = True
+        elif isinstance(s, DirectEmployment):
+            direct_employment.append(s)
+
+    if drag_reserved:
+        channels["financing_drag"] = financing_drag_dF(cd, drag_total)
+    return channels, direct_employment
+
+
+def compile_tariffs(cd, p, tariffs, include_retaliation):
+    shocks = [DemandShock(tariff_substitution_dF(cd, tariffs, p),
+                          "tariff_substitution")]
+    dp_m = _tariff_dp_m(cd, tariffs)
+    shocks.append(ImportPriceShock(dp_m, "tariff_downstream",
+                                   "tariff_real_income", dp_m))
+    if include_retaliation:
+        shocks.append(DemandShock(tariff_retaliation_dF(cd, tariffs, p),
+                                  "tariff_retaliation"))
+    return shocks
+
+
+def compile_sector_support(cd, support):
+    total = float(sum(rate * cd.x[_sector_index(cd, s)]
+                      for s, rate in support.items()))
+    return [DemandShock(sector_support_dF(cd, support), "sector_support"),
+            FiscalCost(total, drag_eligible=True)]
+
+
+def compile_stimulus(cd, p, rate_of_gdp):
+    return [DemandShock(stimulus_dF(cd, rate_of_gdp, p), "sme_stimulus"),
+            FiscalCost(rate_of_gdp * cd.gdp, drag_eligible=False)]
+
+
+def _compile_scenario(cd, p, tariffs, sector_support, sme_stimulus,
+                      include_retaliation):
+    """v1 levers as a shock list, emitted in the v1 channel order."""
+    shocks = []
     if tariffs:
-        channels["tariff_substitution"] = tariff_substitution_dF(cd, tariffs, p)
-        channels["tariff_downstream"] = tariff_downstream_dF(cd, tariffs, p)
-        channels["tariff_real_income"] = tariff_real_income_dF(cd, tariffs, p)
-        if include_retaliation:
-            channels["tariff_retaliation"] = tariff_retaliation_dF(
-                cd, tariffs, p)
+        shocks += compile_tariffs(cd, p, tariffs, include_retaliation)
     if sector_support:
-        channels["sector_support"] = sector_support_dF(cd, sector_support)
-        if include_financing_drag:
-            total = float(sum(rate * cd.x[_sector_index(cd, s)]
-                              for s, rate in sector_support.items()))
-            channels["financing_drag"] = financing_drag_dF(cd, total)
+        shocks += compile_sector_support(cd, sector_support)
     if sme_stimulus > 0:
-        channels["sme_stimulus"] = stimulus_dF(cd, sme_stimulus, p)
+        shocks += compile_stimulus(cd, p, sme_stimulus)
+    return shocks
+
+
+def _scenario_channels(cd, p, tariffs, sector_support, sme_stimulus,
+                       include_retaliation, include_financing_drag):
+    """The v1 channel dict, now produced via the shock pipeline."""
+    shocks = _compile_scenario(cd, p, tariffs, sector_support,
+                               sme_stimulus, include_retaliation)
+    channels, _ = _evaluate_channel_dFs(cd, p, shocks,
+                                        include_financing_drag)
     return channels
 
 
@@ -331,8 +566,8 @@ def run_scenario(iso3: str, tariffs: dict | None = None,
     sector_support = sector_support or {}
 
     p = load_params("central", iso3)
-    channels = _channel_dFs(cd, p, tariffs, sector_support, sme_stimulus,
-                            include_retaliation, include_financing_drag)
+    channels = _scenario_channels(cd, p, tariffs, sector_support, sme_stimulus,
+                                  include_retaliation, include_financing_drag)
     dF = sum(channels.values(), np.zeros(len(cd.sectors)))
     main = decompose(cd, dF, include_type_ii)
 
@@ -348,8 +583,8 @@ def run_scenario(iso3: str, tariffs: dict | None = None,
     totals = [float(main["total"].sum())]
     for variant in ("low", "high"):
         pv = load_params(variant, iso3)
-        chv = _channel_dFs(cd, pv, tariffs, sector_support, sme_stimulus,
-                           include_retaliation, include_financing_drag)
+        chv = _scenario_channels(cd, pv, tariffs, sector_support, sme_stimulus,
+                                 include_retaliation, include_financing_drag)
         dFv = sum(chv.values(), np.zeros(len(cd.sectors)))
         totals.append(float(decompose(cd, dFv, include_type_ii)["total"].sum()))
 
