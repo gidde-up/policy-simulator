@@ -20,6 +20,7 @@ from .schemas import (
     CostsResponse,
     UncertaintyInfo,
     InvestmentIncentiveInfo,
+    JobQuality,
     DataSourceInfo,
     BaselineIndicator,
     BaselineIndicators,
@@ -221,6 +222,7 @@ async def run_simulation(request: PolicyScenarioRequest):
             InvestmentIncentiveInfo(**r["investment_incentive"])
             if r.get("investment_incentive") else None),
         job_years_note=r.get("job_years_note"),
+        job_quality=JobQuality(**engine.job_quality(iso3, r)),
     )
 
 

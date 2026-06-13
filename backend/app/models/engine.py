@@ -79,6 +79,10 @@ class CountryData:
     # the Type II inverse.
     consumption_coefficients: np.ndarray = None
     labour_income_coefficients: np.ndarray = None
+    # informal employment share by sector (None where the country has no
+    # ILOSTAT informality data; np.nan for individual unobserved sectors)
+    informal_share: np.ndarray = None
+    informality_meta: dict = None
 
     @classmethod
     def from_dict(cls, d: dict) -> "CountryData":
@@ -87,6 +91,13 @@ class CountryData:
         t2 = d.get("type_ii") or {}
         cc = t2.get("consumption_coefficients")
         li = t2.get("labour_income_coefficients")
+        inf_block = d.get("informality")
+        inf_share = None
+        if inf_block:
+            shares = inf_block["informal_share_of_employment"]
+            inf_share = np.array(
+                [shares.get(s) if shares.get(s) is not None else np.nan
+                 for s in d["sectors"]], dtype=float)
         return cls(
             iso3=d["metadata"]["iso3"],
             name=d["metadata"]["country"],
@@ -109,6 +120,11 @@ class CountryData:
             baseline_totals=d["baseline_totals"],
             consumption_coefficients=arr(cc) if cc is not None else None,
             labour_income_coefficients=arr(li) if li is not None else None,
+            informal_share=inf_share,
+            informality_meta=({k: inf_block[k]
+                               for k in ("indicator", "year_used",
+                                         "classification")}
+                              if inf_block else None),
         )
 
     @property
@@ -962,6 +978,70 @@ def _assumptions_used(p, ext: dict) -> list:
                 if i not in used:
                     used.append(i)
     return used
+
+
+def job_quality(iso3: str, result: dict) -> dict:
+    """Composition indicators of a scenario's job change. Every figure
+    describes the MIX of the jobs gained/lost, on the assumption that
+    created/lost jobs mirror each sector's existing characteristics --
+    NOT a quality forecast. Computed from the scenario's sector effects,
+    so it is a pure post-processing of run_scenario (which is therefore
+    left untouched, and its regression lock unaffected)."""
+    cd = load_country(iso3)
+    dE = np.array([se["total_jobs"] for se in result["sector_effects"]])
+    dx = np.array([se["output_change_usd_million"]
+                   for se in result["sector_effects"]])
+
+    # comp per worker by sector (USD million / person) and economy mean
+    comp = (cd.labour_income_coefficients * cd.x
+            if cd.labour_income_coefficients is not None
+            else _va_coeff(cd) * cd.x)        # fallback: VA per worker
+    with np.errstate(divide="ignore", invalid="ignore"):
+        comp_per_worker = np.where(cd.employment > 0,
+                                   comp / cd.employment, 0.0)
+    economy_comp_per_worker = float(comp.sum() / cd.employment.sum())
+
+    # (a) wage-bill effect: dW = compensation coefficient . dx
+    h_r = (cd.labour_income_coefficients
+           if cd.labour_income_coefficients is not None else _va_coeff(cd))
+    wage_bill_change = float(h_r @ dx)
+
+    # (b) average compensation of the net jobs moved, vs economy mean
+    abs_w = np.abs(dE)
+    denom = float(abs_w.sum())
+    if denom > 0:
+        avg_comp = float((abs_w @ comp_per_worker) / denom)
+        comp_ratio = avg_comp / economy_comp_per_worker \
+            if economy_comp_per_worker > 0 else None
+    else:
+        avg_comp, comp_ratio = None, None
+
+    wage = {
+        "wage_bill_change_usd_million": wage_bill_change,
+        "avg_compensation_ratio_vs_economy": comp_ratio,
+        "caveat": "created/lost jobs are assumed to share each sector's "
+                  "existing average compensation; this is the wage mix of "
+                  "the change, not a wage forecast",
+    }
+
+    # informality composition (gated: hidden where no data)
+    informality = None
+    if cd.informal_share is not None and denom > 0:
+        mask = ~np.isnan(cd.informal_share)
+        w = abs_w[mask]
+        if float(w.sum()) > 0:
+            share = float((w @ cd.informal_share[mask]) / w.sum())
+            informality = {
+                "informal_share_of_change": share,
+                "indicator": cd.informality_meta.get("indicator"),
+                "year": cd.informality_meta.get("year_used"),
+                "caveat": "share of the jobs moved that fall in activities "
+                          "where employment is predominantly informal "
+                          "(sector-mix basis); not a prediction that these "
+                          "specific jobs are informal",
+            }
+
+    return {"wage": wage, "informality": informality}
 
 
 def employment_multipliers(iso3: str) -> dict:

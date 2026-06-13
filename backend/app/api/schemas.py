@@ -192,6 +192,25 @@ class CostsResponse(BaseModel):
     financing_drag_included: bool
 
 
+class WageQuality(BaseModel):
+    wage_bill_change_usd_million: float
+    avg_compensation_ratio_vs_economy: Optional[float] = None
+    caveat: str
+
+
+class InformalityQuality(BaseModel):
+    informal_share_of_change: float
+    indicator: Optional[str] = None
+    year: Optional[int] = None
+    caveat: str
+
+
+class JobQuality(BaseModel):
+    """Composition of the simulated job change (not a quality forecast)."""
+    wage: WageQuality
+    informality: Optional[InformalityQuality] = None
+
+
 class InvestmentIncentiveInfo(BaseModel):
     """Tax-incentive breakdown; the windfall is the didactic point."""
     fiscal_cost_usd_million: float
@@ -249,6 +268,8 @@ class SimulationResponse(BaseModel):
     # extension levers (Session F); present only when the lever is used
     investment_incentive: Optional[InvestmentIncentiveInfo] = None
     job_years_note: Optional[str] = None
+    # job-quality composition of the change (Session G)
+    job_quality: Optional[JobQuality] = None
 
 
 class ChatRequest(BaseModel):
