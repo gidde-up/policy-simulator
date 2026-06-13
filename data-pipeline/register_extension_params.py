@@ -21,7 +21,7 @@ import json
 import sys
 
 import config
-from pipeline import assumptions
+from pipeline import assumptions, download
 
 TODAY = datetime.date.today().isoformat()
 
@@ -31,6 +31,42 @@ EIIP = ("ILO Employment Intensive Investment Programme, 'Green Works: "
         "labour-based approaches can be applied normally ranges between "
         "20-50% of the total investment cost' (the most labour-intensive "
         "public works programmes exceed 50%).")
+
+TOKARICK = ("Tokarick, S. (2010), 'A Method for Calculating Export Supply "
+            "and Import Demand Elasticities', IMF Working Paper WP/10/180, "
+            "Table 2 (Export Supply Elasticities).")
+
+REDUNDANCY = ("James, S. (2013), 'Effectiveness of Tax and Non-Tax "
+              "Incentives and Investments: Evidence and Policy "
+              "Implications', World Bank; and IMF-OECD-UN-World Bank "
+              "(2015), 'Options for Low Income Countries' Effective and "
+              "Efficient Use of Tax Incentives for Investment', Table 1 "
+              "(Redundancy of Tax Incentives Based on Investor Surveys).")
+
+# Manually downloaded source PDFs (OECD/IMF/World Bank bot-blocked);
+# recorded in sources.lock.json with sha256 + method=manual.
+SOURCE_PDFS = {
+    "eiip_green_works_wcms_619821":
+        ("eiip_green_works_wcms_619821.pdf",
+         "https://www.ilo.org/sites/default/files/wcmsp5/groups/public/"
+         "@ed_emp/@emp_policy/@invest/documents/publication/"
+         "wcms_619821.pdf"),
+    "eiip_guidance_wcms_743537":
+        ("eiip_guidance_wcms_743537.pdf",
+         "https://www.ilo.org/sites/default/files/wcmsp5/groups/public/"
+         "@ed_emp/documents/publication/wcms_743537.pdf"),
+    "tokarick_2010_wp10180":
+        ("wp10180.pdf",
+         "https://www.imf.org/external/pubs/ft/wp/2010/wp10180.pdf"),
+    "james_2013_incentives":
+        ("james_2013.pdf",
+         "https://openknowledge.worldbank.org/server/api/core/"
+         "bitstreams/5f14d5e0-1b40-5219-93ab-9691a0b784d0/content"),
+    "imf_oecd_un_wb_2015_tax_incentives":
+        ("tax_incentives_2015.pdf",
+         "https://www.tax-platform.org/sites/pct/files/publications/"
+         "100756-Tax-incentives-Main-report-options-PUBLIC_0.pdf"),
+}
 
 
 def _eiip_entry(variant, value, basis):
@@ -88,7 +124,85 @@ def conventional_construction_entries():
     return entries
 
 
+def export_supply_entries():
+    """GLOBAL export supply elasticity for the (stylised) depreciation
+    lever. Tokarick (2010) provides export SUPPLY (Table 2), not export
+    demand; Viet Nam is absent from the paper and the published table's
+    sparse cells do not support reliable per-country column extraction,
+    so a single cited developing-economy value with a range is used --
+    consistent with the lever being explicitly stylised. Range spans the
+    GTAP low-income default (~0.3) to the general-equilibrium long-run
+    estimates of the covered target countries (ZAF/TUN/THA/SEN ~0.8-1.4
+    in Table 2)."""
+    def e(variant, value, basis):
+        return assumptions.make_entry(
+            entry_id=f"GLOBAL-export-supply-elasticity-{variant}",
+            country=assumptions.GLOBAL_COUNTRY, scope="elasticity",
+            sector="all", field="export_supply_elasticity",
+            icio_codes=[], value=value, unit="elasticity",
+            method="authored_constant", basis=basis,
+            source={"dataset": "IMF WP/10/180 Table 2", "url": "",
+                    "accessed": TODAY, "reference_period": "n/a"},
+            citation=TOKARICK,
+            notes="Tokarick reports export SUPPLY elasticities, not "
+                  "export demand; the depreciation lever models the "
+                  "export-volume response to the relative-price change "
+                  "as a supply expansion and is labelled stylised. Viet "
+                  "Nam is not in the paper; a global value is used.")
+    return [
+        e("central", 0.6, "round central within the covered target "
+                          "countries' general-equilibrium estimates "
+                          "(SEN~0.8, TUN~0.9, ZAF~1.0, THA~1.4) and the "
+                          "GTAP low-income default (~0.3); deliberately "
+                          "conservative for a stylised lever"),
+        e("low", 0.3, "GTAP low-income default export supply elasticity"),
+        e("high", 1.1, "general-equilibrium long-run end of the covered "
+                       "target countries' Table 2 estimates"),
+    ]
+
+
+def redundancy_entries():
+    """GLOBAL investment-incentive redundancy share (the windfall the
+    investment-tax-incentive lever displays). IMF-OECD-UN-WB (2015)
+    Table 1 investor surveys: redundancy exceeds 70% in 10 of 14
+    surveys; covered target countries Tunisia 58%, Viet Nam 85%,
+    Thailand 81%; James (2013) reports Thailand 81%, and Jordan /
+    Mozambique / Serbia >=70%."""
+    def e(variant, value, basis):
+        return assumptions.make_entry(
+            entry_id=f"GLOBAL-investment-incentive-redundancy-{variant}",
+            country=assumptions.GLOBAL_COUNTRY, scope="other",
+            sector="all", field="investment_incentive_redundancy",
+            icio_codes=[], value=value, unit="share",
+            method="authored_constant", basis=basis,
+            source={"dataset": "James 2013; IMF-OECD-UN-WB 2015 Table 1",
+                    "url": "", "accessed": TODAY,
+                    "reference_period": "n/a"},
+            citation=REDUNDANCY,
+            notes="share of incentivised investment that would have "
+                  "occurred anyway (the windfall); covered target "
+                  "countries TUN 0.58, VNM 0.85, THA 0.81")
+    return [
+        e("central", 0.75, "consistent with 'redundancy exceeds 70% in "
+                           "10 of 14 surveys' (IMF-OECD-UN-WB 2015) and "
+                           "the covered target-country mean (TUN 0.58, "
+                           "VNM 0.85, THA 0.81 -> 0.75)"),
+        e("low", 0.50, "below the covered range to bound the windfall "
+                       "from below"),
+        e("high", 0.90, "upper end of the survey distribution "
+                        "(several surveys 90%+)"),
+    ]
+
+
+def record_source_pdfs():
+    for key, (fname, url) in SOURCE_PDFS.items():
+        path = config.RAW_DIR / fname
+        if path.exists():
+            download.record_file(key, path, url, method="manual")
+
+
 def main():
+    record_source_pdfs()
     registry = assumptions.load_registry()
     # GLOBAL EIIP labour share (replace the three variants)
     registry["entries"] = [
@@ -96,6 +210,15 @@ def main():
         if not (e["country"] == assumptions.GLOBAL_COUNTRY
                 and e.get("field") == "eiip_labour_cost_share")
     ] + eiip_entries()
+    # GLOBAL export supply elasticity + redundancy share
+    for field, builder in [("export_supply_elasticity", export_supply_entries),
+                           ("investment_incentive_redundancy",
+                            redundancy_entries)]:
+        registry["entries"] = [
+            e for e in registry["entries"]
+            if not (e["country"] == assumptions.GLOBAL_COUNTRY
+                    and e.get("field") == field)
+        ] + builder()
     # per-country conventional construction labour share (data-derived)
     for e in conventional_construction_entries():
         registry["entries"] = [

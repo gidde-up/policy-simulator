@@ -63,10 +63,11 @@ def main():
                       if (iso3, "conventional_construction_labour_share")
                       in idx else "PENDING")
 
-    # item 2: Tokarick export demand elasticity (per country)
-    tok = {}
-    for iso3 in config.COUNTRIES:
-        tok[iso3] = ("OK" if (iso3, "export_demand_elasticity") in idx
+    # item 2: Tokarick export elasticity -- registered GLOBAL as an
+    # export SUPPLY elasticity (the paper has no export demand table;
+    # see note below)
+    export_supply = ("GLOBAL"
+                     if ("GLOBAL", "export_supply_elasticity") in idx
                      else "PENDING (manual download: IMF WP/10/180)")
 
     # item 4: redundancy share (GLOBAL)
@@ -100,15 +101,23 @@ def main():
         + " | ".join(wp[c] for c in config.COUNTRIES) + " |",
         "| 3b. Conventional construction labour share | "
         + " | ".join(conv[c] for c in config.COUNTRIES) + " |",
-        "| 2. Tokarick export demand elasticity | "
-        + " | ".join(tok[c] for c in config.COUNTRIES) + " |",
         "",
         "## Global / non-per-country items",
         "",
+        f"- 2. Export elasticity (depreciation lever): **{export_supply}** "
+        "-- Tokarick (2010) WP/10/180 has NO export-demand table; it "
+        "reports export SUPPLY (Table 2), import demand (Table 1) and "
+        "trade-balance (Table 4) elasticities. Registered GLOBAL as "
+        "export SUPPLY (0.6, [0.3, 1.1]); Viet Nam is absent from the "
+        "paper and the published sparse-cell tables do not support "
+        "reliable per-country extraction. Import-demand Table 1 "
+        "cross-checks the registered KNO values qualitatively.",
         f"- 3a. EIIP labour-based labour-cost share: **{eiip}** "
         "(GLOBAL-eiip-labour-cost-share-central/low/high; ILO EIIP, "
         "0.35 / 0.20 / 0.50)",
-        f"- 4. Investment-incentive redundancy share: **{redundancy}**",
+        f"- 4. Investment-incentive redundancy share: **{redundancy}** "
+        "(0.75, [0.50, 0.90]; James 2013 + IMF-OECD-UN-WB 2015 Table 1; "
+        "covered targets TUN 0.58, VNM 0.85, THA 0.81)",
         f"- 6. Wage cross-check (internal TiM vs ILOSTAT earnings): "
         f"**{wage}** (ILOSTAT earnings-by-activity not on the bulk API; "
         "model uses internal TiM figures -- see reports/wage_crosscheck.md)",
@@ -122,12 +131,15 @@ def main():
         "(1-digit data cannot split manufacturing); every inherited cell "
         "is registered (scope=informality, method=share_inheritance).",
         "- TUN informality year is 2019 (latest available); others 2022.",
-        "- Items 2 and 4 require manual PDF downloads (IMF/World Bank are "
-        "bot-blocked). They feed Session F levers (depreciation; "
-        "investment tax incentive) and are not needed by the Session E "
-        "engine foundation. register_extension_params.py registers them "
-        "automatically once the PDFs are in raw/ and the extraction "
-        "scripts have read them.",
+        "- All source PDFs (ILO EIIP x2, Tokarick WP/10/180, James 2013, "
+        "IMF-OECD-UN-WB 2015) were acquired by manual browser download "
+        "(IMF/World Bank bot-blocked) and recorded in sources.lock.json "
+        "with sha256 + method=manual.",
+        "- Concept note (item 2): the extension prompt expected per-"
+        "country export DEMAND elasticities from Tokarick; the paper "
+        "does not contain them. The honest reading -- export SUPPLY "
+        "elasticities, correctly labelled -- is registered GLOBAL and "
+        "the depreciation lever is flagged stylised.",
         "",
     ]
     out = config.REPORTS_DIR / "data_availability_extension.md"

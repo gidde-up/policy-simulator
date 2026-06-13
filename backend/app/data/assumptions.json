@@ -1776,6 +1776,132 @@
       "notes": "labour-based infrastructure method; the conventional method's labour share is data-derived per country ({ISO3}-conventional-construction-labour-share)"
     },
     {
+      "id": "GLOBAL-export-supply-elasticity-central",
+      "country": "GLOBAL",
+      "reference_year": 2022,
+      "scope": "elasticity",
+      "sector": "all",
+      "field": "export_supply_elasticity",
+      "icio_codes": [],
+      "value": 0.6,
+      "unit": "elasticity",
+      "method": "authored_constant",
+      "basis": "round central within the covered target countries' general-equilibrium estimates (SEN~0.8, TUN~0.9, ZAF~1.0, THA~1.4) and the GTAP low-income default (~0.3); deliberately conservative for a stylised lever",
+      "source": {
+        "dataset": "IMF WP/10/180 Table 2",
+        "url": "",
+        "accessed": "2026-06-13",
+        "reference_period": "n/a"
+      },
+      "citation": "Tokarick, S. (2010), 'A Method for Calculating Export Supply and Import Demand Elasticities', IMF Working Paper WP/10/180, Table 2 (Export Supply Elasticities).",
+      "notes": "Tokarick reports export SUPPLY elasticities, not export demand; the depreciation lever models the export-volume response to the relative-price change as a supply expansion and is labelled stylised. Viet Nam is not in the paper; a global value is used."
+    },
+    {
+      "id": "GLOBAL-export-supply-elasticity-low",
+      "country": "GLOBAL",
+      "reference_year": 2022,
+      "scope": "elasticity",
+      "sector": "all",
+      "field": "export_supply_elasticity",
+      "icio_codes": [],
+      "value": 0.3,
+      "unit": "elasticity",
+      "method": "authored_constant",
+      "basis": "GTAP low-income default export supply elasticity",
+      "source": {
+        "dataset": "IMF WP/10/180 Table 2",
+        "url": "",
+        "accessed": "2026-06-13",
+        "reference_period": "n/a"
+      },
+      "citation": "Tokarick, S. (2010), 'A Method for Calculating Export Supply and Import Demand Elasticities', IMF Working Paper WP/10/180, Table 2 (Export Supply Elasticities).",
+      "notes": "Tokarick reports export SUPPLY elasticities, not export demand; the depreciation lever models the export-volume response to the relative-price change as a supply expansion and is labelled stylised. Viet Nam is not in the paper; a global value is used."
+    },
+    {
+      "id": "GLOBAL-export-supply-elasticity-high",
+      "country": "GLOBAL",
+      "reference_year": 2022,
+      "scope": "elasticity",
+      "sector": "all",
+      "field": "export_supply_elasticity",
+      "icio_codes": [],
+      "value": 1.1,
+      "unit": "elasticity",
+      "method": "authored_constant",
+      "basis": "general-equilibrium long-run end of the covered target countries' Table 2 estimates",
+      "source": {
+        "dataset": "IMF WP/10/180 Table 2",
+        "url": "",
+        "accessed": "2026-06-13",
+        "reference_period": "n/a"
+      },
+      "citation": "Tokarick, S. (2010), 'A Method for Calculating Export Supply and Import Demand Elasticities', IMF Working Paper WP/10/180, Table 2 (Export Supply Elasticities).",
+      "notes": "Tokarick reports export SUPPLY elasticities, not export demand; the depreciation lever models the export-volume response to the relative-price change as a supply expansion and is labelled stylised. Viet Nam is not in the paper; a global value is used."
+    },
+    {
+      "id": "GLOBAL-investment-incentive-redundancy-central",
+      "country": "GLOBAL",
+      "reference_year": 2022,
+      "scope": "other",
+      "sector": "all",
+      "field": "investment_incentive_redundancy",
+      "icio_codes": [],
+      "value": 0.75,
+      "unit": "share",
+      "method": "authored_constant",
+      "basis": "consistent with 'redundancy exceeds 70% in 10 of 14 surveys' (IMF-OECD-UN-WB 2015) and the covered target-country mean (TUN 0.58, VNM 0.85, THA 0.81 -> 0.75)",
+      "source": {
+        "dataset": "James 2013; IMF-OECD-UN-WB 2015 Table 1",
+        "url": "",
+        "accessed": "2026-06-13",
+        "reference_period": "n/a"
+      },
+      "citation": "James, S. (2013), 'Effectiveness of Tax and Non-Tax Incentives and Investments: Evidence and Policy Implications', World Bank; and IMF-OECD-UN-World Bank (2015), 'Options for Low Income Countries' Effective and Efficient Use of Tax Incentives for Investment', Table 1 (Redundancy of Tax Incentives Based on Investor Surveys).",
+      "notes": "share of incentivised investment that would have occurred anyway (the windfall); covered target countries TUN 0.58, VNM 0.85, THA 0.81"
+    },
+    {
+      "id": "GLOBAL-investment-incentive-redundancy-low",
+      "country": "GLOBAL",
+      "reference_year": 2022,
+      "scope": "other",
+      "sector": "all",
+      "field": "investment_incentive_redundancy",
+      "icio_codes": [],
+      "value": 0.5,
+      "unit": "share",
+      "method": "authored_constant",
+      "basis": "below the covered range to bound the windfall from below",
+      "source": {
+        "dataset": "James 2013; IMF-OECD-UN-WB 2015 Table 1",
+        "url": "",
+        "accessed": "2026-06-13",
+        "reference_period": "n/a"
+      },
+      "citation": "James, S. (2013), 'Effectiveness of Tax and Non-Tax Incentives and Investments: Evidence and Policy Implications', World Bank; and IMF-OECD-UN-World Bank (2015), 'Options for Low Income Countries' Effective and Efficient Use of Tax Incentives for Investment', Table 1 (Redundancy of Tax Incentives Based on Investor Surveys).",
+      "notes": "share of incentivised investment that would have occurred anyway (the windfall); covered target countries TUN 0.58, VNM 0.85, THA 0.81"
+    },
+    {
+      "id": "GLOBAL-investment-incentive-redundancy-high",
+      "country": "GLOBAL",
+      "reference_year": 2022,
+      "scope": "other",
+      "sector": "all",
+      "field": "investment_incentive_redundancy",
+      "icio_codes": [],
+      "value": 0.9,
+      "unit": "share",
+      "method": "authored_constant",
+      "basis": "upper end of the survey distribution (several surveys 90%+)",
+      "source": {
+        "dataset": "James 2013; IMF-OECD-UN-WB 2015 Table 1",
+        "url": "",
+        "accessed": "2026-06-13",
+        "reference_period": "n/a"
+      },
+      "citation": "James, S. (2013), 'Effectiveness of Tax and Non-Tax Incentives and Investments: Evidence and Policy Implications', World Bank; and IMF-OECD-UN-World Bank (2015), 'Options for Low Income Countries' Effective and Efficient Use of Tax Incentives for Investment', Table 1 (Redundancy of Tax Incentives Based on Investor Surveys).",
+      "notes": "share of incentivised investment that would have occurred anyway (the windfall); covered target countries TUN 0.58, VNM 0.85, THA 0.81"
+    },
+    {
       "id": "ZAF-conventional-construction-labour-share",
       "country": "ZAF",
       "reference_year": 2022,
