@@ -154,6 +154,11 @@ class EngineParams:
     retaliation_top_n: int
     fiscal_multiplier: float
     entry_ids: list = field(default_factory=list)
+    # extension (Session F) parameters; default 0 so v1 paths are
+    # unaffected and the regression lock holds
+    export_supply: float = 0.0    # export supply elasticity (positive)
+    redundancy: float = 0.0       # investment-incentive redundancy share
+    eiip_labour_share: float = 0.0  # labour-based infrastructure labour share
 
 
 def _registry():
@@ -190,6 +195,21 @@ def load_params(variant: str = "central", iso3: str | None = None
         "fiscal_multiplier": f"GLOBAL-fiscal-multiplier-{variant}",
     }
     values = {k: get(eid)["value"] for k, eid in ids.items()}
+
+    # extension parameters: present only after Session E registration;
+    # optional so a v1-era registry still loads (defaults 0)
+    ext_ids = {
+        "export_supply": f"GLOBAL-export-supply-elasticity-{variant}",
+        "redundancy": f"GLOBAL-investment-incentive-redundancy-{variant}",
+        "eiip_labour_share": f"GLOBAL-eiip-labour-cost-share-{variant}",
+    }
+    # NOTE: ext ids are deliberately NOT added to entry_ids -- only the
+    # levers actually used add their assumptions to the response
+    # (run_scenario does this), so old-lever scenarios keep their exact
+    # v1 assumptions_used list and the regression lock holds.
+    ext = {eid_k: (float(by_id[eid]["value"]) if eid in by_id else 0.0)
+           for eid_k, eid in ext_ids.items()}
+
     return EngineParams(
         eps=float(values["eps"]),
         eta=float(values["eta"]),
@@ -197,6 +217,9 @@ def load_params(variant: str = "central", iso3: str | None = None
         retaliation_top_n=int(values["retaliation_top_n"]),
         fiscal_multiplier=float(values["fiscal_multiplier"]),
         entry_ids=list(ids.values()),
+        export_supply=ext["export_supply"],
+        redundancy=ext["redundancy"],
+        eiip_labour_share=ext["eiip_labour_share"],
     )
 
 
@@ -355,21 +378,17 @@ def _va_coeff(cd: CountryData) -> np.ndarray:
         return np.where(cd.x > 0, cd.va / cd.x, 0)
 
 
-def evaluate_scenario(cd: CountryData, p: EngineParams, shocks: list,
-                      include_type_ii: bool,
-                      include_financing_drag: bool = True) -> dict:
-    """General shock-list evaluator (used by Session F levers and the
-    DirectEmployment tests). Sums the demand channels, decomposes, then
-    layers in programme employment: jobs enter directly (no output-route
-    indirect effect), and when Type II is on their wage bill is recycled
-    through the household closure as consumption (e * L_II * h_c * W).
-    Returns aggregate decomposition vectors plus the channel dict."""
+def _aggregate(cd: CountryData, channels: dict, direct_employment: list,
+               include_type_ii: bool) -> dict:
+    """Sum the demand channels, decompose, then layer in programme
+    employment: jobs enter directly (no output-route indirect effect),
+    and when Type II is on their wage bill is recycled through the
+    household closure as consumption (e * L_II * h_c * W). With no
+    direct employment the result equals decompose() exactly (the v1
+    path -- the regression lock depends on this)."""
     n = len(cd.sectors)
-    channels, direct_employment = _evaluate_channel_dFs(
-        cd, p, shocks, include_financing_drag)
     dF = sum(channels.values(), np.zeros(n))
     dec = decompose(cd, dF, include_type_ii)
-
     direct = dec["direct"].copy()
     indirect = dec["indirect"].copy()
     induced = dec["induced"].copy()
@@ -397,17 +416,26 @@ def evaluate_scenario(cd: CountryData, p: EngineParams, shocks: list,
         direct_channels[de.channel] = (
             direct_channels.get(de.channel, 0.0) + ch_jobs)
 
-    total = direct + indirect + induced
     return {
         "channels": channels,
         "direct_employment_channels": direct_channels,
         "direct": direct,
         "indirect": indirect,
         "induced": induced,
-        "total": total,
+        "total": direct + indirect + induced,
         "dx": dx,
         "dva": dva,
     }
+
+
+def evaluate_scenario(cd: CountryData, p: EngineParams, shocks: list,
+                      include_type_ii: bool,
+                      include_financing_drag: bool = True) -> dict:
+    """General shock-list evaluator (used by the DirectEmployment
+    tests). Returns aggregate decomposition vectors plus the channels."""
+    channels, direct_employment = _evaluate_channel_dFs(
+        cd, p, shocks, include_financing_drag)
+    return _aggregate(cd, channels, direct_employment, include_type_ii)
 
 
 # --------------------------------------------------------------------
@@ -531,6 +559,150 @@ def compile_stimulus(cd, p, rate_of_gdp):
             FiscalCost(rate_of_gdp * cd.gdp, drag_eligible=False)]
 
 
+# --------------------------------------------------------------------
+# extension levers (Session F)
+# --------------------------------------------------------------------
+
+def _normalised(vec: np.ndarray) -> np.ndarray:
+    s = float(vec.sum())
+    return vec / s if s > 0 else vec * 0
+
+
+def _compose_domestic(cd, amount: float, v_dom: np.ndarray) -> np.ndarray:
+    """Distribute `amount` across a domestic final-demand vector's
+    product composition (no import leakage)."""
+    return amount * _normalised(v_dom)
+
+
+def _compose_with_leakage(cd, amount: float, choice: str) -> np.ndarray:
+    """Distribute `amount` like a baseline demand vector; the imported
+    share of that vector leaks abroad (only the domestic part hits
+    domestic producers)."""
+    vecs = {"government": ("government",), "investment": ("gfcf",),
+            "household": ("households",)}
+    key = vecs[choice][0]
+    v_dom = cd.fd[key]
+    v_imp = cd.fd_imported.get(key, np.zeros(len(cd.sectors)))
+    total = float(v_dom.sum() + v_imp.sum())
+    return amount * v_dom / total if total > 0 else v_dom * 0
+
+
+def _require_labour_coeffs(cd):
+    if cd.labour_income_coefficients is None:
+        raise ValueError("lever needs labour_income_coefficients "
+                         "(no type_ii block in the country data)")
+    return cd.labour_income_coefficients
+
+
+def compile_public_investment(cd, amount, target=None):
+    """Public investment: allocate by the domestic GFCF composition, or
+    fully into a target sector. Fiscal cost = the injection (drag on)."""
+    if target:
+        dF = np.zeros(len(cd.sectors))
+        dF[_sector_index(cd, target)] = amount
+    else:
+        dF = _compose_domestic(cd, amount, cd.fd["gfcf"])
+    return [DemandShock(dF, "public_investment"),
+            FiscalCost(amount, drag_eligible=True)]
+
+
+def compile_stimulus_variant(cd, p, rate_of_gdp, target):
+    """Stimulus with a composition choice. Household transfer keeps the
+    Batini first-round multiplier; government/investment purchases enter
+    at full value with the chosen vector's import share as leakage."""
+    amount = rate_of_gdp * cd.gdp
+    if target == "household":
+        dF = stimulus_dF(cd, rate_of_gdp, p)
+    else:
+        dF = _compose_with_leakage(cd, amount, target)
+    return [DemandShock(dF, "sme_stimulus"),
+            FiscalCost(amount, drag_eligible=False)]
+
+
+def compile_production_subsidy(cd, subsidies):
+    """Subsidy rate s on sector j: unit-cost cut dc[j] = -s, propagated
+    through the price model (downstream demand gain + real-income gain).
+    Fiscal cost = s x baseline output (drag on)."""
+    dc = np.zeros(len(cd.sectors))
+    fiscal = 0.0
+    for s, rate in subsidies.items():
+        i = _sector_index(cd, s)
+        dc[i] += -rate
+        fiscal += rate * cd.x[i]
+    return [DomesticCostShock(dc, "production_subsidy_downstream",
+                              "production_subsidy_real_income"),
+            FiscalCost(fiscal, drag_eligible=True)]
+
+
+def compile_wage_subsidy(cd, subsidies):
+    """Subsidy rate w on sector j's labour costs: dc[j] = -w x labour
+    share (compensation/output). Fiscal cost = w x wage bill (drag on).
+    Excluded by construction: hiring responses beyond the demand
+    channel, displacement, deadweight (see docs/levers)."""
+    h_r = _require_labour_coeffs(cd)
+    dc = np.zeros(len(cd.sectors))
+    fiscal = 0.0
+    for s, rate in subsidies.items():
+        i = _sector_index(cd, s)
+        dc[i] += -rate * float(h_r[i])
+        fiscal += rate * float(h_r[i]) * cd.x[i]   # w x wage bill
+    return [DomesticCostShock(dc, "wage_subsidy_downstream",
+                              "wage_subsidy_real_income"),
+            FiscalCost(fiscal, drag_eligible=True)]
+
+
+def compile_public_works(cd, p, budget, method):
+    """Public works: budget split into a labour-based wage component
+    (direct job-years) and a materials component (construction input
+    column). Labour share from EIIP (labour-based) or the country's own
+    construction labour share (conventional)."""
+    i = _sector_index(cd, "construction")
+    h_r = _require_labour_coeffs(cd)
+    lam = (p.eiip_labour_share if method == "labour_based"
+           else float(h_r[i]))
+    wage_bill = lam * budget
+    comp_i = float(h_r[i]) * cd.x[i]                # construction wage bill
+    comp_per_worker = comp_i / cd.employment[i]
+    direct_jobs = wage_bill / comp_per_worker
+    materials = (1 - lam) * budget
+    materials_dF = materials * _normalised(cd.A_d[:, i])
+    return [DirectEmployment(direct_jobs, wage_bill, "construction",
+                             "public_works_direct"),
+            DemandShock(materials_dF, "public_works_materials"),
+            FiscalCost(budget, drag_eligible=True)]
+
+
+def compile_direct_public_employment(cd, budget):
+    """Government hiring in public services: wage component (direct jobs
+    + Type II income recycling) plus a non-wage operating component on
+    the public-services input column. Fiscal cost = full budget."""
+    i = _sector_index(cd, "public_services")
+    h_r = _require_labour_coeffs(cd)
+    wage_share = float(h_r[i])
+    wage_bill = wage_share * budget
+    comp_i = wage_share * cd.x[i]
+    comp_per_worker = comp_i / cd.employment[i]
+    direct_jobs = wage_bill / comp_per_worker
+    operating = (1 - wage_share) * budget
+    operating_dF = operating * _normalised(cd.A_d[:, i])
+    return [DirectEmployment(direct_jobs, wage_bill, "public_services",
+                             "direct_public_employment"),
+            DemandShock(operating_dF, "direct_public_employment_operating"),
+            FiscalCost(budget, drag_eligible=True)]
+
+
+def compile_depreciation(cd, p, d):
+    """Stylised depreciation rate d: all imported prices rise by d
+    (downstream cost + real-income loss); exports expand by the export
+    supply elasticity x d. No fiscal cost; no forced net sign."""
+    n = len(cd.sectors)
+    dp_m = np.full(n, float(d))
+    dF_exports = p.export_supply * d * cd.fd["exports"]
+    return [ImportPriceShock(dp_m, "depreciation_downstream",
+                             "depreciation_real_income", dp_m),
+            DemandShock(dF_exports, "depreciation_exports")]
+
+
 def _compile_scenario(cd, p, tariffs, sector_support, sme_stimulus,
                       include_retaliation):
     """v1 levers as a shock list, emitted in the v1 channel order."""
@@ -554,22 +726,101 @@ def _scenario_channels(cd, p, tariffs, sector_support, sme_stimulus,
     return channels
 
 
+def _tax_incentive_breakdown(cd, p, iti):
+    """gross / additional / windfall investment from a tax incentive of
+    fiscal cost X at intensity s, with redundancy share r."""
+    X = iti["fiscal_cost_pct_gdp"] * cd.gdp
+    gross = X / iti["intensity"]
+    additional = (1 - p.redundancy) * gross
+    windfall = p.redundancy * gross
+    return X, gross, additional, windfall
+
+
+def _compile_all(cd, p, tariffs, sector_support, sme_stimulus,
+                 include_retaliation, ext):
+    """Full lever set: v1 levers first (in v1 order, so old-only
+    scenarios are byte-identical to _compile_scenario), then the
+    Session F extension levers."""
+    shocks = []
+    if tariffs:
+        shocks += compile_tariffs(cd, p, tariffs, include_retaliation)
+    if sector_support:
+        shocks += compile_sector_support(cd, sector_support)
+    if sme_stimulus > 0:
+        shocks += compile_stimulus_variant(
+            cd, p, sme_stimulus, ext.get("stimulus_target", "household"))
+
+    pi = ext.get("public_investment")
+    if pi and pi.get("amount_pct_gdp", 0) > 0:
+        shocks += compile_public_investment(
+            cd, pi["amount_pct_gdp"] * cd.gdp, pi.get("target"))
+    ps = ext.get("production_subsidy")
+    if ps:
+        shocks += compile_production_subsidy(cd, ps)
+    ws = ext.get("wage_subsidy")
+    if ws:
+        shocks += compile_wage_subsidy(cd, ws)
+    iti = ext.get("investment_tax_incentive")
+    if iti and iti.get("fiscal_cost_pct_gdp", 0) > 0:
+        X, gross, additional, _ = _tax_incentive_breakdown(cd, p, iti)
+        if iti.get("target"):
+            dF = np.zeros(len(cd.sectors))
+            dF[_sector_index(cd, iti["target"])] = additional
+        else:
+            dF = _compose_domestic(cd, additional, cd.fd["gfcf"])
+        shocks += [DemandShock(dF, "investment_incentive"),
+                   FiscalCost(X, drag_eligible=True)]
+    pw = ext.get("public_works")
+    if pw and pw.get("budget_pct_gdp", 0) > 0:
+        shocks += compile_public_works(
+            cd, p, pw["budget_pct_gdp"] * cd.gdp,
+            pw.get("method", "labour_based"))
+    dpe = ext.get("direct_public_employment")
+    if dpe and dpe.get("budget_pct_gdp", 0) > 0:
+        shocks += compile_direct_public_employment(
+            cd, dpe["budget_pct_gdp"] * cd.gdp)
+    dep = ext.get("depreciation", 0) or 0
+    if dep > 0:
+        shocks += compile_depreciation(cd, p, dep)
+    return shocks
+
+
+# parameter-registry ids each extension lever relies on (appended to
+# assumptions_used only when the lever is active, so v1 scenarios keep
+# their exact assumptions list)
+_LEVER_ASSUMPTIONS = {
+    "production_subsidy": ["GLOBAL-own-price-demand-elasticity-central"],
+    "wage_subsidy": ["GLOBAL-own-price-demand-elasticity-central"],
+    "investment_tax_incentive":
+        ["GLOBAL-investment-incentive-redundancy-central"],
+    "depreciation": ["GLOBAL-export-supply-elasticity-central",
+                     "GLOBAL-own-price-demand-elasticity-central"],
+}
+
+
 def run_scenario(iso3: str, tariffs: dict | None = None,
                  sector_support: dict | None = None,
                  sme_stimulus: float = 0,
                  include_type_ii: bool = False,
                  include_retaliation: bool = False,
-                 include_financing_drag: bool = True) -> dict:
-    """All rates are fractions; returns USD million / persons."""
+                 include_financing_drag: bool = True,
+                 extensions: dict | None = None) -> dict:
+    """All rates are fractions; returns USD million / persons.
+
+    `extensions` (optional) carries the Session F levers; when omitted
+    the result is byte-for-byte the v1.0.0 contract (regression-locked).
+    """
     cd = load_country(iso3)
     tariffs = tariffs or {}
     sector_support = sector_support or {}
+    ext = extensions or {}
 
     p = load_params("central", iso3)
-    channels = _scenario_channels(cd, p, tariffs, sector_support, sme_stimulus,
-                                  include_retaliation, include_financing_drag)
-    dF = sum(channels.values(), np.zeros(len(cd.sectors)))
-    main = decompose(cd, dF, include_type_ii)
+    shocks = _compile_all(cd, p, tariffs, sector_support, sme_stimulus,
+                          include_retaliation, ext)
+    channels, direct_employment = _evaluate_channel_dFs(
+        cd, p, shocks, include_financing_drag)
+    main = _aggregate(cd, channels, direct_employment, include_type_ii)
 
     channel_jobs = {
         name: {
@@ -578,29 +829,33 @@ def run_scenario(iso3: str, tariffs: dict | None = None,
         }
         for name, cdF in channels.items()
     }
+    for ch, jobs in main["direct_employment_channels"].items():
+        wage = float(sum(de.wage_bill for de in direct_employment
+                         if de.channel == ch))
+        channel_jobs[ch] = {"jobs": float(jobs), "demand_usd_million": wage}
 
     # uncertainty: corner evaluations over parameter variants
     totals = [float(main["total"].sum())]
     for variant in ("low", "high"):
         pv = load_params(variant, iso3)
-        chv = _scenario_channels(cd, pv, tariffs, sector_support, sme_stimulus,
-                                 include_retaliation, include_financing_drag)
-        dFv = sum(chv.values(), np.zeros(len(cd.sectors)))
-        totals.append(float(decompose(cd, dFv, include_type_ii)["total"].sum()))
+        shv = _compile_all(cd, pv, tariffs, sector_support, sme_stimulus,
+                           include_retaliation, ext)
+        chv, dev = _evaluate_channel_dFs(cd, pv, shv, include_financing_drag)
+        aggv = _aggregate(cd, chv, dev, include_type_ii)
+        totals.append(float(aggv["total"].sum()))
 
     # costs
     revenue = float(sum(
         t * cd.imports_by_product[_sector_index(cd, s)]
         * (1 - min(abs(p.eps) * t, 1))
         for s, t in tariffs.items()))
-    spending = float(sum(rate * cd.x[_sector_index(cd, s)]
-                         for s, rate in sector_support.items()))
-    spending += sme_stimulus * cd.gdp
+    spending = float(sum(s.amount for s in shocks
+                         if isinstance(s, FiscalCost)))
     total_jobs = float(main["total"].sum())
 
     baseline_emp = cd.baseline_employment
     meta = cd.metadata
-    return {
+    resp = {
         "country": iso3,
         "sectors": cd.sectors,
         "aggregate": {
@@ -650,8 +905,7 @@ def run_scenario(iso3: str, tariffs: dict | None = None,
             "cost_per_job_fiscal_usd_million":
                 (spending / total_jobs
                  if spending > 0 and total_jobs > 0 else None),
-            "financing_drag_included": bool(include_financing_drag
-                                            and sector_support),
+            "financing_drag_included": "financing_drag" in channels,
         },
         "induced_note": ("upper-bound illustration of induced effects "
                          "(the household closure caps the consumption "
@@ -672,8 +926,42 @@ def run_scenario(iso3: str, tariffs: dict | None = None,
             "reference_year": meta["reference_year"],
             "notes": "; ".join(meta.get("notes", [])),
         },
-        "assumptions_used": p.entry_ids,
+        "assumptions_used": _assumptions_used(p, ext),
     }
+
+    # extension-only response keys (absent for v1 scenarios, so the
+    # regression lock's key-set check is unaffected)
+    iti = ext.get("investment_tax_incentive")
+    if iti and iti.get("fiscal_cost_pct_gdp", 0) > 0:
+        X, gross, additional, windfall = _tax_incentive_breakdown(cd, p, iti)
+        resp["investment_incentive"] = {
+            "fiscal_cost_usd_million": float(X),
+            "gross_investment_usd_million": float(gross),
+            "additional_investment_usd_million": float(additional),
+            "windfall_usd_million": float(windfall),
+            "redundancy_share": float(p.redundancy),
+            "note": "the windfall is investment that would have occurred "
+                    "anyway (redundancy); only the additional investment "
+                    "creates demand",
+        }
+    if (ext.get("public_works", {}).get("budget_pct_gdp", 0) > 0
+            or ext.get("direct_public_employment", {}).get(
+                "budget_pct_gdp", 0) > 0):
+        resp["job_years_note"] = (
+            "programme jobs are reported as JOB-YEARS, not permanent "
+            "posts; one job-year is one person employed for one year")
+    return resp
+
+
+def _assumptions_used(p, ext: dict) -> list:
+    used = list(p.entry_ids)
+    for lever, ids in _LEVER_ASSUMPTIONS.items():
+        active = ext.get(lever)
+        if active:
+            for i in ids:
+                if i not in used:
+                    used.append(i)
+    return used
 
 
 def employment_multipliers(iso3: str) -> dict:
