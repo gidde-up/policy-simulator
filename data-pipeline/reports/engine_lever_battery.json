@@ -1,0 +1,577 @@
+{
+ "description": "Session F lever battery: one run per new lever per country, central parameters (rates as fractions, USD million / persons)",
+ "countries": [
+  "ZAF",
+  "TUN",
+  "VNM",
+  "THA",
+  "SEN"
+ ],
+ "runs": {
+  "ZAF": {
+   "public_investment_1pct_broad": {
+    "net_jobs": 75630.6,
+    "pct_of_baseline": 0.4807,
+    "channels": {
+     "public_investment": 196669.8,
+     "financing_drag": -121039.1
+    },
+    "spending_usd_million": 3812.2,
+    "investment_incentive": null,
+    "job_years": false
+   },
+   "stimulus_2pct_government": {
+    "net_jobs": 341425.1,
+    "pct_of_baseline": 2.1702,
+    "channels": {
+     "sme_stimulus": 341425.1
+    },
+    "spending_usd_million": 7624.5,
+    "investment_incentive": null,
+    "job_years": false
+   },
+   "production_subsidy_mfg_10": {
+    "net_jobs": -68687.8,
+    "pct_of_baseline": -0.4366,
+    "channels": {
+     "production_subsidy_downstream": 95093.5,
+     "production_subsidy_real_income": 41063.4,
+     "financing_drag": -204844.7
+    },
+    "spending_usd_million": 6451.8,
+    "investment_incentive": null,
+    "job_years": false
+   },
+   "wage_subsidy_mfg_10": {
+    "net_jobs": -10537.5,
+    "pct_of_baseline": -0.067,
+    "channels": {
+     "wage_subsidy_downstream": 14588.5,
+     "wage_subsidy_real_income": 6299.6,
+     "financing_drag": -31425.6
+    },
+    "spending_usd_million": 989.8,
+    "investment_incentive": null,
+    "job_years": false
+   },
+   "tax_incentive_1pct_s30": {
+    "net_jobs": 42852.3,
+    "pct_of_baseline": 0.2724,
+    "channels": {
+     "investment_incentive": 163891.5,
+     "financing_drag": -121039.1
+    },
+    "spending_usd_million": 3812.2,
+    "investment_incentive": {
+     "fiscal_cost_usd_million": 3812.2390000000005,
+     "gross_investment_usd_million": 12707.463333333335,
+     "additional_investment_usd_million": 3176.8658333333337,
+     "windfall_usd_million": 9530.597500000002,
+     "redundancy_share": 0.75,
+     "note": "the windfall is investment that would have occurred anyway (redundancy); only the additional investment creates demand"
+    },
+    "job_years": false
+   },
+   "public_works_1pct_labour_based": {
+    "net_jobs": 399870.6,
+    "pct_of_baseline": 2.5417,
+    "channels": {
+     "public_works_materials": 74072.1,
+     "financing_drag": -121039.1,
+     "public_works_direct": 446837.6
+    },
+    "spending_usd_million": 3812.2,
+    "investment_incentive": null,
+    "job_years": true
+   },
+   "public_works_1pct_conventional": {
+    "net_jobs": 180635.9,
+    "pct_of_baseline": 1.1482,
+    "channels": {
+     "public_works_materials": 95559.0,
+     "financing_drag": -121039.1,
+     "public_works_direct": 206116.0
+    },
+    "spending_usd_million": 3812.2,
+    "investment_incentive": null,
+    "job_years": true
+   },
+   "direct_public_employment_1pct": {
+    "net_jobs": 77557.0,
+    "pct_of_baseline": 0.493,
+    "channels": {
+     "direct_public_employment_operating": 91229.4,
+     "financing_drag": -121039.1,
+     "direct_public_employment": 107366.8
+    },
+    "spending_usd_million": 3812.2,
+    "investment_incentive": null,
+    "job_years": true
+   },
+   "depreciation_10pct": {
+    "net_jobs": -80370.8,
+    "pct_of_baseline": -0.5109,
+    "channels": {
+     "depreciation_downstream": -133413.8,
+     "depreciation_real_income": -158062.9,
+     "depreciation_exports": 211106.0
+    },
+    "spending_usd_million": 0.0,
+    "investment_incentive": null,
+    "job_years": false
+   }
+  },
+  "TUN": {
+   "public_investment_1pct_broad": {
+    "net_jobs": 25030.5,
+    "pct_of_baseline": 0.6994,
+    "channels": {
+     "public_investment": 50412.0,
+     "financing_drag": -25381.5
+    },
+    "spending_usd_million": 433.5,
+    "investment_incentive": null,
+    "job_years": false
+   },
+   "stimulus_2pct_government": {
+    "net_jobs": 63294.1,
+    "pct_of_baseline": 1.7686,
+    "channels": {
+     "sme_stimulus": 63294.1
+    },
+    "spending_usd_million": 867.1,
+    "investment_incentive": null,
+    "job_years": false
+   },
+   "production_subsidy_mfg_10": {
+    "net_jobs": -23436.1,
+    "pct_of_baseline": -0.6549,
+    "channels": {
+     "production_subsidy_downstream": 19532.6,
+     "production_subsidy_real_income": 5863.0,
+     "financing_drag": -48831.6
+    },
+    "spending_usd_million": 834.1,
+    "investment_incentive": null,
+    "job_years": false
+   },
+   "wage_subsidy_mfg_10": {
+    "net_jobs": -5170.0,
+    "pct_of_baseline": -0.1445,
+    "channels": {
+     "wage_subsidy_downstream": 4308.9,
+     "wage_subsidy_real_income": 1293.4,
+     "financing_drag": -10772.3
+    },
+    "spending_usd_million": 184.0,
+    "investment_incentive": null,
+    "job_years": false
+   },
+   "tax_incentive_1pct_s30": {
+    "net_jobs": 16628.5,
+    "pct_of_baseline": 0.4646,
+    "channels": {
+     "investment_incentive": 42010.0,
+     "financing_drag": -25381.5
+    },
+    "spending_usd_million": 433.5,
+    "investment_incentive": {
+     "fiscal_cost_usd_million": 433.536,
+     "gross_investment_usd_million": 1445.1200000000001,
+     "additional_investment_usd_million": 361.28000000000003,
+     "windfall_usd_million": 1083.8400000000001,
+     "redundancy_share": 0.75,
+     "note": "the windfall is investment that would have occurred anyway (redundancy); only the additional investment creates demand"
+    },
+    "job_years": false
+   },
+   "public_works_1pct_labour_based": {
+    "net_jobs": 113710.4,
+    "pct_of_baseline": 3.1773,
+    "channels": {
+     "public_works_materials": 15623.8,
+     "financing_drag": -25381.5,
+     "public_works_direct": 123468.1
+    },
+    "spending_usd_million": 433.5,
+    "investment_incentive": null,
+    "job_years": true
+   },
+   "public_works_1pct_conventional": {
+    "net_jobs": 49639.1,
+    "pct_of_baseline": 1.387,
+    "channels": {
+     "public_works_materials": 20308.7,
+     "financing_drag": -25381.5,
+     "public_works_direct": 54711.9
+    },
+    "spending_usd_million": 433.5,
+    "investment_incentive": null,
+    "job_years": true
+   },
+   "direct_public_employment_1pct": {
+    "net_jobs": 13236.1,
+    "pct_of_baseline": 0.3698,
+    "channels": {
+     "direct_public_employment_operating": 9640.4,
+     "financing_drag": -25381.5,
+     "direct_public_employment": 28977.2
+    },
+    "spending_usd_million": 433.5,
+    "investment_incentive": null,
+    "job_years": true
+   },
+   "depreciation_10pct": {
+    "net_jobs": -72637.5,
+    "pct_of_baseline": -2.0297,
+    "channels": {
+     "depreciation_downstream": -42211.2,
+     "depreciation_real_income": -94275.4,
+     "depreciation_exports": 63849.1
+    },
+    "spending_usd_million": 0.0,
+    "investment_incentive": null,
+    "job_years": false
+   }
+  },
+  "VNM": {
+   "public_investment_1pct_broad": {
+    "net_jobs": -169926.6,
+    "pct_of_baseline": -0.3092,
+    "channels": {
+     "public_investment": 285786.8,
+     "financing_drag": -455713.4
+    },
+    "spending_usd_million": 4020.2,
+    "investment_incentive": null,
+    "job_years": false
+   },
+   "stimulus_2pct_government": {
+    "net_jobs": 832130.1,
+    "pct_of_baseline": 1.5141,
+    "channels": {
+     "sme_stimulus": 832130.1
+    },
+    "spending_usd_million": 8040.3,
+    "investment_incentive": null,
+    "job_years": false
+   },
+   "production_subsidy_mfg_10": {
+    "net_jobs": -3391064.4,
+    "pct_of_baseline": -6.1702,
+    "channels": {
+     "production_subsidy_downstream": 894171.8,
+     "production_subsidy_real_income": 398143.4,
+     "financing_drag": -4683379.5
+    },
+    "spending_usd_million": 41315.4,
+    "investment_incentive": null,
+    "job_years": false
+   },
+   "wage_subsidy_mfg_10": {
+    "net_jobs": -351182.0,
+    "pct_of_baseline": -0.639,
+    "channels": {
+     "wage_subsidy_downstream": 92601.3,
+     "wage_subsidy_real_income": 41232.1,
+     "financing_drag": -485015.5
+    },
+    "spending_usd_million": 4278.7,
+    "investment_incentive": null,
+    "job_years": false
+   },
+   "tax_incentive_1pct_s30": {
+    "net_jobs": -217557.7,
+    "pct_of_baseline": -0.3959,
+    "channels": {
+     "investment_incentive": 238155.7,
+     "financing_drag": -455713.4
+    },
+    "spending_usd_million": 4020.2,
+    "investment_incentive": {
+     "fiscal_cost_usd_million": 4020.168,
+     "gross_investment_usd_million": 13400.560000000001,
+     "additional_investment_usd_million": 3350.1400000000003,
+     "windfall_usd_million": 10050.420000000002,
+     "redundancy_share": 0.75,
+     "note": "the windfall is investment that would have occurred anyway (redundancy); only the additional investment creates demand"
+    },
+    "job_years": false
+   },
+   "public_works_1pct_labour_based": {
+    "net_jobs": 54486.2,
+    "pct_of_baseline": 0.0991,
+    "channels": {
+     "public_works_materials": 126581.2,
+     "financing_drag": -455713.4,
+     "public_works_direct": 383618.4
+    },
+    "spending_usd_million": 4020.2,
+    "investment_incentive": null,
+    "job_years": true
+   },
+   "public_works_1pct_conventional": {
+    "net_jobs": -126185.5,
+    "pct_of_baseline": -0.2296,
+    "channels": {
+     "public_works_materials": 165617.7,
+     "financing_drag": -455713.4,
+     "public_works_direct": 163910.3
+    },
+    "spending_usd_million": 4020.2,
+    "investment_incentive": null,
+    "job_years": true
+   },
+   "direct_public_employment_1pct": {
+    "net_jobs": 28611.2,
+    "pct_of_baseline": 0.0521,
+    "channels": {
+     "direct_public_employment_operating": 162379.3,
+     "financing_drag": -455713.4,
+     "direct_public_employment": 321945.4
+    },
+    "spending_usd_million": 4020.2,
+    "investment_incentive": null,
+    "job_years": true
+   },
+   "depreciation_10pct": {
+    "net_jobs": -929583.9,
+    "pct_of_baseline": -1.6914,
+    "channels": {
+     "depreciation_downstream": -1097424.7,
+     "depreciation_real_income": -1176669.2,
+     "depreciation_exports": 1344510.0
+    },
+    "spending_usd_million": 0.0,
+    "investment_incentive": null,
+    "job_years": false
+   }
+  },
+  "THA": {
+   "public_investment_1pct_broad": {
+    "net_jobs": -80413.8,
+    "pct_of_baseline": -0.2051,
+    "channels": {
+     "public_investment": 262811.0,
+     "financing_drag": -343224.8
+    },
+    "spending_usd_million": 4700.9,
+    "investment_incentive": null,
+    "job_years": false
+   },
+   "stimulus_2pct_government": {
+    "net_jobs": 522246.9,
+    "pct_of_baseline": 1.3321,
+    "channels": {
+     "sme_stimulus": 522246.9
+    },
+    "spending_usd_million": 9401.9,
+    "investment_incentive": null,
+    "job_years": false
+   },
+   "production_subsidy_mfg_10": {
+    "net_jobs": -1078332.8,
+    "pct_of_baseline": -2.7506,
+    "channels": {
+     "production_subsidy_downstream": 338155.6,
+     "production_subsidy_real_income": 181209.5,
+     "financing_drag": -1597697.9
+    },
+    "spending_usd_million": 21882.7,
+    "investment_incentive": null,
+    "job_years": false
+   },
+   "wage_subsidy_mfg_10": {
+    "net_jobs": -65629.5,
+    "pct_of_baseline": -0.1674,
+    "channels": {
+     "wage_subsidy_downstream": 20580.8,
+     "wage_subsidy_real_income": 11028.8,
+     "financing_drag": -97239.1
+    },
+    "spending_usd_million": 1331.8,
+    "investment_incentive": null,
+    "job_years": false
+   },
+   "tax_incentive_1pct_s30": {
+    "net_jobs": -124215.7,
+    "pct_of_baseline": -0.3168,
+    "channels": {
+     "investment_incentive": 219009.2,
+     "financing_drag": -343224.8
+    },
+    "spending_usd_million": 4700.9,
+    "investment_incentive": {
+     "fiscal_cost_usd_million": 4700.933,
+     "gross_investment_usd_million": 15669.776666666667,
+     "additional_investment_usd_million": 3917.4441666666667,
+     "windfall_usd_million": 11752.3325,
+     "redundancy_share": 0.75,
+     "note": "the windfall is investment that would have occurred anyway (redundancy); only the additional investment creates demand"
+    },
+    "job_years": false
+   },
+   "public_works_1pct_labour_based": {
+    "net_jobs": 909362.5,
+    "pct_of_baseline": 2.3196,
+    "channels": {
+     "public_works_materials": 140895.8,
+     "financing_drag": -343224.8,
+     "public_works_direct": 1111691.5
+    },
+    "spending_usd_million": 4700.9,
+    "investment_incentive": null,
+    "job_years": true
+   },
+   "public_works_1pct_conventional": {
+    "net_jobs": 115690.0,
+    "pct_of_baseline": 0.2951,
+    "channels": {
+     "public_works_materials": 199026.8,
+     "financing_drag": -343224.8,
+     "public_works_direct": 259888.1
+    },
+    "spending_usd_million": 4700.9,
+    "investment_incentive": null,
+    "job_years": true
+   },
+   "direct_public_employment_1pct": {
+    "net_jobs": -10037.9,
+    "pct_of_baseline": -0.0256,
+    "channels": {
+     "direct_public_employment_operating": 102617.4,
+     "financing_drag": -343224.8,
+     "direct_public_employment": 230569.5
+    },
+    "spending_usd_million": 4700.9,
+    "investment_incentive": null,
+    "job_years": true
+   },
+   "depreciation_10pct": {
+    "net_jobs": -379747.8,
+    "pct_of_baseline": -0.9686,
+    "channels": {
+     "depreciation_downstream": -485362.9,
+     "depreciation_real_income": -754085.0,
+     "depreciation_exports": 859700.0
+    },
+    "spending_usd_million": 0.0,
+    "investment_incentive": null,
+    "job_years": false
+   }
+  },
+  "SEN": {
+   "public_investment_1pct_broad": {
+    "net_jobs": 682.3,
+    "pct_of_baseline": 0.0137,
+    "channels": {
+     "public_investment": 44649.8,
+     "financing_drag": -43967.4
+    },
+    "spending_usd_million": 261.5,
+    "investment_incentive": null,
+    "job_years": false
+   },
+   "stimulus_2pct_government": {
+    "net_jobs": 37869.9,
+    "pct_of_baseline": 0.761,
+    "channels": {
+     "sme_stimulus": 37869.9
+    },
+    "spending_usd_million": 523.0,
+    "investment_incentive": null,
+    "job_years": false
+   },
+   "production_subsidy_mfg_10": {
+    "net_jobs": -24504.2,
+    "pct_of_baseline": -0.4924,
+    "channels": {
+     "production_subsidy_downstream": 16869.8,
+     "production_subsidy_real_income": 6210.2,
+     "financing_drag": -47584.2
+    },
+    "spending_usd_million": 283.0,
+    "investment_incentive": null,
+    "job_years": false
+   },
+   "wage_subsidy_mfg_10": {
+    "net_jobs": -1932.4,
+    "pct_of_baseline": -0.0388,
+    "channels": {
+     "wage_subsidy_downstream": 1330.3,
+     "wage_subsidy_real_income": 489.7,
+     "financing_drag": -3752.4
+    },
+    "spending_usd_million": 22.3,
+    "investment_incentive": null,
+    "job_years": false
+   },
+   "tax_incentive_1pct_s30": {
+    "net_jobs": -6759.3,
+    "pct_of_baseline": -0.1358,
+    "channels": {
+     "investment_incentive": 37208.1,
+     "financing_drag": -43967.4
+    },
+    "spending_usd_million": 261.5,
+    "investment_incentive": {
+     "fiscal_cost_usd_million": 261.523,
+     "gross_investment_usd_million": 871.7433333333335,
+     "additional_investment_usd_million": 217.93583333333336,
+     "windfall_usd_million": 653.8075000000001,
+     "redundancy_share": 0.75,
+     "note": "the windfall is investment that would have occurred anyway (redundancy); only the additional investment creates demand"
+    },
+    "job_years": false
+   },
+   "public_works_1pct_labour_based": {
+    "net_jobs": 77294.7,
+    "pct_of_baseline": 1.5533,
+    "channels": {
+     "public_works_materials": 20757.9,
+     "financing_drag": -43967.4,
+     "public_works_direct": 100504.2
+    },
+    "spending_usd_million": 261.5,
+    "investment_incentive": null,
+    "job_years": true
+   },
+   "public_works_1pct_conventional": {
+    "net_jobs": 14584.1,
+    "pct_of_baseline": 0.2931,
+    "channels": {
+     "public_works_materials": 28604.7,
+     "financing_drag": -43967.4,
+     "public_works_direct": 29946.8
+    },
+    "spending_usd_million": 261.5,
+    "investment_incentive": null,
+    "job_years": true
+   },
+   "direct_public_employment_1pct": {
+    "net_jobs": -11957.1,
+    "pct_of_baseline": -0.2403,
+    "channels": {
+     "direct_public_employment_operating": 19579.6,
+     "financing_drag": -43967.4,
+     "direct_public_employment": 12430.7
+    },
+    "spending_usd_million": 261.5,
+    "investment_incentive": null,
+    "job_years": true
+   },
+   "depreciation_10pct": {
+    "net_jobs": -90883.5,
+    "pct_of_baseline": -1.8263,
+    "channels": {
+     "depreciation_downstream": -49840.6,
+     "depreciation_real_income": -93300.8,
+     "depreciation_exports": 52257.9
+    },
+    "spending_usd_million": 0.0,
+    "investment_incentive": null,
+    "job_years": false
+   }
+  }
+ }
+}

@@ -13,6 +13,35 @@ from pydantic import BaseModel, Field, field_validator
 from typing import Dict, List, Optional, Any
 
 
+class PublicInvestmentRequest(BaseModel):
+    amount_pct_gdp: float = Field(ge=0, le=20,
+                                  description="Investment, % of GDP")
+    target: Optional[str] = Field(
+        default=None, description="Target sector, or null for broad "
+                                  "(GFCF composition)")
+
+
+class InvestmentTaxIncentiveRequest(BaseModel):
+    fiscal_cost_pct_gdp: float = Field(ge=0, le=10,
+                                       description="Revenue forgone, % of GDP")
+    intensity: float = Field(gt=0, le=100,
+                             description="Incentive intensity (% of "
+                                         "investment cost covered)")
+    target: Optional[str] = None
+
+
+class PublicWorksRequest(BaseModel):
+    budget_pct_gdp: float = Field(ge=0, le=20,
+                                  description="Programme budget, % of GDP")
+    method: str = Field(default="labour_based",
+                        description="labour_based | conventional")
+
+
+class DirectPublicEmploymentRequest(BaseModel):
+    budget_pct_gdp: float = Field(ge=0, le=20,
+                                  description="Programme budget, % of GDP")
+
+
 class PolicyScenarioRequest(BaseModel):
     """Request schema for policy simulation. All lever values in percent;
     the API layer converts to fractions for the engine."""
@@ -45,6 +74,45 @@ class PolicyScenarioRequest(BaseModel):
         description="Tax-financed sector support: subtract the same "
                     "amount from household consumption"
     )
+    # --- extension levers (Session F); all percent values in percent ---
+    public_investment: Optional["PublicInvestmentRequest"] = Field(
+        default=None, description="Public investment programme")
+    stimulus_target: str = Field(
+        default="household",
+        description="Stimulus composition: household | government | "
+                    "investment")
+    production_subsidy: Dict[str, float] = Field(
+        default_factory=dict,
+        description="Production subsidy rate by sector (% of output)")
+    wage_subsidy: Dict[str, float] = Field(
+        default_factory=dict,
+        description="Wage subsidy rate by sector (% of labour cost)")
+    investment_tax_incentive: Optional["InvestmentTaxIncentiveRequest"] = \
+        Field(default=None, description="Investment tax incentive")
+    public_works: Optional["PublicWorksRequest"] = Field(
+        default=None, description="Public works / EIIP programme")
+    direct_public_employment: Optional["DirectPublicEmploymentRequest"] = \
+        Field(default=None, description="Direct public hiring programme")
+    depreciation: float = Field(
+        default=0.0, ge=0, le=50,
+        description="Stylised exchange-rate depreciation (%)")
+
+    @field_validator('stimulus_target')
+    @classmethod
+    def validate_stimulus_target(cls, v: str) -> str:
+        if v not in ("household", "government", "investment"):
+            raise ValueError("stimulus_target must be household, "
+                             "government or investment")
+        return v
+
+    @field_validator('production_subsidy', 'wage_subsidy')
+    @classmethod
+    def validate_subsidy_rates(cls, v: Dict[str, float]) -> Dict[str, float]:
+        for sector, value in v.items():
+            if not (0 <= value <= 50):
+                raise ValueError(
+                    f"Subsidy for '{sector}' must be 0-50%, got {value}")
+        return v
 
     @field_validator('tariff_changes')
     @classmethod
@@ -124,6 +192,16 @@ class CostsResponse(BaseModel):
     financing_drag_included: bool
 
 
+class InvestmentIncentiveInfo(BaseModel):
+    """Tax-incentive breakdown; the windfall is the didactic point."""
+    fiscal_cost_usd_million: float
+    gross_investment_usd_million: float
+    additional_investment_usd_million: float
+    windfall_usd_million: float
+    redundancy_share: float
+    note: str
+
+
 class UncertaintyInfo(BaseModel):
     low: float
     high: float
@@ -168,6 +246,9 @@ class SimulationResponse(BaseModel):
     data_source: DataSourceInfo
     assumptions_used: List[str]
     baseline_indicators: Optional[BaselineIndicators] = None
+    # extension levers (Session F); present only when the lever is used
+    investment_incentive: Optional[InvestmentIncentiveInfo] = None
+    job_years_note: Optional[str] = None
 
 
 class ChatRequest(BaseModel):
