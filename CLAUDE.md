@@ -41,4 +41,4 @@ You are working on the ITCILO Economic Policy Simulator (FastAPI backend, React/
 
 ## Project version
 Current version: **1.0.0** (2026-06-11)
-The post-audit overhaul (Phases 1-4) is complete. No next session planned; maintenance mode.
+The post-audit overhaul (Phases 1-4) is complete. An extension (Sessions E-H: policy-lever expansion and a job-quality module) is in progress on top of 1.0.0 — see CHANGELOG `[Unreleased]`. Per user decision, `__version__` stays 1.0.0 and nothing is pushed/deployed until the extension is verified at the end of Session H, when the version is decided. Work proceeds in local commits; the local pytest suite is the gate (CI runs only on push).

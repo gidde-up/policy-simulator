@@ -6,7 +6,27 @@ The project is in pre-release (0.x.y); version 1.0.0 will mark the first product
 
 ---
 
-## [1.0.0] — 2026-06-11  ← current
+## [Unreleased] — extension (Sessions E–H): policy-lever expansion and job quality
+Work in progress; `__version__` stays 1.0.0 and nothing is pushed/deployed until the extension is verified at the end of Session H, when the version number is decided. Local commits only.
+
+### Session E — data gates and engine generalisation (2026-06-13)
+**Engine (E.2)**
+- Refactored `backend/app/models/engine.py` to composable typed shocks (`DemandShock`, `ImportPriceShock`, `DomesticCostShock`, `DirectEmployment`, `FiscalCost`) feeding a single evaluator; generalised price/demand primitives (`_cost_push_prices`, `_downstream_dF`, `_real_income_dF`, `_hh_spread`) now shared by every price-side lever so Session F levers reuse one path
+- `DirectEmployment` recycles programme wage bills through the Miyazawa closure when Type II is on (e · L_II · h_c · W); raises rather than silently zeroing when no closure exists
+- All v1 levers re-expressed as shock compilers; numbers unchanged — a 35-case regression lock (15 presets + 5-country tariff battery × retaliation/Type II) asserts `run_scenario` reproduces the committed v1.0.0 engine at rel=1e-6 (`tests/test_engine_regression_lock.py`, fixture generated pre-refactor from commit 5273bf4)
+
+**Data (E.1)**
+- ILOSTAT informal-employment shares by sector appended as an optional `informality` block to the five country JSONs (append-only, byte-identity-gated so verified numbers cannot move); ZAF via ILOSTAT broad aggregate groups, the others ISIC Rev.4 sections; manufacturing-family sectors inherit section C; national informality + working-poverty context indicators included (context only, never in simulation arithmetic)
+- EIIP labour-based labour-cost share registered GLOBAL (0.35, range 0.20–0.50; ILO EIIP Green Works); conventional construction labour share registered per country, data-derived from each JSON (construction compensation/output)
+- Registry: scopes `informality`/`labour_content`, methods `data_derived`/`share_inheritance`; country-rebuild preservation extended so extension entries survive
+- Wage cross-check report: ILOSTAT earnings-by-activity is not served by the rplumber bulk API (HTTP 400); model uses internal TiM compensation (IO-consistent), documented
+- Data-availability matrix committed (`reports/data_availability_extension.md`)
+- **Pending manual downloads** (IMF/World Bank bot-blocked): Tokarick (2010) export demand elasticities and the investment-incentive redundancy share (James 2013; IMF-OECD-UN-WB 2015) — both feed Session F levers, not the Session E foundation; `register_extension_params.py` registers them once the PDFs are in `raw/`
+- Tests: 142 → 222 (regression lock, shock-equivalence, DirectEmployment toy, informality)
+
+---
+
+## [1.0.0] — 2026-06-11
 **Session 18 — Session D of the post-audit overhaul: Phase 4 hygiene and deployment. First production-ready release.**
 
 The MAJOR bump marks completion of the four-phase overhaul: verified data pipeline (A), engine rebuild with cited parameters and acceptance gates (B), didactic UI rebuild (C), CI and documentation hygiene (D). Both external verifications passed.

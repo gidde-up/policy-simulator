@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "pipeline_version": "1.0.0",
-  "updated": "2026-06-12",
+  "updated": "2026-06-13",
   "entries": [
     {
       "id": "ZAF-2022-employment-C24A-1",
@@ -1707,6 +1707,174 @@
         "dataset": "ILOSTAT EMP_NIFL_SEX_ECO_NB_A / EMP_TEMP_SEX_ECO_NB_A",
         "url": "https://rplumber.ilo.org/data/indicator/",
         "accessed": "2026-06-12",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "GLOBAL-eiip-labour-cost-share-central",
+      "country": "GLOBAL",
+      "reference_year": 2022,
+      "scope": "labour_content",
+      "sector": "construction",
+      "field": "eiip_labour_cost_share",
+      "icio_codes": [],
+      "value": 0.35,
+      "unit": "share",
+      "method": "authored_constant",
+      "basis": "midpoint of the ILO EIIP 20-50% labour-content range for labour-based methods",
+      "source": {
+        "dataset": "ILO EIIP literature",
+        "url": "",
+        "accessed": "2026-06-13",
+        "reference_period": "n/a"
+      },
+      "citation": "ILO Employment Intensive Investment Programme, 'Green Works: Community and LRB Approaches' (wcms_619821), p.20: 'The labour content for the types of infrastructure works where labour-based approaches can be applied normally ranges between 20-50% of the total investment cost' (the most labour-intensive public works programmes exceed 50%).",
+      "notes": "labour-based infrastructure method; the conventional method's labour share is data-derived per country ({ISO3}-conventional-construction-labour-share)"
+    },
+    {
+      "id": "GLOBAL-eiip-labour-cost-share-low",
+      "country": "GLOBAL",
+      "reference_year": 2022,
+      "scope": "labour_content",
+      "sector": "construction",
+      "field": "eiip_labour_cost_share",
+      "icio_codes": [],
+      "value": 0.2,
+      "unit": "share",
+      "method": "authored_constant",
+      "basis": "bottom of the ILO EIIP 20-50% range",
+      "source": {
+        "dataset": "ILO EIIP literature",
+        "url": "",
+        "accessed": "2026-06-13",
+        "reference_period": "n/a"
+      },
+      "citation": "ILO Employment Intensive Investment Programme, 'Green Works: Community and LRB Approaches' (wcms_619821), p.20: 'The labour content for the types of infrastructure works where labour-based approaches can be applied normally ranges between 20-50% of the total investment cost' (the most labour-intensive public works programmes exceed 50%).",
+      "notes": "labour-based infrastructure method; the conventional method's labour share is data-derived per country ({ISO3}-conventional-construction-labour-share)"
+    },
+    {
+      "id": "GLOBAL-eiip-labour-cost-share-high",
+      "country": "GLOBAL",
+      "reference_year": 2022,
+      "scope": "labour_content",
+      "sector": "construction",
+      "field": "eiip_labour_cost_share",
+      "icio_codes": [],
+      "value": 0.5,
+      "unit": "share",
+      "method": "authored_constant",
+      "basis": "top of the ILO EIIP 20-50% range (labour-based; PWP can exceed this)",
+      "source": {
+        "dataset": "ILO EIIP literature",
+        "url": "",
+        "accessed": "2026-06-13",
+        "reference_period": "n/a"
+      },
+      "citation": "ILO Employment Intensive Investment Programme, 'Green Works: Community and LRB Approaches' (wcms_619821), p.20: 'The labour content for the types of infrastructure works where labour-based approaches can be applied normally ranges between 20-50% of the total investment cost' (the most labour-intensive public works programmes exceed 50%).",
+      "notes": "labour-based infrastructure method; the conventional method's labour share is data-derived per country ({ISO3}-conventional-construction-labour-share)"
+    },
+    {
+      "id": "ZAF-conventional-construction-labour-share",
+      "country": "ZAF",
+      "reference_year": 2022,
+      "scope": "labour_content",
+      "sector": "construction",
+      "field": "conventional_construction_labour_share",
+      "icio_codes": [],
+      "value": 0.1614,
+      "unit": "share",
+      "method": "data_derived",
+      "basis": "construction-sector compensation of employees (3535.2) / gross output (21896.9) USD million, from ZAF.json (OECD ICIO 2025 + TiM 2025)",
+      "source": {
+        "dataset": "derived from backend/app/data/countries/ZAF.json",
+        "url": "https://www.oecd.org/en/data/datasets/inter-country-input-output-tables.html",
+        "accessed": "2026-06-13",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "TUN-conventional-construction-labour-share",
+      "country": "TUN",
+      "reference_year": 2022,
+      "scope": "labour_content",
+      "sector": "construction",
+      "field": "conventional_construction_labour_share",
+      "icio_codes": [],
+      "value": 0.1551,
+      "unit": "share",
+      "method": "data_derived",
+      "basis": "construction-sector compensation of employees (597.4) / gross output (3851.8) USD million, from TUN.json (OECD ICIO 2025 + TiM 2025)",
+      "source": {
+        "dataset": "derived from backend/app/data/countries/TUN.json",
+        "url": "https://www.oecd.org/en/data/datasets/inter-country-input-output-tables.html",
+        "accessed": "2026-06-13",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "VNM-conventional-construction-labour-share",
+      "country": "VNM",
+      "reference_year": 2022,
+      "scope": "labour_content",
+      "sector": "construction",
+      "field": "conventional_construction_labour_share",
+      "icio_codes": [],
+      "value": 0.1495,
+      "unit": "share",
+      "method": "data_derived",
+      "basis": "construction-sector compensation of employees (16672.3) / gross output (111485.8) USD million, from VNM.json (OECD ICIO 2025 + TiM 2025)",
+      "source": {
+        "dataset": "derived from backend/app/data/countries/VNM.json",
+        "url": "https://www.oecd.org/en/data/datasets/inter-country-input-output-tables.html",
+        "accessed": "2026-06-13",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "THA-conventional-construction-labour-share",
+      "country": "THA",
+      "reference_year": 2022,
+      "scope": "labour_content",
+      "sector": "construction",
+      "field": "conventional_construction_labour_share",
+      "icio_codes": [],
+      "value": 0.0818,
+      "unit": "share",
+      "method": "data_derived",
+      "basis": "construction-sector compensation of employees (3263.3) / gross output (39882.9) USD million, from THA.json (OECD ICIO 2025 + TiM 2025)",
+      "source": {
+        "dataset": "derived from backend/app/data/countries/THA.json",
+        "url": "https://www.oecd.org/en/data/datasets/inter-country-input-output-tables.html",
+        "accessed": "2026-06-13",
+        "reference_period": "2022"
+      },
+      "citation": "",
+      "notes": ""
+    },
+    {
+      "id": "SEN-conventional-construction-labour-share",
+      "country": "SEN",
+      "reference_year": 2022,
+      "scope": "labour_content",
+      "sector": "construction",
+      "field": "conventional_construction_labour_share",
+      "icio_codes": [],
+      "value": 0.1043,
+      "unit": "share",
+      "method": "data_derived",
+      "basis": "construction-sector compensation of employees (312.2) / gross output (2993.6) USD million, from SEN.json (OECD ICIO 2025 + TiM 2025)",
+      "source": {
+        "dataset": "derived from backend/app/data/countries/SEN.json",
+        "url": "https://www.oecd.org/en/data/datasets/inter-country-input-output-tables.html",
+        "accessed": "2026-06-13",
         "reference_period": "2022"
       },
       "citation": "",

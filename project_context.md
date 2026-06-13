@@ -122,6 +122,18 @@ real-income loss, optional stylised retaliation.
 **Unit conversions** (percent <-> fraction, USD million <-> USD) live in
 `routes.py`, never in the engine.
 
+**Composable shocks (extension, Session E):** levers now compile to
+typed shocks (`DemandShock`, `ImportPriceShock`, `DomesticCostShock`,
+`DirectEmployment`, `FiscalCost`) evaluated by one path
+(`_compile_scenario` -> `_evaluate_channel_dFs`; general entry point
+`evaluate_scenario` for DirectEmployment-bearing levers). Generalised
+price/demand primitives (`_cost_push_prices` = L_I'·dc, `_downstream_dF`,
+`_real_income_dF`, `_hh_spread`) are shared by all price-side levers.
+`run_scenario` output is byte-for-byte the v1.0.0 contract, held by a
+35-case regression lock (`tests/test_engine_regression_lock.py`,
+rel=1e-6). `CountryData` carries optional Miyazawa `consumption_`/
+`labour_income_coefficients` from the JSON `type_ii` block.
+
 ### API Routes (`backend/app/api/routes.py`)
 
 **Endpoints (paths unchanged, /simulate contract NEW in 0.11.0):**
@@ -345,9 +357,28 @@ The post-audit overhaul is COMPLETE (v1.0.0): verified data pipeline
 (Session B), didactic UI rebuild (Session C), CI + documentation
 hygiene (Session D). Both external verifications passed. CI:
 `.github/workflows/tests.yml` (pytest suite, API-contract smoke,
-frontend build). The project is in maintenance mode; for changes,
-follow the ground rules in CLAUDE.md (no invented numbers, registry
-citations, push only after pytest green).
+frontend build).
+
+**Extension in progress (Sessions E–H, on top of 1.0.0):** policy-lever
+expansion (public investment, stimulus composition, production/wage
+subsidies, investment tax incentive, public works/EIIP, direct public
+employment, stylised depreciation) and a job-quality module
+(wage + informality composition of simulated job changes). Foregrounds
+industrial/sectoral policy; trade goes last in the taxonomy. Per user
+decision: `__version__` stays 1.0.0, no push/deploy until verified at
+the end of Session H. **Session E done** (composable-shock engine
+refactor with regression lock; informality data gate; EIIP + data-
+derived construction labour shares; availability matrix). New
+data-pipeline files: `make_regression_fixture.py`,
+`register_extension_params.py`, `probe_ilostat_informality.py`,
+`add_informality.py`, `wage_crosscheck.py`, `make_availability_matrix.py`,
+`extract_eiip.py`, `pipeline/informality.py`, `reports/
+data_availability_extension.md`, `reports/wage_crosscheck.md`, and
+`tests/test_{engine_regression_lock,shock_equivalence,
+direct_employment_toy,informality}.py`. **Pending for Session F:**
+Tokarick (2010) export demand elasticities and the investment-incentive
+redundancy share — manual PDF downloads outstanding (IMF/World Bank
+bot-blocked); they feed Session F levers, not the E foundation.
 
 ---
 
