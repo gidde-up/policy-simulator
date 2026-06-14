@@ -281,6 +281,12 @@ async def get_not_in_tool():
     return _serve_doc("not-in-this-tool.md")
 
 
+@router.get("/methodology")
+async def get_methodology():
+    """The two-tier methodology document (docs/methodology.md)."""
+    return _serve_doc("methodology.md")
+
+
 @router.get("/context/{country_code}")
 async def get_country_context(country_code: str):
     """National informality and working-poverty context indicators for a

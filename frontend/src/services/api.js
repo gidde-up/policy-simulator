@@ -73,6 +73,10 @@ export async function getNotInTool() {
   return fetchApi('/not-in-tool');
 }
 
+export async function getMethodology() {
+  return fetchApi('/methodology');
+}
+
 export async function getCountryContext(countryCode) {
   return fetchApi(`/context/${countryCode}`);
 }

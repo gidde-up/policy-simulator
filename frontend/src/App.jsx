@@ -8,6 +8,7 @@ import GuidedMode from './components/GuidedMode';
 import FirstVisitModal from './components/FirstVisitModal';
 import LimitationsPanel from './components/LimitationsPanel';
 import NotInToolPanel, { NotInToolTeasers } from './components/NotInToolPanel';
+import MethodologyPanel from './components/MethodologyPanel';
 import CountryContext from './components/CountryContext';
 import { useSimulation } from './hooks/useSimulation';
 
@@ -182,105 +183,7 @@ function App() {
         )}
 
         {/* Methodology Tab */}
-        {activeTab === 'methodology' && (
-          <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-md p-8 space-y-6 text-sm text-gray-700">
-            <div>
-              <h2 className="text-xl font-bold text-gray-800 mb-2">What this tool is</h2>
-              <p>
-                A didactic simulator: it illustrates the direction, transmission channels
-                and rough magnitude of employment effects of policy choices in a
-                demand-driven Leontief input-output framework. It is NOT a forecasting
-                or decision-support tool.
-              </p>
-            </div>
-
-            <div>
-              <h2 className="text-xl font-bold text-gray-800 mb-2">Data</h2>
-              <ul className="list-disc ml-5 space-y-1">
-                <li>
-                  Inter-industry structure, final demand, imports and value added:
-                  <span className="font-medium"> OECD Inter-Country Input-Output (ICIO) tables,
-                  2025 edition (rev. Jan 2026), reference year 2022</span>, aggregated from
-                  50 ICIO industries to 14 didactic sectors by a committed, documented concordance
-                  (hover a sector in the controls to see its composition).
-                </li>
-                <li>
-                  Employment and labour compensation by industry:
-                  <span className="font-medium"> OECD Trade in Employment (TiM) 2025</span>,
-                  with documented ILOSTAT fallbacks. Every substituted cell is recorded in the
-                  assumptions registry (the info buttons next to each lever).
-                </li>
-                <li>
-                  Dashboard indicators: World Bank WDI (live API). WDI GDP and labour-force
-                  figures use different concepts and vintages than the ICIO-derived model
-                  baseline; small discrepancies are expected.
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h2 className="text-xl font-bold text-gray-800 mb-2">Model core</h2>
-              <p>
-                Employment effects are computed as &#916;E = &ecirc; L &#916;F, where L is the
-                Leontief inverse of the domestic coefficient matrix (Type I), or the
-                Miyazawa household-endogenised inverse (Type II, optional toggle, labelled
-                an upper bound because the consumption propensity is capped at 1; the sign
-                of small net results can flip under that closure).
-                Direct, indirect and induced components are reported separately.
-                Results are comparative-static: one equilibrium adjustment, no time path.
-              </p>
-            </div>
-
-            <div>
-              <h2 className="text-xl font-bold text-gray-800 mb-2">Policy levers and channels</h2>
-              <ul className="list-disc ml-5 space-y-1">
-                <li>
-                  <span className="font-medium">Tariffs</span>: four channels shown separately -
-                  import substitution into the protected sector (bounded by the sector's
-                  data-derived domestic absorption share); downstream input-cost push through
-                  the price-side Leontief model; a real-income loss to households; and an
-                  optional stylised retaliation toggle.
-                </li>
-                <li>
-                  <span className="font-medium">Sector support</span>: a final-demand injection
-                  with a financing-drag toggle (tax-financed, default on). The recurring lesson:
-                  a tax-financed injection creates net jobs only when the supported sector
-                  employs more people per dollar than the household consumption basket the
-                  taxes crowd out.
-                </li>
-                <li>
-                  <span className="font-medium">SME / demand stimulus</span>: spread through
-                  household consumption, scaled by a cited first-round fiscal multiplier.
-                </li>
-              </ul>
-              <p className="mt-2">
-                All behavioural parameters carry full citations in the assumptions registry
-                and are reported with ranges; results are never shown as a single point
-                without their parameter range. Methodological notes per lever are in
-                <code className="bg-gray-100 px-1 rounded text-xs"> docs/levers/</code>.
-              </p>
-            </div>
-
-            <div>
-              <h2 className="text-xl font-bold text-gray-800 mb-2">What the model cannot tell you</h2>
-              <p>
-                See the permanently accessible panel:{' '}
-                <button
-                  onClick={() => setLimitationsOpen(true)}
-                  className="text-blue-700 underline focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded"
-                >
-                  what the model can and cannot tell you
-                </button>
-                {' '}(also linked in the blue banner at the top).
-              </p>
-            </div>
-
-            <div className="text-xs text-gray-500 border-t pt-4">
-              Model v1.1.0 - OECD ICIO 2025 ed. (year 2022); employment: OECD TiM 2025 / ILOSTAT.
-              Pipeline, validation reports and the assumptions registry are in the project repository.
-            </div>
-          </div>
-        )}
+        {activeTab === 'methodology' && <MethodologyPanel />}
       </main>
     </div>
   );
