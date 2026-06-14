@@ -170,11 +170,14 @@ function App() {
           </div>
         )}
 
-        {/* Data Tab */}
+        {/* Data Tab: employment-by-sector dashboard first, then the
+            informality / working-poverty context below it */}
         {activeTab === 'data' && (
           <div>
-            <CountryContext countryCode={selectedCountry} />
             <CountryDashboard countryCode={selectedCountry} />
+            <div className="mt-4">
+              <CountryContext countryCode={selectedCountry} />
+            </div>
           </div>
         )}
 
