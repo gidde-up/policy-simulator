@@ -19,53 +19,25 @@ def presets():
 
 
 def _run(engine, preset):
-    p = preset["params"]
-    ext = _extensions_from_params(p)
-    return engine.run_scenario(
-        preset["country_code"],
-        tariffs={s: v / 100 for s, v in p.get("tariff_changes", {}).items()},
-        sector_support={s: v / 100
-                        for s, v in p.get("sector_support", {}).items()},
-        sme_stimulus=p.get("sme_stimulus", 0) / 100,
-        extensions=ext or None,
-    )
+    # use the EXACT conversion the /api/simulate route uses, so the
+    # tests and the live app can never drift on percent->fraction
+    return engine.run_scenario(preset["country_code"],
+                               **_to_engine_kwargs(preset["params"]))
 
 
-def _extensions_from_params(p: dict) -> dict:
-    """Mirror of routes.py: build the engine `extensions` dict from a
-    preset's API-shaped params (percent -> fraction)."""
-    ext = {}
-    if p.get("stimulus_target", "household") != "household":
-        ext["stimulus_target"] = p["stimulus_target"]
-    if p.get("public_investment"):
-        pi = p["public_investment"]
-        ext["public_investment"] = {
-            "amount_pct_gdp": pi["amount_pct_gdp"] / 100,
-            "target": pi.get("target")}
-    if p.get("production_subsidy"):
-        ext["production_subsidy"] = {s: v / 100
-                                     for s, v in p["production_subsidy"].items()}
-    if p.get("wage_subsidy"):
-        ext["wage_subsidy"] = {s: v / 100
-                               for s, v in p["wage_subsidy"].items()}
-    if p.get("investment_tax_incentive"):
-        iti = p["investment_tax_incentive"]
-        ext["investment_tax_incentive"] = {
-            "fiscal_cost_pct_gdp": iti["fiscal_cost_pct_gdp"] / 100,
-            "intensity": iti["intensity"] / 100,
-            "target": iti.get("target")}
-    if p.get("public_works"):
-        pw = p["public_works"]
-        ext["public_works"] = {
-            "budget_pct_gdp": pw["budget_pct_gdp"] / 100,
-            "method": pw.get("method", "labour_based")}
-    if p.get("direct_public_employment"):
-        dpe = p["direct_public_employment"]
-        ext["direct_public_employment"] = {
-            "budget_pct_gdp": dpe["budget_pct_gdp"] / 100}
-    if p.get("depreciation"):
-        ext["depreciation"] = p["depreciation"] / 100
-    return ext
+def _load_lever_params():
+    """Load backend/app/api/lever_params.py by file path (the shared
+    API conversion helper; no FastAPI dependency)."""
+    import importlib.util
+    path = (config.REPO_ROOT / "backend" / "app" / "api"
+            / "lever_params.py")
+    spec = importlib.util.spec_from_file_location("lever_params", path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+_to_engine_kwargs = _load_lever_params().to_engine_kwargs
 
 
 def test_presets_structure(presets):

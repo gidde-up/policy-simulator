@@ -440,6 +440,11 @@ PRESETS = [
                      "only the labour share of output, a far smaller "
                      "fiscal footprint and a much smaller net loss. Same "
                      "sector, very different bill."},
+            {"title": "Read it as accounting, not a forecast",
+             "text": "Comparative-static input-output result at fixed "
+                     "prices and technology - the direction and rough "
+                     "magnitude of a reallocation, not a prediction that "
+                     "supporting the sector would destroy this many jobs."},
         ],
         "expected": {"net_sign": "negative", "has_tariff_channels": False},
     },
@@ -481,6 +486,11 @@ PRESETS = [
                      "drag, while only the small additional investment "
                      "adds jobs: the net effect is negative. The "
                      "windfall is shown explicitly - it is the point."},
+            {"title": "Read it as accounting, not a forecast",
+             "text": "Comparative-static input-output result at fixed "
+                     "prices and technology - the direction and rough "
+                     "magnitude of a reallocation, not a prediction of "
+                     "Viet Nam's employment."},
         ],
         "expected": {"net_sign": "negative", "has_tariff_channels": False,
                      "has_windfall": True},

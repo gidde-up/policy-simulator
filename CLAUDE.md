@@ -40,5 +40,5 @@ You are working on the ITCILO Economic Policy Simulator (FastAPI backend, React/
 - Keep the technical reference accurate and current; it is the primary onboarding document for resuming work.
 
 ## Project version
-Current version: **1.0.0** (2026-06-11)
-The post-audit overhaul (Phases 1-4) is complete. An extension (Sessions E-H: policy-lever expansion and a job-quality module) is in progress on top of 1.0.0 — see CHANGELOG `[Unreleased]`. Per user decision, `__version__` stays 1.0.0 and nothing is pushed/deployed until the extension is verified at the end of Session H, when the version is decided. Work proceeds in local commits; the local pytest suite is the gate (CI runs only on push).
+Current version: **1.1.0** (2026-06-14)
+The post-audit overhaul (Phases 1-4, v1.0.0) and the policy-lever + job-quality extension (Sessions E-H, v1.1.0) are both complete and independently verified. Twelve policy levers across industrial/sectoral, public-investment, employment-programme, macro-fiscal and trade policy; a data-driven job-quality dimension; 308-test suite. Maintenance mode.

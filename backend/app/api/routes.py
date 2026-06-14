@@ -32,6 +32,7 @@ from .schemas import (
     PresetScenario,
 )
 from ..models import engine
+from .lever_params import to_engine_kwargs
 from ..services import get_wdi_service, get_chat_service
 
 router = APIRouter()
@@ -112,57 +113,11 @@ async def run_simulation(request: PolicyScenarioRequest):
             detail=f"Unsupported country. Available: {', '.join(available)}"
         )
 
-    # build the extension-lever dict, converting percent -> fraction
-    ext: dict = {}
-    if request.stimulus_target != "household":
-        ext["stimulus_target"] = request.stimulus_target
-    if request.public_investment:
-        ext["public_investment"] = {
-            "amount_pct_gdp": request.public_investment.amount_pct_gdp / 100,
-            "target": request.public_investment.target,
-        }
-    if request.production_subsidy:
-        ext["production_subsidy"] = {s: v / 100
-                                     for s, v in request.production_subsidy.items()
-                                     if v != 0}
-    if request.wage_subsidy:
-        ext["wage_subsidy"] = {s: v / 100
-                               for s, v in request.wage_subsidy.items()
-                               if v != 0}
-    if request.investment_tax_incentive:
-        iti = request.investment_tax_incentive
-        ext["investment_tax_incentive"] = {
-            "fiscal_cost_pct_gdp": iti.fiscal_cost_pct_gdp / 100,
-            "intensity": iti.intensity / 100,
-            "target": iti.target,
-        }
-    if request.public_works:
-        ext["public_works"] = {
-            "budget_pct_gdp": request.public_works.budget_pct_gdp / 100,
-            "method": request.public_works.method,
-        }
-    if request.direct_public_employment:
-        ext["direct_public_employment"] = {
-            "budget_pct_gdp":
-                request.direct_public_employment.budget_pct_gdp / 100,
-        }
-    if request.depreciation:
-        ext["depreciation"] = request.depreciation / 100
-
+    # percent -> fraction + extensions assembly via the shared helper
+    # (the same one the preset tests use, so they cannot drift)
+    kwargs = to_engine_kwargs(request.model_dump())
     try:
-        r = engine.run_scenario(
-            iso3,
-            tariffs={s: v / 100 for s, v in request.tariff_changes.items()
-                     if v != 0},
-            sector_support={s: v / 100
-                            for s, v in request.sector_support.items()
-                            if v != 0},
-            sme_stimulus=request.sme_stimulus / 100,
-            include_type_ii=request.include_type_ii,
-            include_retaliation=request.include_retaliation,
-            include_financing_drag=request.include_financing_drag,
-            extensions=ext or None,
-        )
+        r = engine.run_scenario(iso3, **kwargs)
     except (KeyError, ValueError) as e:
         raise HTTPException(status_code=400, detail=str(e))
 

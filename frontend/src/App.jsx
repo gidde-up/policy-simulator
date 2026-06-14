@@ -273,7 +273,7 @@ function App() {
             </div>
 
             <div className="text-xs text-gray-500 border-t pt-4">
-              Model v1.0.0 - OECD ICIO 2025 ed. (year 2022); employment: OECD TiM 2025 / ILOSTAT.
+              Model v1.1.0 - OECD ICIO 2025 ed. (year 2022); employment: OECD TiM 2025 / ILOSTAT.
               Pipeline, validation reports and the assumptions registry are in the project repository.
             </div>
           </div>

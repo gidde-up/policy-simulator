@@ -6,8 +6,10 @@ The project is in pre-release (0.x.y); version 1.0.0 will mark the first product
 
 ---
 
-## [Unreleased] — extension (Sessions E–H): policy-lever expansion and job quality
-Work in progress; `__version__` stays 1.0.0 and nothing is pushed/deployed until the extension is verified at the end of Session H, when the version number is decided. Local commits only.
+## [1.1.0] — 2026-06-14  ← current
+**Sessions 19–22 (E–H) — policy-lever expansion and job quality.** Independently verified (regression lock reproduced at 5e-15; every mandated lever identity and acceptance test confirmed; the three judgement calls — Tokarick export-supply provenance, redundancy share, wage cross-check — accepted as honestly handled). MINOR bump: new levers, a new job-quality metric, new UI sections; backward-compatible API (the v1.0.0 simulate contract is a strict subset, regression-locked).
+
+Post-verification follow-ups folded into this release: the percent→fraction conversion is now a single shared helper (`backend/app/api/lever_params.py`) used by both `/api/simulate` and the preset tests, so they cannot drift; the static-accounting caveat was extended to the `tha_production_subsidy_auto` and `vnm_investment_incentive` presets; the informality indicator direction was confirmed (informal employment as a share of sector employment — agriculture highest, finance/public lower).
 
 ### Session H — UI, taxonomy, presets, job-quality panel (2026-06-14)
 **Frontend**
