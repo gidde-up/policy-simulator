@@ -108,7 +108,7 @@ function ResultsPanel({ results, loading }) {
     );
   }
 
-  const { aggregate, sector_effects, tariff_channels, other_channels, costs, uncertainty, data_source, baseline, induced_note } = results;
+  const { aggregate, sector_effects, tariff_channels, other_channels, costs, uncertainty, data_source, baseline, induced_note, job_quality, investment_incentive, job_years_note } = results;
   const totalJobs = aggregate.total_jobs;
   const isPositive = totalJobs > 0;
 
@@ -329,10 +329,86 @@ function ResultsPanel({ results, loading }) {
         {costs.financing_drag_included && (
           <p className="text-xs text-gray-500 mt-2 flex items-center">
             <DollarSign className="w-3 h-3 mr-1" />
-            Sector support is modelled as tax-financed (financing drag included).
+            Tax-financed (financing drag included): figures are net, not gross.
           </p>
         )}
       </div>
+
+      {/* Investment-incentive windfall */}
+      {investment_incentive && (
+        <div className="bg-amber-50 border border-amber-200 rounded-xl p-6">
+          <h3 className="text-lg font-bold text-gray-800 mb-2">Incentive Windfall</h3>
+          <div className="grid grid-cols-3 gap-3 text-center text-sm">
+            <div>
+              <div className="text-xs text-gray-500">Gross investment</div>
+              <div className="font-bold text-gray-800">
+                {Math.round(investment_incentive.gross_investment_usd_million).toLocaleString()}
+              </div>
+            </div>
+            <div>
+              <div className="text-xs text-gray-500">Additional (new)</div>
+              <div className="font-bold text-green-700">
+                {Math.round(investment_incentive.additional_investment_usd_million).toLocaleString()}
+              </div>
+            </div>
+            <div>
+              <div className="text-xs text-gray-500">Windfall ({Math.round(investment_incentive.redundancy_share * 100)}%)</div>
+              <div className="font-bold text-red-700">
+                {Math.round(investment_incentive.windfall_usd_million).toLocaleString()}
+              </div>
+            </div>
+          </div>
+          <p className="text-xs text-gray-600 mt-2">{investment_incentive.note}</p>
+        </div>
+      )}
+
+      {/* Job quality (composition of the change) */}
+      {job_quality && (
+        <div className="bg-white rounded-xl shadow-md p-6">
+          <h3 className="text-lg font-bold text-gray-800 mb-1">Job Quality (composition of the change)</h3>
+          <p className="text-xs text-gray-500 mb-4">
+            The wage and informality MIX of the jobs moved, on the assumption
+            that created/lost jobs share each sector's existing characteristics
+            - not a quality forecast.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-gray-50 rounded-lg p-3">
+              <div className="text-xs text-gray-500">Wage-bill change</div>
+              <div className="text-xl font-bold text-gray-800">
+                {Math.round(job_quality.wage.wage_bill_change_usd_million).toLocaleString()} <span className="text-sm font-normal">USD m</span>
+              </div>
+              {job_quality.wage.avg_compensation_ratio_vs_economy != null && (
+                <div className="text-sm text-gray-600 mt-1">
+                  Jobs moved pay on average{' '}
+                  <span className="font-medium">
+                    {job_quality.wage.avg_compensation_ratio_vs_economy.toFixed(2)}x
+                  </span>{' '}the economy mean
+                </div>
+              )}
+            </div>
+            {job_quality.informality && (
+              <div className="bg-gray-50 rounded-lg p-3">
+                <div className="text-xs text-gray-500">Informality of the change</div>
+                <div className="text-xl font-bold text-gray-800">
+                  {Math.round(job_quality.informality.informal_share_of_change * 100)}%
+                </div>
+                <div className="text-sm text-gray-600 mt-1">
+                  of jobs moved fall in predominantly-informal activities
+                  <span className="text-xs text-gray-400"> ({job_quality.informality.year})</span>
+                </div>
+              </div>
+            )}
+          </div>
+          <p className="text-xs text-gray-400 mt-2">{job_quality.wage.caveat}</p>
+        </div>
+      )}
+
+      {/* Job-years framing */}
+      {job_years_note && (
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 text-sm text-blue-800">
+          {job_years_note}
+        </div>
+      )}
 
       {/* WDI unemployment baseline */}
       {results.baseline_indicators?.unemployment_total && (

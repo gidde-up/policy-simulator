@@ -10,6 +10,15 @@ const DEFAULT_PARAMS = {
   include_type_ii: false,
   include_retaliation: false,
   include_financing_drag: true,
+  // extension levers (Session F/H)
+  production_subsidy: {},
+  wage_subsidy: {},
+  stimulus_target: 'household',
+  public_investment: null,          // {amount_pct_gdp, target}
+  investment_tax_incentive: null,   // {fiscal_cost_pct_gdp, intensity, target}
+  public_works: null,               // {budget_pct_gdp, method}
+  direct_public_employment: null,   // {budget_pct_gdp}
+  depreciation: 0,
 };
 
 export function useSimulation() {
@@ -35,10 +44,15 @@ export function useSimulation() {
   const updateSupport = useCallback((sector, value) => {
     setParams(prev => ({
       ...prev,
-      sector_support: {
-        ...prev.sector_support,
-        [sector]: value,
-      },
+      sector_support: { ...prev.sector_support, [sector]: value },
+    }));
+  }, []);
+
+  // generic per-sector setter for the subsidy dict levers
+  const updateSectorMap = useCallback((key, sector, value) => {
+    setParams(prev => ({
+      ...prev,
+      [key]: { ...(prev[key] || {}), [sector]: value },
     }));
   }, []);
 
@@ -79,6 +93,7 @@ export function useSimulation() {
     updateParam,
     updateTariff,
     updateSupport,
+    updateSectorMap,
     simulate,
     loadPreset,
     reset,

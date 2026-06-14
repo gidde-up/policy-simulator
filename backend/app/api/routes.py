@@ -310,6 +310,39 @@ async def get_limitations():
                         detail="model-limitations.md not found")
 
 
+def _serve_doc(filename: str):
+    from pathlib import Path
+    here = Path(__file__).resolve()
+    for p in (here.parents[3] / "docs" / filename,
+              here.parents[2] / "docs" / filename):
+        if p.exists():
+            return {"markdown": p.read_text(encoding="utf-8")}
+    raise HTTPException(status_code=404, detail=f"{filename} not found")
+
+
+@router.get("/not-in-tool")
+async def get_not_in_tool():
+    """'What is not in this tool and why' (docs/not-in-this-tool.md)."""
+    return _serve_doc("not-in-this-tool.md")
+
+
+@router.get("/context/{country_code}")
+async def get_country_context(country_code: str):
+    """National informality and working-poverty context indicators for a
+    country (from the verified JSON; context only, never scenario
+    outputs). Returns {} where the country has no informality block."""
+    iso3 = country_code.upper()
+    if iso3 not in engine.available_countries():
+        raise HTTPException(status_code=400, detail="Unsupported country")
+    import json as _json
+    from pathlib import Path
+    path = (Path(__file__).resolve().parents[1] / "data" / "countries"
+            / f"{iso3}.json")
+    d = _json.loads(path.read_text(encoding="utf-8"))
+    ctx = (d.get("informality") or {}).get("context", {})
+    return {"country": iso3, "context": ctx}
+
+
 # ============== WDI Data Routes ==============
 
 @router.get("/countries")

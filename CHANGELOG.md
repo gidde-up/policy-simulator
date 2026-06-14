@@ -9,6 +9,24 @@ The project is in pre-release (0.x.y); version 1.0.0 will mark the first product
 ## [Unreleased] — extension (Sessions E–H): policy-lever expansion and job quality
 Work in progress; `__version__` stays 1.0.0 and nothing is pushed/deployed until the extension is verified at the end of Session H, when the version number is decided. Local commits only.
 
+### Session H — UI, taxonomy, presets, job-quality panel (2026-06-14)
+**Frontend**
+- Lever taxonomy regrouped into four collapsible groups: (1) industrial & sectoral policy, (2) public investment & employment programmes, (3) macro-fiscal, (4) trade & exchange rate (last, collapsed by default) - directly answering the "tariff-heavy" critique
+- New lever controls: production/wage subsidies (per-sector), public investment, investment tax incentive, public works (method choice), direct public hiring, stimulus composition, depreciation; assumptions popovers extended to every new lever
+- Results: job-quality panel (wage-bill change, average compensation ratio vs economy, informality composition with caveats), investment-incentive windfall breakdown, job-years framing
+- Guided mode reordered to lead with industrial/public-programme scenarios; "What is not in this tool and why" panel with greyed pseudo-levers (interest rates, ALMPs, minimum wages, targeted transfers); country labour-market context (informality, working poverty) in the Data tab
+**Backend**
+- 9 new test-enforced guided presets (24 total) incl. ZAF public works (EPWP context), VNM investment incentive (windfall lesson), production-vs-wage-subsidy contrast, stimulus-composition comparison, TUN depreciation; static-accounting caveat added to the two flagship presets
+- New endpoints: /api/not-in-tool, /api/context/{iso3}, /api/sectors output shares, /api/assumptions
+
+### Session G — job-quality module (2026-06-14)
+- engine.job_quality(): wage-bill change (v.L.dF identity), |dE|-weighted average compensation per worker vs economy mean, informality composition of the change (per-country gate; hidden where no data, never imputed); national working poverty stays context-only. docs/job-quality.md. Pure post-processing -- run_scenario and its regression lock untouched.
+
+### Session F — new policy levers (2026-06-13)
+- Eight levers via the composable-shock pipeline: public investment, stimulus composition (household/government/investment), production subsidy, wage subsidy, investment tax incentive (windfall/redundancy), public works/EIIP (job-years; labour-based vs conventional), direct public employment, stylised depreciation
+- run_scenario gains an optional `extensions` arg; v1 calls byte-identical (35-case regression lock green). API request/response extended. 13 acceptance-style tests x 5 countries. docs/levers/*.md for all 8 + docs/not-in-this-tool.md
+- Registered (cited): EIIP labour share (ILO), conventional construction labour share (data-derived per country), export supply elasticity (Tokarick 2010 - note: the paper has export SUPPLY, not demand; documented), investment-incentive redundancy (James 2013; IMF-OECD-UN-WB 2015)
+
 ### Session E — data gates and engine generalisation (2026-06-13)
 **Engine (E.2)**
 - Refactored `backend/app/models/engine.py` to composable typed shocks (`DemandShock`, `ImportPriceShock`, `DomesticCostShock`, `DirectEmployment`, `FiscalCost`) feeding a single evaluator; generalised price/demand primitives (`_cost_push_prices`, `_downstream_dF`, `_real_income_dF`, `_hh_spread`) now shared by every price-side lever so Session F levers reuse one path

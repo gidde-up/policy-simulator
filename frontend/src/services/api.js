@@ -69,6 +69,14 @@ export async function getLimitations() {
   return fetchApi('/limitations');
 }
 
+export async function getNotInTool() {
+  return fetchApi('/not-in-tool');
+}
+
+export async function getCountryContext(countryCode) {
+  return fetchApi(`/context/${countryCode}`);
+}
+
 // ============== Country Data API ==============
 
 export async function getCountries() {

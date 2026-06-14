@@ -40,6 +40,23 @@
   closure. The robust lesson is the reallocation, not the sign of a
   small residual.
 
+## Extension levers and job quality (notes)
+
+- **Job-years, not permanent posts.** Public works and direct public
+  employment report job-years (one person for one year), not permanent
+  jobs. The headline flags this.
+- **Job quality is composition, not a forecast.** Wage and informality
+  figures describe the sector mix of the jobs moved, assuming created/
+  lost jobs share each sector's existing averages. Working poverty is
+  shown only as national context, never per scenario.
+- **Depreciation is stylised.** A pure relative-price shock: no monetary
+  policy, no inflation pass-through, no balance-sheet effects, no
+  J-curve. The export elasticity is an export *supply* elasticity
+  (Tokarick 2010 has no export-demand table).
+- **What is excluded entirely** (interest rates, active labour market
+  policies, minimum wages, distribution-targeted transfers) and why: see
+  docs/not-in-this-tool.md, surfaced in-app.
+
 ## Sources and audit trail
 
 Every coefficient is computed from OECD ICIO 2025 (year 2022), OECD TiM

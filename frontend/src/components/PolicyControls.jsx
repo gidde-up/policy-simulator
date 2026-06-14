@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronDown, ChevronUp, Factory, Leaf, Building2, ShoppingBag, DollarSign, Settings } from 'lucide-react';
+import { ChevronDown, ChevronUp, Settings } from 'lucide-react';
 import PolicySlider from './PolicySlider';
 import AssumptionsPopover from './AssumptionsPopover';
 import { getSectors } from '../services/api';
@@ -10,64 +10,35 @@ import { getSectors } from '../services/api';
 const MICRO_SECTOR_THRESHOLD = 0.005;
 
 const SECTOR_GROUPS = {
-  primary: {
-    label: 'Primary Sectors',
-    icon: Leaf,
-    sectors: ['agriculture', 'mining'],
-    color: 'green',
-  },
-  manufacturing: {
-    label: 'Manufacturing',
-    icon: Factory,
-    sectors: ['manufacturing', 'textiles', 'automotive', 'food_processing', 'chemicals'],
-    color: 'blue',
-  },
-  infrastructure: {
-    label: 'Infrastructure & Utilities',
-    icon: Building2,
-    sectors: ['construction', 'utilities'],
-    color: 'orange',
-  },
-  services: {
-    label: 'Services',
-    icon: ShoppingBag,
-    sectors: ['trade', 'transport', 'finance', 'public_services', 'other_services'],
-    color: 'purple',
-  },
+  primary: { label: 'Primary', sectors: ['agriculture', 'mining'], color: 'green' },
+  manufacturing: { label: 'Manufacturing', sectors: ['manufacturing', 'textiles', 'automotive', 'food_processing', 'chemicals'], color: 'blue' },
+  infrastructure: { label: 'Infrastructure & Utilities', sectors: ['construction', 'utilities'], color: 'orange' },
+  services: { label: 'Services', sectors: ['trade', 'transport', 'finance', 'public_services', 'other_services'], color: 'purple' },
 };
 
 const SECTOR_LABELS = {
-  agriculture: 'Agriculture',
-  mining: 'Mining',
-  manufacturing: 'General Manufacturing',
-  textiles: 'Textiles & Apparel',
-  automotive: 'Automotive',
-  food_processing: 'Food Processing',
-  chemicals: 'Chemicals',
-  construction: 'Construction',
-  utilities: 'Utilities (Energy, Water)',
-  trade: 'Wholesale & Retail Trade',
-  transport: 'Transport & Logistics',
-  finance: 'Financial Services',
-  public_services: 'Public Services',
-  other_services: 'Other Services (Tourism, etc.)',
+  agriculture: 'Agriculture', mining: 'Mining', manufacturing: 'General Manufacturing',
+  textiles: 'Textiles & Apparel', automotive: 'Automotive', food_processing: 'Food Processing',
+  chemicals: 'Chemicals', construction: 'Construction', utilities: 'Utilities (Energy, Water)',
+  trade: 'Wholesale & Retail Trade', transport: 'Transport & Logistics', finance: 'Financial Services',
+  public_services: 'Public Services', other_services: 'Other Services (Tourism, etc.)',
 };
 
-function PolicyControls({
-  countryCode,
-  params,
-  onUpdateTariff,
-  onUpdateSupport,
-  onUpdateParam,
-}) {
-  const [expandedGroups, setExpandedGroups] = useState({
-    primary: false,
-    manufacturing: true,
-    infrastructure: false,
-    services: false,
-  });
+const SECTOR_OPTIONS = Object.keys(SECTOR_LABELS);
 
-  const [activeTab, setActiveTab] = useState('tariffs'); // 'tariffs' | 'support' | 'other'
+// the four policy groups; trade goes last and is collapsed by default
+const POLICY_GROUPS = [
+  { id: 'industrial', label: '1. Industrial & sectoral policy', open: true },
+  { id: 'public', label: '2. Public investment & employment programmes', open: true },
+  { id: 'macro', label: '3. Macro-fiscal', open: true },
+  { id: 'trade', label: '4. Trade & exchange rate', open: false },
+];
+
+function PolicyControls({ countryCode, params, onUpdateTariff, onUpdateSupport,
+                          onUpdateSectorMap, onUpdateParam }) {
+  const [openGroups, setOpenGroups] = useState(
+    Object.fromEntries(POLICY_GROUPS.map(g => [g.id, g.open])));
+  const [openLever, setOpenLever] = useState({ sector_support: true });
   const [sectorInfo, setSectorInfo] = useState({});
 
   useEffect(() => {
@@ -83,213 +54,239 @@ function PolicyControls({
     return () => { alive = false; };
   }, [countryCode]);
 
-  const toggleGroup = (group) => {
-    setExpandedGroups(prev => ({ ...prev, [group]: !prev[group] }));
-  };
+  const toggleGroup = (id) => setOpenGroups(p => ({ ...p, [id]: !p[id] }));
+  const toggleLever = (id) => setOpenLever(p => ({ ...p, [id]: !p[id] }));
 
   const compositionTooltip = (sector) => {
     const info = sectorInfo[sector];
     if (!info || !info.icio_industries?.length) return undefined;
-    const items = info.icio_industries
-      .map((i) => `${i.code} ${i.description}`).join('; ');
-    return `Contains (OECD ICIO industries): ${items}`;
+    return 'Contains (OECD ICIO industries): ' +
+      info.icio_industries.map((i) => `${i.code} ${i.description}`).join('; ');
   };
 
-  const renderSectorSliders = (values, onChange, { min, max, color, kind }) => (
-    Object.entries(SECTOR_GROUPS).map(([groupKey, group]) => {
-      const Icon = group.icon;
-      return (
-        <div key={groupKey} className="mb-3">
-          <button
-            onClick={() => toggleGroup(groupKey)}
-            className="w-full flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
-          >
-            <div className="flex items-center space-x-2">
-              <Icon className="w-5 h-5 text-gray-600" />
-              <span className="font-medium text-gray-700">{group.label}</span>
-            </div>
-            {expandedGroups[groupKey] ? (
-              <ChevronUp className="w-5 h-5 text-gray-500" />
-            ) : (
-              <ChevronDown className="w-5 h-5 text-gray-500" />
-            )}
-          </button>
-
-          {expandedGroups[groupKey] && (
-            <div className="mt-2 pl-4 border-l-2 border-gray-200">
-              {group.sectors.map((sector) => {
+  // a sector-based lever: 14 sliders grouped by sector family
+  const SectorLever = ({ id, title, values, onChange, max, color, lever }) => (
+    <div className="border border-gray-200 rounded-lg mb-2">
+      <button onClick={() => toggleLever(id)}
+        className="w-full flex items-center justify-between p-3 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-lg">
+        <span className="font-medium text-gray-800">{title}</span>
+        <span className="flex items-center space-x-2">
+          {lever && <AssumptionsPopover lever={lever} countryCode={countryCode} />}
+          {openLever[id] ? <ChevronUp className="w-4 h-4 text-gray-500" />
+                         : <ChevronDown className="w-4 h-4 text-gray-500" />}
+        </span>
+      </button>
+      {openLever[id] && (
+        <div className="px-3 pb-3">
+          {Object.entries(SECTOR_GROUPS).map(([gk, g]) => (
+            <div key={gk} className="mt-2">
+              <div className="text-xs font-semibold text-gray-400 uppercase mb-1">{g.label}</div>
+              {g.sectors.map((sector) => {
                 const share = sectorInfo[sector]?.output_share;
-                const isMicro = share !== undefined
-                  && share < MICRO_SECTOR_THRESHOLD;
+                const isMicro = share !== undefined && share < MICRO_SECTOR_THRESHOLD;
                 return (
                   <div key={sector} title={compositionTooltip(sector)}>
                     <PolicySlider
                       label={SECTOR_LABELS[sector]}
                       value={values[sector] || 0}
-                      onChange={(val) => onChange(sector, val)}
-                      min={min}
-                      max={max}
-                      color={color || group.color}
-                      description={`${kind} for ${SECTOR_LABELS[sector].toLowerCase()}`}
+                      onChange={(v) => onChange(sector, v)}
+                      min={0} max={max} color={color || g.color}
                       disabled={isMicro}
-                      disabledNote={`below 0.5% of this economy's output - results would be meaningless decimals`}
+                      disabledNote="below 0.5% of this economy's output"
                     />
                   </div>
                 );
               })}
             </div>
-          )}
+          ))}
         </div>
-      );
-    })
+      )}
+    </div>
+  );
+
+  // a structured lever card (compact form)
+  const LeverCard = ({ id, title, lever, children }) => (
+    <div className="border border-gray-200 rounded-lg mb-2">
+      <button onClick={() => toggleLever(id)}
+        className="w-full flex items-center justify-between p-3 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-lg">
+        <span className="font-medium text-gray-800">{title}</span>
+        <span className="flex items-center space-x-2">
+          {lever && <AssumptionsPopover lever={lever} countryCode={countryCode} />}
+          {openLever[id] ? <ChevronUp className="w-4 h-4 text-gray-500" />
+                         : <ChevronDown className="w-4 h-4 text-gray-500" />}
+        </span>
+      </button>
+      {openLever[id] && <div className="px-3 pb-3 space-y-2">{children}</div>}
+    </div>
+  );
+
+  const numField = (label, value, onChange, { min = 0, max = 20, step = 0.5, unit = '% of GDP' } = {}) => (
+    <label className="flex items-center justify-between text-sm text-gray-700">
+      <span>{label}</span>
+      <span className="flex items-center space-x-1">
+        <input type="number" min={min} max={max} step={step} value={value}
+          onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
+          className="w-20 text-right px-1 py-0.5 border rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600" />
+        <span className="text-xs text-gray-500">{unit}</span>
+      </span>
+    </label>
+  );
+
+  const sectorSelect = (label, value, onChange) => (
+    <label className="flex items-center justify-between text-sm text-gray-700">
+      <span>{label}</span>
+      <select value={value || ''} onChange={(e) => onChange(e.target.value || null)}
+        className="border rounded px-1 py-0.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">
+        <option value="">Broad (GFCF mix)</option>
+        {SECTOR_OPTIONS.map(s => <option key={s} value={s}>{SECTOR_LABELS[s]}</option>)}
+      </select>
+    </label>
+  );
+
+  const obj = (key) => params[key] || {};
+  const setObj = (key, patch) =>
+    onUpdateParam(key, { ...(params[key] || {}), ...patch });
+
+  const Group = ({ id, label, children }) => (
+    <div className="bg-white rounded-xl shadow-md overflow-hidden mb-3">
+      <button onClick={() => toggleGroup(id)}
+        className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">
+        <span className="font-bold text-gray-800">{label}</span>
+        {openGroups[id] ? <ChevronUp className="w-5 h-5 text-gray-500" />
+                        : <ChevronDown className="w-5 h-5 text-gray-500" />}
+      </button>
+      {openGroups[id] && <div className="p-3">{children}</div>}
+    </div>
   );
 
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden">
-      {/* Tab Navigation */}
-      <div className="flex border-b">
-        <button
-          onClick={() => setActiveTab('tariffs')}
-          className={`flex-1 py-3 px-4 text-sm font-medium transition-colors ${
-            activeTab === 'tariffs'
-              ? 'bg-blue-50 text-blue-700 border-b-2 border-blue-500'
-              : 'text-gray-500 hover:bg-gray-50'
-          }`}
-        >
-          Import Tariffs
-        </button>
-        <button
-          onClick={() => setActiveTab('support')}
-          className={`flex-1 py-3 px-4 text-sm font-medium transition-colors ${
-            activeTab === 'support'
-              ? 'bg-green-50 text-green-700 border-b-2 border-green-500'
-              : 'text-gray-500 hover:bg-gray-50'
-          }`}
-        >
-          Sector Support
-        </button>
-        <button
-          onClick={() => setActiveTab('other')}
-          className={`flex-1 py-3 px-4 text-sm font-medium transition-colors ${
-            activeTab === 'other'
-              ? 'bg-purple-50 text-purple-700 border-b-2 border-purple-500'
-              : 'text-gray-500 hover:bg-gray-50'
-          }`}
-        >
-          Stimulus & Options
-        </button>
-      </div>
+    <div>
+      {/* 1. Industrial & sectoral policy */}
+      <Group id="industrial" label={POLICY_GROUPS[0].label}>
+        <SectorLever id="production_subsidy" title="Production subsidy"
+          lever="production_subsidy" values={obj('production_subsidy')}
+          onChange={(s, v) => onUpdateSectorMap('production_subsidy', s, v)}
+          max={30} color="green" />
+        <SectorLever id="wage_subsidy" title="Wage subsidy"
+          lever="wage_subsidy" values={obj('wage_subsidy')}
+          onChange={(s, v) => onUpdateSectorMap('wage_subsidy', s, v)}
+          max={30} color="green" />
+        <LeverCard id="investment_tax_incentive" title="Investment tax incentive"
+          lever="investment_tax_incentive">
+          <p className="text-xs text-gray-600">Set what the incentive costs and how
+            much of investment cost it covers; the windfall (investment that would
+            have happened anyway) is shown in the results.</p>
+          {numField('Fiscal cost', params.investment_tax_incentive?.fiscal_cost_pct_gdp || 0,
+            (v) => onUpdateParam('investment_tax_incentive',
+              v > 0 ? { ...(params.investment_tax_incentive || { intensity: 30 }), fiscal_cost_pct_gdp: v } : null),
+            { max: 10 })}
+          {params.investment_tax_incentive && numField('Intensity', params.investment_tax_incentive.intensity || 30,
+            (v) => setObj('investment_tax_incentive', { intensity: v }),
+            { max: 100, unit: '% of cost' })}
+          {params.investment_tax_incentive && sectorSelect('Target',
+            params.investment_tax_incentive.target,
+            (t) => setObj('investment_tax_incentive', { target: t }))}
+        </LeverCard>
+        <SectorLever id="sector_support" title="Sector support (government spending)"
+          lever="support" values={obj('sector_support')}
+          onChange={onUpdateSupport} max={20} color="green" />
+      </Group>
 
-      <div className="p-4">
-        {/* Tariffs Tab */}
-        {activeTab === 'tariffs' && (
-          <div>
-            <div className="flex items-start justify-between mb-4">
-              <p className="text-sm text-gray-700 pr-2">
-                Raise import tariffs by sector. The model shows the protected-sector
-                gain against downstream input-cost and real-income losses.
-              </p>
-              <AssumptionsPopover lever="tariffs" countryCode={countryCode} />
-            </div>
-            {renderSectorSliders(params.tariff_changes, onUpdateTariff,
-              { min: 0, max: 30, kind: 'Tariff increase' })}
-          </div>
-        )}
+      {/* 2. Public investment & employment programmes */}
+      <Group id="public" label={POLICY_GROUPS[1].label}>
+        <LeverCard id="public_investment" title="Public investment">
+          {numField('Amount', params.public_investment?.amount_pct_gdp || 0,
+            (v) => onUpdateParam('public_investment',
+              v > 0 ? { ...(params.public_investment || {}), amount_pct_gdp: v } : null))}
+          {params.public_investment && sectorSelect('Target',
+            params.public_investment.target,
+            (t) => setObj('public_investment', { target: t }))}
+        </LeverCard>
+        <LeverCard id="public_works" title="Public works / EIIP (job-years)">
+          {numField('Budget', params.public_works?.budget_pct_gdp || 0,
+            (v) => onUpdateParam('public_works',
+              v > 0 ? { ...(params.public_works || { method: 'labour_based' }), budget_pct_gdp: v } : null))}
+          {params.public_works && (
+            <label className="flex items-center justify-between text-sm text-gray-700">
+              <span>Method</span>
+              <select value={params.public_works.method || 'labour_based'}
+                onChange={(e) => setObj('public_works', { method: e.target.value })}
+                className="border rounded px-1 py-0.5 text-sm">
+                <option value="labour_based">Labour-based (EIIP)</option>
+                <option value="conventional">Conventional</option>
+              </select>
+            </label>
+          )}
+        </LeverCard>
+        <LeverCard id="direct_public_employment" title="Direct public hiring (job-years)">
+          {numField('Budget', params.direct_public_employment?.budget_pct_gdp || 0,
+            (v) => onUpdateParam('direct_public_employment',
+              v > 0 ? { budget_pct_gdp: v } : null))}
+        </LeverCard>
+      </Group>
 
-        {/* Sector Support Tab */}
-        {activeTab === 'support' && (
-          <div>
-            <div className="flex items-start justify-between mb-4">
-              <p className="text-sm text-gray-700 pr-2">
-                Government spending in support of a sector (as % of the sector's
-                output). With the financing drag on, the same amount is taken out
-                of household consumption (tax-financed).
-              </p>
-              <AssumptionsPopover lever="support" countryCode={countryCode} />
-            </div>
-            {renderSectorSliders(params.sector_support, onUpdateSupport,
-              { min: 0, max: 20, color: 'green', kind: 'Government support' })}
-          </div>
-        )}
+      {/* 3. Macro-fiscal */}
+      <Group id="macro" label={POLICY_GROUPS[2].label}>
+        <LeverCard id="sme_stimulus" title="SME / demand stimulus" lever="stimulus">
+          {numField('Stimulus', params.sme_stimulus || 0,
+            (v) => onUpdateParam('sme_stimulus', v), { max: 10, step: 0.1 })}
+          <label className="flex items-center justify-between text-sm text-gray-700">
+            <span>Composition</span>
+            <select value={params.stimulus_target || 'household'}
+              onChange={(e) => onUpdateParam('stimulus_target', e.target.value)}
+              className="border rounded px-1 py-0.5 text-sm">
+              <option value="household">Household transfer</option>
+              <option value="government">Government consumption</option>
+              <option value="investment">Public investment</option>
+            </select>
+          </label>
+        </LeverCard>
+      </Group>
 
-        {/* Stimulus & Options Tab */}
-        {activeTab === 'other' && (
-          <div className="space-y-6">
-            {/* SME Stimulus */}
-            <div className="p-4 bg-orange-50 rounded-lg">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center space-x-2">
-                  <DollarSign className="w-5 h-5 text-orange-600" />
-                  <h3 className="font-medium text-gray-800">SME / Demand Stimulus</h3>
-                </div>
-                <AssumptionsPopover lever="stimulus" countryCode={countryCode} />
-              </div>
-              <p className="text-sm text-gray-700 mb-4">
-                Broad demand stimulus spread through household consumption
-                patterns, scaled by a cited first-round fiscal multiplier.
-              </p>
-              <PolicySlider
-                label="Stimulus Package"
-                value={params.sme_stimulus}
-                onChange={(val) => onUpdateParam('sme_stimulus', val)}
-                min={0}
-                max={5}
-                step={0.1}
-                unit="% of GDP"
-                color="orange"
-              />
-            </div>
+      {/* 4. Trade & exchange rate (collapsed by default) */}
+      <Group id="trade" label={POLICY_GROUPS[3].label}>
+        <SectorLever id="tariff_changes" title="Import tariffs"
+          lever="tariffs" values={obj('tariff_changes')}
+          onChange={onUpdateTariff} max={30} color="blue" />
+        <LeverCard id="depreciation" title="Exchange-rate depreciation (stylised)"
+          lever="depreciation">
+          {numField('Depreciation', params.depreciation || 0,
+            (v) => onUpdateParam('depreciation', v), { max: 50, step: 1, unit: '%' })}
+        </LeverCard>
+      </Group>
 
-            {/* Model options */}
-            <div className="p-4 bg-gray-50 rounded-lg">
-              <div className="flex items-center space-x-2 mb-3">
-                <Settings className="w-5 h-5 text-gray-600" />
-                <h3 className="font-medium text-gray-800">Model Options</h3>
-              </div>
-              <div className="space-y-3">
-                <label className="flex items-start space-x-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    className="mt-1"
-                    checked={params.include_type_ii}
-                    onChange={(e) => onUpdateParam('include_type_ii', e.target.checked)}
-                  />
-                  <span className="text-sm text-gray-700">
-                    <span className="font-medium">Include induced effects (Type II)</span><br />
-                    Upper-bound illustration: household spending of labour income
-                    is recycled, with the consumption propensity capped at 1.
-                  </span>
-                </label>
-                <label className="flex items-start space-x-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    className="mt-1"
-                    checked={params.include_retaliation}
-                    onChange={(e) => onUpdateParam('include_retaliation', e.target.checked)}
-                  />
-                  <span className="text-sm text-gray-700">
-                    <span className="font-medium">Trade-partner retaliation (stylised)</span><br />
-                    Export demand falls in the top export sectors, mirroring the
-                    2018-19 trade-war episode.
-                  </span>
-                </label>
-                <label className="flex items-start space-x-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    className="mt-1"
-                    checked={params.include_financing_drag}
-                    onChange={(e) => onUpdateParam('include_financing_drag', e.target.checked)}
-                  />
-                  <span className="text-sm text-gray-700">
-                    <span className="font-medium">Financing drag on sector support</span><br />
-                    Tax-financed spending: the support amount is subtracted from
-                    household consumption, showing net rather than gross effects.
-                  </span>
-                </label>
-              </div>
-            </div>
-          </div>
-        )}
+      {/* Model options */}
+      <div className="bg-white rounded-xl shadow-md p-4">
+        <div className="flex items-center space-x-2 mb-3">
+          <Settings className="w-5 h-5 text-gray-600" />
+          <h3 className="font-medium text-gray-800">Model Options</h3>
+        </div>
+        <div className="space-y-3">
+          <label className="flex items-start space-x-3 cursor-pointer">
+            <input type="checkbox" className="mt-1" checked={params.include_type_ii}
+              onChange={(e) => onUpdateParam('include_type_ii', e.target.checked)} />
+            <span className="text-sm text-gray-700">
+              <span className="font-medium">Include induced effects (Type II)</span><br />
+              Upper-bound illustration; consumption propensity capped at 1.
+            </span>
+          </label>
+          <label className="flex items-start space-x-3 cursor-pointer">
+            <input type="checkbox" className="mt-1" checked={params.include_retaliation}
+              onChange={(e) => onUpdateParam('include_retaliation', e.target.checked)} />
+            <span className="text-sm text-gray-700">
+              <span className="font-medium">Trade-partner retaliation (stylised)</span><br />
+              Export demand falls in the top export sectors.
+            </span>
+          </label>
+          <label className="flex items-start space-x-3 cursor-pointer">
+            <input type="checkbox" className="mt-1" checked={params.include_financing_drag}
+              onChange={(e) => onUpdateParam('include_financing_drag', e.target.checked)} />
+            <span className="text-sm text-gray-700">
+              <span className="font-medium">Financing drag (tax-financed)</span><br />
+              Subtract spending from household consumption: net vs gross.
+            </span>
+          </label>
+        </div>
       </div>
     </div>
   );

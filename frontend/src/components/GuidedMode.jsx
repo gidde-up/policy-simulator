@@ -3,6 +3,24 @@ import { ChevronLeft, ChevronRight, Compass, ExternalLink, Play } from 'lucide-r
 import { getPresets, runSimulation } from '../services/api';
 import ResultsPanel from './ResultsPanel';
 
+// lead with industrial/sectoral and public-employment scenarios; trade
+// (tariff/depreciation) scenarios go last (the "tariff-heavy" critique)
+function scenarioRank(p) {
+  const par = p.params || {};
+  if (par.production_subsidy || par.wage_subsidy ||
+      par.investment_tax_incentive) return 0;        // industrial/sectoral
+  if (par.public_works || par.direct_public_employment ||
+      par.public_investment) return 1;               // public programmes
+  if (par.sector_support) return 2;
+  if (par.sme_stimulus) return 3;                    // macro-fiscal
+  if (par.tariff_changes || par.depreciation) return 5;  // trade last
+  return 4;
+}
+
+function orderScenarios(list) {
+  return [...list].sort((a, b) => scenarioRank(a) - scenarioRank(b));
+}
+
 function GuidedMode({ countryCode, onOpenInExplorer }) {
   const [scenarios, setScenarios] = useState([]);
   const [loadError, setLoadError] = useState(false);
@@ -16,7 +34,7 @@ function GuidedMode({ countryCode, onOpenInExplorer }) {
     setResults(null);
     setStep(0);
     getPresets(countryCode)
-      .then((d) => { setScenarios(d.presets || []); setLoadError(false); })
+      .then((d) => { setScenarios(orderScenarios(d.presets || [])); setLoadError(false); })
       .catch(() => { setScenarios([]); setLoadError(true); });
   }, [countryCode]);
 

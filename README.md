@@ -14,14 +14,24 @@ every screen.
 - **Guided Tour** (default view): 15 curated scenarios with step-by-step
   walkthroughs of what each result teaches. Every factual claim in the
   walkthroughs is enforced by automated tests against the model output.
-- **Free Exploration**: three policy levers —
-  - **Tariffs**, decomposed into four separately displayed channels:
-    protected-sector gain (import substitution), downstream input-cost
-    push, real-income loss, and an optional stylised retaliation toggle;
-  - **Government sector support**, with a financing-drag toggle
-    (tax-financed) so gross and net effects can be compared;
-  - **SME / demand stimulus**, spread through household consumption and
-    scaled by a cited first-round fiscal multiplier.
+- **Free Exploration**: policy levers grouped to foreground industrial
+  and sectoral policy, with trade last:
+  1. **Industrial & sectoral**: production subsidy, wage subsidy,
+     investment tax incentive (with an explicit windfall/redundancy
+     display), government sector support;
+  2. **Public investment & employment programmes**: public investment,
+     public works / EIIP (job-years; labour-based vs conventional),
+     direct public hiring;
+  3. **Macro-fiscal**: SME / demand stimulus with a composition choice
+     (household transfer, government consumption, or public investment);
+  4. **Trade & exchange rate** (collapsed by default): tariffs
+     (four-channel decomposition + optional retaliation) and a stylised
+     exchange-rate depreciation.
+  A financing-drag toggle (tax-financed) compares gross and net effects;
+  a job-quality panel shows the wage and informality composition of the
+  change; a "what is not in this tool and why" panel covers the
+  deliberate exclusions (interest rates, active labour market policies,
+  minimum wages, targeted transfers).
 - Results show net employment with a **parameter range** (never a single
   point), direct/indirect/(induced) decomposition, per-sector effects,
   output and value-added changes, and fiscal flows. Induced (Type II)

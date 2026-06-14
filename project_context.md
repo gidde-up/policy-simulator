@@ -366,19 +366,27 @@ employment, stylised depreciation) and a job-quality module
 (wage + informality composition of simulated job changes). Foregrounds
 industrial/sectoral policy; trade goes last in the taxonomy. Per user
 decision: `__version__` stays 1.0.0, no push/deploy until verified at
-the end of Session H. **Session E done** (composable-shock engine
-refactor with regression lock; informality data gate; EIIP + data-
-derived construction labour shares; availability matrix). New
-data-pipeline files: `make_regression_fixture.py`,
-`register_extension_params.py`, `probe_ilostat_informality.py`,
-`add_informality.py`, `wage_crosscheck.py`, `make_availability_matrix.py`,
-`extract_eiip.py`, `pipeline/informality.py`, `reports/
-data_availability_extension.md`, `reports/wage_crosscheck.md`, and
-`tests/test_{engine_regression_lock,shock_equivalence,
-direct_employment_toy,informality}.py`. **Pending for Session F:**
-Tokarick (2010) export demand elasticities and the investment-incentive
-redundancy share — manual PDF downloads outstanding (IMF/World Bank
-bot-blocked); they feed Session F levers, not the E foundation.
+the end of Session H. **Sessions E-H all implemented** (local commits only; not yet pushed;
+`__version__` still 1.0.0 pending the user's end-of-H verification and
+version decision):
+- **E**: composable-shock engine refactor with a 35-case regression lock
+  (v1.0.0 output byte-identical); informality data gate (per-country
+  blocks in the JSONs); EIIP + data-derived construction labour shares;
+  availability matrix.
+- **F**: 8 new levers (public investment, stimulus composition,
+  production/wage subsidy, investment tax incentive, public works/EIIP,
+  direct public employment, stylised depreciation); cited parameters
+  (Tokarick export *supply* elasticity - the paper has no demand table;
+  James 2013 + IMF-OECD-UN-WB 2015 redundancy 0.75); docs/levers/*.md +
+  docs/not-in-this-tool.md.
+- **G**: job-quality module (engine.job_quality: wage-bill, compensation
+  ratio, informality composition; gated). run_scenario untouched.
+- **H**: 4-group lever taxonomy UI (trade last), 24 test-enforced
+  presets, job-quality + windfall + job-years panels, not-in-tool panel,
+  country labour-market context, new endpoints (/api/not-in-tool,
+  /api/context, /api/sectors shares, /api/assumptions).
+Engine entry point: `run_scenario(..., extensions=None)`; job quality via
+`engine.job_quality(iso3, result)`. Test count: 142 (v1.0.0) -> 308.
 
 ---
 

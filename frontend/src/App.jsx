@@ -7,12 +7,15 @@ import CountryDashboard from './components/CountryDashboard';
 import GuidedMode from './components/GuidedMode';
 import FirstVisitModal from './components/FirstVisitModal';
 import LimitationsPanel from './components/LimitationsPanel';
+import NotInToolPanel, { NotInToolTeasers } from './components/NotInToolPanel';
+import CountryContext from './components/CountryContext';
 import { useSimulation } from './hooks/useSimulation';
 
 function App() {
   const [selectedCountry, setSelectedCountry] = useState('ZAF');
   const [activeTab, setActiveTab] = useState('guided'); // guided | explore | data | methodology
   const [limitationsOpen, setLimitationsOpen] = useState(false);
+  const [notInToolOpen, setNotInToolOpen] = useState(false);
 
   const {
     params,
@@ -22,6 +25,7 @@ function App() {
     updateParam,
     updateTariff,
     updateSupport,
+    updateSectorMap,
     simulate,
     loadPreset,
     reset,
@@ -49,6 +53,7 @@ function App() {
     <div className="min-h-screen bg-gray-100">
       <FirstVisitModal />
       <LimitationsPanel open={limitationsOpen} onClose={() => setLimitationsOpen(false)} />
+      <NotInToolPanel open={notInToolOpen} onClose={() => setNotInToolOpen(false)} />
 
       <Header
         selectedCountry={selectedCountry}
@@ -117,8 +122,11 @@ function App() {
                 params={params}
                 onUpdateTariff={updateTariff}
                 onUpdateSupport={updateSupport}
+                onUpdateSectorMap={updateSectorMap}
                 onUpdateParam={updateParam}
               />
+
+              <NotInToolTeasers onOpen={() => setNotInToolOpen(true)} />
 
               {/* Action Buttons */}
               <div className="flex space-x-3">
@@ -164,7 +172,10 @@ function App() {
 
         {/* Data Tab */}
         {activeTab === 'data' && (
-          <CountryDashboard countryCode={selectedCountry} />
+          <div>
+            <CountryContext countryCode={selectedCountry} />
+            <CountryDashboard countryCode={selectedCountry} />
+          </div>
         )}
 
         {/* Methodology Tab */}

@@ -8,6 +8,11 @@ const LEVER_FIELDS = {
             'retaliation_share', 'retaliation_top_n'],
   support: [],   // pure accounting; show data-substitution entries instead
   stimulus: ['fiscal_multiplier'],
+  production_subsidy: ['own_price_demand_elasticity'],
+  wage_subsidy: ['own_price_demand_elasticity',
+                 'conventional_construction_labour_share'],
+  investment_tax_incentive: ['investment_incentive_redundancy'],
+  depreciation: ['export_supply_elasticity', 'own_price_demand_elasticity'],
 };
 
 function AssumptionsPopover({ lever, countryCode }) {
