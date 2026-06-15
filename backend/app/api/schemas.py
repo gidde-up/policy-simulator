@@ -69,11 +69,22 @@ class PolicyScenarioRequest(BaseModel):
         default=False,
         description="Stylised retaliation on top export sectors"
     )
-    include_financing_drag: bool = Field(
-        default=True,
-        description="Tax-financed sector support: subtract the same "
-                    "amount from household consumption"
-    )
+    financing_mode: str = Field(
+        default="tax_financed",
+        description="How spending is financed: deficit | tax_financed | "
+                    "full_crowding_out (default tax_financed)")
+    include_financing_drag: Optional[bool] = Field(
+        default=None,
+        description="DEPRECATED alias: true -> full_crowding_out, "
+                    "false -> deficit")
+
+    @field_validator('financing_mode')
+    @classmethod
+    def validate_financing_mode(cls, v: str) -> str:
+        if v not in ("deficit", "tax_financed", "full_crowding_out"):
+            raise ValueError("financing_mode must be deficit, "
+                             "tax_financed or full_crowding_out")
+        return v
     # --- extension levers (Session F); all percent values in percent ---
     public_investment: Optional["PublicInvestmentRequest"] = Field(
         default=None, description="Public investment programme")
@@ -150,6 +161,12 @@ class AggregateEffect(BaseModel):
         description="Upper bound over the registered parameter range")
     pct_of_baseline_employment: float = Field(
         description="total_jobs as % of sector-sum baseline employment")
+    gross_jobs_before_financing: float = Field(
+        default=0.0, description="net jobs before the financing offset")
+    net_jobs_after_financing: float = Field(
+        default=0.0, description="net jobs after the financing offset")
+    financing_offset_jobs: float = Field(
+        default=0.0, description="jobs withdrawn by the financing offset")
 
 
 class SectorEffectResponse(BaseModel):
@@ -205,10 +222,40 @@ class InformalityQuality(BaseModel):
     caveat: str
 
 
+class JobGroupProfile(BaseModel):
+    """Weighted profile of either the gained or the lost jobs (Workstream G)."""
+    total_jobs: float
+    avg_compensation_usd_million: Optional[float] = None
+    avg_compensation_ratio_vs_economy: Optional[float] = None
+    informal_share: Optional[float] = None
+    informality_coverage: Optional[float] = None
+    informality_note: str
+
+
 class JobQuality(BaseModel):
     """Composition of the simulated job change (not a quality forecast)."""
     wage: WageQuality
     informality: Optional[InformalityQuality] = None
+    gained: Optional[JobGroupProfile] = None
+    lost: Optional[JobGroupProfile] = None
+    net_composition_note: Optional[str] = None
+    caveat: Optional[str] = None
+
+
+class Financing(BaseModel):
+    """How the scenario's fiscal cost is financed and its job offset."""
+    mode: str
+    label: str
+    fiscal_cost_usd_million: float
+    financing_withdrawal_usd_million: float
+    financing_mpc: Optional[float] = None
+    financing_mpc_source: Optional[str] = None
+    financing_mpc_status: Optional[str] = None
+    household_consumption_vector_source: str
+    financing_offset_jobs: float
+    financing_offset_output: float
+    caveat: str
+    deprecated_input_used: bool
 
 
 class InvestmentIncentiveInfo(BaseModel):
@@ -260,6 +307,7 @@ class SimulationResponse(BaseModel):
     tariff_channels: Optional[TariffChannels] = None
     other_channels: Optional[Dict[str, ChannelEffect]] = None
     costs: CostsResponse
+    financing: Optional[Financing] = None
     induced_note: Optional[str] = None
     uncertainty: UncertaintyInfo
     data_source: DataSourceInfo
@@ -333,3 +381,8 @@ class PresetScenario(BaseModel):
     country_code: str
     params: PolicyScenarioRequest
     walkthrough: List[WalkthroughStep] = Field(default_factory=list)
+    lever_group: Optional[str] = None
+    financing_mode: Optional[str] = None
+    illustrates: Optional[str] = None
+    do_not_conclude: Optional[str] = None
+    caveat_tags: List[str] = Field(default_factory=list)

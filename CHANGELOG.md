@@ -6,7 +6,32 @@ The project is in pre-release (0.x.y); version 1.0.0 will mark the first product
 
 ---
 
-## [1.1.0] — 2026-06-14  ← current
+## [1.2.0] — 2026-06-15  ← current
+**Integrated Prompt v5 — financing transparency, methodology, and result interpretation.** MINOR bump: new financing-mode control and job-quality output dimension, a comprehensive two-tier methodology with its own API and UI, and a corrected trade-elasticity parameter. The v1.0.0 simulate contract is preserved except for the deliberate financing change (documented below); the engine regression lock was regenerated at the new numbers after the Workstream C verification stop.
+
+### Backend
+- **Financing modes (Workstream C).** The boolean `include_financing_drag` is replaced by an explicit `financing_mode`: `deficit` (no offset), `tax_financed` (offset = MPC x fiscal cost, **the new default**), `full_crowding_out` (offset = fiscal cost, the old 100% behaviour kept as a labelled upper bound). The marginal propensity to consume is a registered parameter (`GLOBAL-marginal-propensity-to-consume`, central 0.8, range 0.6–0.9; literature_based, Haavelmo 1945 framing; global, as no country-specific value was available). Financing applies symmetrically to every positive-cost fiscal lever, including the stimulus, which loses its separate 0.5 first-round fiscal multiplier (now deprecated in the registry, audit trail preserved) and is no longer costless to finance. Tariffs and depreciation are not financing-eligible; tariff revenue stays a memo item. `run_scenario` returns a structured `financing` object plus gross/net aggregate keys. The legacy boolean is a deprecated alias.
+- **Senegal tariff elasticity (Workstream D).** Corrected from the outcome-calibrated −0.5 to the cited central −1.05 (Kee, Nicita & Olarreaga 2008). The sign-forcing tariff acceptance tests are removed and replaced with channel/accounting/transparency tests plus a guard that fails if any test requires a predetermined tariff sign. Consequence: a 10% Senegal manufacturing tariff is now modestly net positive, a property of the data, not an endorsement. This deliberately retires the former net-non-positive acceptance constraint.
+- **Job quality gained/lost split (Workstream G).** `engine.job_quality` now returns separate gained and lost profiles (weighted compensation ratio and informality, missing-informality sectors excluded rather than zeroed, "not applicable" on empty groups) alongside the net composition.
+- **Methodology API (Workstream B).** `GET /api/methodology` serves the two-tier `docs/methodology.md`.
+- **Country caveats (Workstream F.3).** `GET /api/context/{iso3}` now returns a data-derived `caveats` block (data years, employment-validation gap with a warning when large, MPC status, Type II cap) from a FastAPI-free helper.
+- **Presets (Workstream I.1).** Every preset carries a lever group, financing mode, a "what this illustrates" line, a "do not conclude" line, and caveat tags. Two preset signs changed as correct consequences of the financing fix (Tunisia demand stimulus now negative; Thailand direct public hiring now positive); narratives updated, and stale references to the deprecated 0.5 multiplier removed.
+
+### Frontend
+- Financing-mode selector in the scenario controls; result page shows mode, gross effect, financing offset, net effect, fiscal cost, MPC and caveat (Workstream C.4).
+- App title renamed to "Employment Policy Learning Simulator"; forecast/recommendation wording removed; a persistent not-a-forecast notice and corrected exchange-rate wording on the results page (Workstream E).
+- Central channel-label map (`channelLabels.js`); no raw snake_case in user-facing output; "financing drag" renders as "financing offset" (Workstream F.1).
+- Assumption popovers on every active lever, now showing whether the lever is fiscal and whether the financing mode applies (Workstream F.2).
+- Country "Data and model caveats" panel; informality wording corrected to note its use in the job-quality view (Workstream F.3).
+- Job-quality panel split into sectors gaining, sectors losing, and net composition (Workstream G).
+- Guided mode shows lever settings for every lever (including the newer ones), the financing mode, and the caveat tags.
+
+### Tests
+- New: financing modes (`test_financing.py`), channel labels (`test_channel_labels.py`), UI language guard (`test_ui_language.py`), country caveats (`test_country_caveats.py`), job-quality gained/lost (`test_job_quality.py`), tariff transparency + no-sign-forcing guard (`test_engine_tariff_acceptance.py`). Engine regression lock regenerated at the v1.2 numbers and re-enabled. Suite: 222 → 300+.
+
+---
+
+## [1.1.0] — 2026-06-14
 **Sessions 19–22 (E–H) — policy-lever expansion and job quality.** Independently verified (regression lock reproduced at 5e-15; every mandated lever identity and acceptance test confirmed; the three judgement calls — Tokarick export-supply provenance, redundancy share, wage cross-check — accepted as honestly handled). MINOR bump: new levers, a new job-quality metric, new UI sections; backward-compatible API (the v1.0.0 simulate contract is a strict subset, regression-locked).
 
 Post-verification follow-ups folded into this release: the percent→fraction conversion is now a single shared helper (`backend/app/api/lever_params.py`) used by both `/api/simulate` and the preset tests, so they cannot drift; the static-accounting caveat was extended to the `tha_production_subsidy_auto` and `vnm_investment_incentive` presets; the informality indicator direction was confirmed (informal employment as a share of sector employment — agriculture highest, finance/public lower).

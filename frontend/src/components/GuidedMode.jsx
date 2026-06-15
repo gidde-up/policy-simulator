@@ -150,6 +150,35 @@ function GuidedMode({ countryCode, onOpenInExplorer }) {
           </div>
         )}
 
+        {selected && (selected.illustrates || selected.do_not_conclude) && (
+          <div className="bg-white rounded-xl shadow-md p-4 text-sm space-y-2">
+            {selected.illustrates && (
+              <p className="text-gray-800">
+                <span className="font-semibold">What this illustrates: </span>
+                {selected.illustrates}
+              </p>
+            )}
+            {selected.do_not_conclude && (
+              <p className="text-gray-800">
+                <span className="font-semibold">Do not conclude: </span>
+                {selected.do_not_conclude}
+              </p>
+            )}
+            <div className="flex flex-wrap items-center gap-2 pt-1">
+              {selected.financing_mode && (
+                <span className="text-xs bg-blue-50 text-blue-700 rounded px-2 py-0.5">
+                  Financing: {FINANCING_LABEL[selected.financing_mode] || selected.financing_mode}
+                </span>
+              )}
+              {(selected.caveat_tags || []).map((t) => (
+                <span key={t} className="text-xs bg-gray-100 text-gray-600 rounded px-2 py-0.5">
+                  {t.replace(/-/g, ' ')}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
         <ResultsPanel results={results} loading={running} />
       </div>
     </div>
@@ -158,14 +187,32 @@ function GuidedMode({ countryCode, onOpenInExplorer }) {
 
 function summariseParams(p) {
   const parts = [];
+  const sec = (s) => s.replace(/_/g, ' ');
   for (const [s, v] of Object.entries(p.tariff_changes || {})) {
-    parts.push(`tariff ${s.replace(/_/g, ' ')} +${v}pp`);
+    parts.push(`tariff ${sec(s)} +${v}pp`);
   }
   for (const [s, v] of Object.entries(p.sector_support || {})) {
-    parts.push(`support ${s.replace(/_/g, ' ')} ${v}%`);
+    parts.push(`support ${sec(s)} ${v}%`);
   }
-  if (p.sme_stimulus > 0) parts.push(`stimulus ${p.sme_stimulus}% GDP`);
+  for (const [s, v] of Object.entries(p.production_subsidy || {})) {
+    parts.push(`production subsidy ${sec(s)} ${v}%`);
+  }
+  for (const [s, v] of Object.entries(p.wage_subsidy || {})) {
+    parts.push(`wage subsidy ${sec(s)} ${v}%`);
+  }
+  if (p.public_investment?.amount_pct_gdp) parts.push(`public investment ${p.public_investment.amount_pct_gdp}% GDP`);
+  if (p.public_works?.budget_pct_gdp) parts.push(`public works ${p.public_works.budget_pct_gdp}% GDP (${(p.public_works.method || 'labour_based').replace(/_/g, ' ')})`);
+  if (p.direct_public_employment?.budget_pct_gdp) parts.push(`direct hiring ${p.direct_public_employment.budget_pct_gdp}% GDP`);
+  if (p.investment_tax_incentive?.fiscal_cost_pct_gdp) parts.push(`investment incentive ${p.investment_tax_incentive.fiscal_cost_pct_gdp}% GDP`);
+  if (p.depreciation > 0) parts.push(`depreciation ${p.depreciation}%`);
+  if (p.sme_stimulus > 0) parts.push(`stimulus ${p.sme_stimulus}% GDP (${(p.stimulus_target || 'household').replace(/_/g, ' ')})`);
   return parts.join(' · ') || 'none';
 }
+
+const FINANCING_LABEL = {
+  deficit: 'Deficit-financed',
+  tax_financed: 'Tax-financed (MPC-scaled offset)',
+  full_crowding_out: 'Full crowding-out (upper bound)',
+};
 
 export default GuidedMode;

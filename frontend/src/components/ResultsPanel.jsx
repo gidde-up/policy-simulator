@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TrendingUp, TrendingDown, Briefcase, AlertCircle, HelpCircle, ArrowRight, Database, DollarSign, Scale, Activity } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, ReferenceLine } from 'recharts';
+import { CHANNEL_LABELS } from '../channelLabels';
 
 // Helper component for before/after unemployment display
 function UnemploymentIndicator({ label, icon, current, projected, change, color }) {
@@ -38,7 +39,7 @@ function UnemploymentIndicator({ label, icon, current, projected, change, color 
           </span>
         </div>
         <div className="text-center flex-1">
-          <div className="text-xs text-gray-500 mb-1">Projected</div>
+          <div className="text-xs text-gray-500 mb-1">Simulated</div>
           <div className={`text-2xl font-bold ${isImprovement ? 'text-green-600' : 'text-red-600'}`}>
             {projected.toFixed(1)}%
           </div>
@@ -48,15 +49,42 @@ function UnemploymentIndicator({ label, icon, current, projected, change, color 
   );
 }
 
-const CHANNEL_LABELS = {
-  protected_sector_gain: { label: 'Protected-sector gain', hint: 'Import substitution into the tariffed sector' },
-  downstream_cost: { label: 'Downstream cost', hint: 'Higher input costs reduce demand for downstream output (incl. exports)' },
-  real_income_loss: { label: 'Real-income loss', hint: 'Consumer prices rise; household demand falls across all sectors' },
-  retaliation: { label: 'Retaliation (stylised)', hint: 'Export demand falls in top export sectors' },
-  sector_support: { label: 'Sector support', hint: 'Government spending boosts demand for the supported sector' },
-  financing_drag: { label: 'Financing drag', hint: 'Tax-financed: household consumption falls by the spending amount' },
-  sme_stimulus: { label: 'Demand stimulus', hint: 'Stimulus spread through household consumption' },
-};
+// Gained/lost job-quality profile card (Workstream G).
+function JobGroupCard({ title, tone, profile }) {
+  const na = !profile || profile.total_jobs <= 0;
+  const toneText = tone === 'green' ? 'text-green-700' : 'text-red-700';
+  return (
+    <div className="bg-gray-50 rounded-lg p-3">
+      <div className="text-xs font-semibold text-gray-500 uppercase mb-1">{title}</div>
+      <div className={`text-xl font-bold ${toneText}`}>
+        {na ? '0' : Math.round(profile.total_jobs).toLocaleString()} <span className="text-sm font-normal text-gray-500">jobs</span>
+      </div>
+      {na ? (
+        <div className="text-sm text-gray-400 mt-1">Not applicable</div>
+      ) : (
+        <div className="text-sm text-gray-600 mt-1 space-y-0.5">
+          <div>
+            Pay vs economy mean:{' '}
+            <span className="font-medium">
+              {profile.avg_compensation_ratio_vs_economy != null
+                ? `${profile.avg_compensation_ratio_vs_economy.toFixed(2)}x`
+                : 'Not applicable'}
+            </span>
+          </div>
+          <div>
+            Informal share:{' '}
+            <span className="font-medium">
+              {profile.informal_share != null
+                ? `${Math.round(profile.informal_share * 100)}%`
+                : 'Not applicable'}
+            </span>
+          </div>
+          <div className="text-xs text-gray-400">{profile.informality_note}</div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 function ChannelBar({ name, jobs, maxAbs }) {
   const meta = CHANNEL_LABELS[name] || { label: name, hint: '' };
@@ -101,14 +129,14 @@ function ResultsPanel({ results, loading }) {
           <HelpCircle className="w-16 h-16" />
           <p className="text-lg font-medium">No simulation results yet</p>
           <p className="text-sm text-center">
-            Adjust the policy parameters on the left and click "Run Simulation" to see the projected employment effects.
+            Adjust the policy parameters on the left and click "Run Simulation" to see the simulated employment effects.
           </p>
         </div>
       </div>
     );
   }
 
-  const { aggregate, sector_effects, tariff_channels, other_channels, costs, uncertainty, data_source, baseline, induced_note, job_quality, investment_incentive, job_years_note } = results;
+  const { aggregate, sector_effects, tariff_channels, other_channels, costs, uncertainty, data_source, baseline, induced_note, job_quality, investment_incentive, job_years_note, financing } = results;
   const totalJobs = aggregate.total_jobs;
   const isPositive = totalJobs > 0;
 
@@ -148,15 +176,27 @@ function ResultsPanel({ results, loading }) {
 
   return (
     <div className="space-y-6">
-      {/* Model boundaries warning */}
+      {/* Persistent not-a-forecast notice (required, non-dismissible) */}
+      <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-start space-x-2">
+        <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
+        <p className="text-sm text-amber-800">
+          This is a static training simulation, not a forecast or policy
+          recommendation. Results show modelled employment effects under fixed
+          assumptions and selected financing treatment.
+        </p>
+      </div>
+
+      {/* Model boundaries detail (dismissible) */}
       {!warningDismissed && (
         <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start space-x-3">
           <AlertCircle className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
           <div className="flex-1 text-sm text-amber-800">
-            <span className="font-medium">Learning tool, not a forecast.</span>{' '}
-            Comparative-static, demand-driven input-output results at fixed prices and
-            technology: no exchange-rate effects, no supply constraints, no dynamics.
-            Read direction and rough magnitude, not point predictions.
+            <span className="font-medium">Model boundaries.</span>{' '}
+            Comparative-static, demand-driven input-output results at fixed prices
+            and technology. The model does not estimate endogenous exchange-rate
+            movements; the depreciation lever is a stylised exogenous shock. No
+            supply constraints, no dynamics. Read direction and rough magnitude,
+            not point predictions.
           </div>
           <button
             onClick={() => setWarningDismissed(true)}
@@ -257,6 +297,56 @@ function ResultsPanel({ results, loading }) {
         )}
       </div>
 
+      {/* Financing (Workstream C.4): gross -> offset -> net */}
+      {financing && financing.fiscal_cost_usd_million > 0 && (
+        <div className="bg-white rounded-xl shadow-md p-6">
+          <h3 className="text-lg font-bold text-gray-800 mb-1 flex items-center">
+            <DollarSign className="w-5 h-5 mr-2 text-blue-600" />
+            Financing
+          </h3>
+          <p className="text-xs text-gray-500 mb-4">
+            Mode: <span className="font-medium text-gray-700">{financing.label}</span>
+            {financing.financing_mpc != null && (
+              <span> &middot; MPC {financing.financing_mpc} ({financing.financing_mpc_status})</span>
+            )}
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+            <div className="bg-gray-50 rounded-lg p-3">
+              <div className="text-xs text-gray-500 mb-1">Gross effect (before financing)</div>
+              <div className="text-xl font-bold text-gray-800">
+                {aggregate.gross_jobs_before_financing >= 0 ? '+' : ''}
+                {Math.round(aggregate.gross_jobs_before_financing).toLocaleString()}
+              </div>
+            </div>
+            <div className="bg-gray-50 rounded-lg p-3">
+              <div className="text-xs text-gray-500 mb-1">Financing offset</div>
+              <div className="text-xl font-bold text-red-700">
+                {Math.round(financing.financing_offset_jobs).toLocaleString()}
+              </div>
+            </div>
+            <div className="bg-blue-50 rounded-lg p-3">
+              <div className="text-xs text-gray-500 mb-1">Net effect (after financing)</div>
+              <div className={`text-xl font-bold ${aggregate.net_jobs_after_financing >= 0 ? 'text-green-700' : 'text-red-700'}`}>
+                {aggregate.net_jobs_after_financing >= 0 ? '+' : ''}
+                {Math.round(aggregate.net_jobs_after_financing).toLocaleString()}
+              </div>
+            </div>
+          </div>
+          <div className="text-xs text-gray-600 mt-3">
+            Fiscal cost: {Math.round(financing.fiscal_cost_usd_million).toLocaleString()} USD m
+            {financing.financing_withdrawal_usd_million > 0 && (
+              <span> &middot; withdrawn from household consumption: {Math.round(financing.financing_withdrawal_usd_million).toLocaleString()} USD m</span>
+            )}
+          </div>
+          <p className="text-xs text-gray-400 mt-1">{financing.caveat}</p>
+          {financing.deprecated_input_used && (
+            <p className="text-xs text-amber-600 mt-1">
+              A deprecated financing input was used and mapped to this mode.
+            </p>
+          )}
+        </div>
+      )}
+
       {/* Channel decomposition */}
       {channelEntries.length > 0 && (
         <div className="bg-white rounded-xl shadow-md p-6">
@@ -329,7 +419,7 @@ function ResultsPanel({ results, loading }) {
         {costs.financing_drag_included && (
           <p className="text-xs text-gray-500 mt-2 flex items-center">
             <DollarSign className="w-3 h-3 mr-1" />
-            Tax-financed (financing drag included): figures are net, not gross.
+            A financing offset is applied: employment figures are net, not gross.
           </p>
         )}
       </div>
@@ -362,44 +452,44 @@ function ResultsPanel({ results, loading }) {
         </div>
       )}
 
-      {/* Job quality (composition of the change) */}
+      {/* Job quality (composition of the change): gained / lost / net */}
       {job_quality && (
         <div className="bg-white rounded-xl shadow-md p-6">
           <h3 className="text-lg font-bold text-gray-800 mb-1">Job Quality (composition of the change)</h3>
           <p className="text-xs text-gray-500 mb-4">
-            The wage and informality MIX of the jobs moved, on the assumption
-            that created/lost jobs share each sector's existing characteristics
-            - not a quality forecast.
+            The wage and informality MIX of the jobs gained and lost, on the
+            assumption that they share each sector's existing characteristics.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-gray-50 rounded-lg p-3">
-              <div className="text-xs text-gray-500">Wage-bill change</div>
-              <div className="text-xl font-bold text-gray-800">
-                {Math.round(job_quality.wage.wage_bill_change_usd_million).toLocaleString()} <span className="text-sm font-normal">USD m</span>
-              </div>
-              {job_quality.wage.avg_compensation_ratio_vs_economy != null && (
-                <div className="text-sm text-gray-600 mt-1">
-                  Jobs moved pay on average{' '}
+            <JobGroupCard title="Sectors gaining jobs" tone="green" profile={job_quality.gained} />
+            <JobGroupCard title="Sectors losing jobs" tone="red" profile={job_quality.lost} />
+          </div>
+
+          {/* Net composition */}
+          <div className="mt-4 bg-gray-50 rounded-lg p-3">
+            <div className="text-xs font-semibold text-gray-500 uppercase mb-1">
+              Net composition (whole change)
+            </div>
+            <div className="text-sm text-gray-700">
+              Wage-bill change:{' '}
+              <span className="font-medium">
+                {Math.round(job_quality.wage.wage_bill_change_usd_million).toLocaleString()} USD m
+              </span>
+              {job_quality.informality && (
+                <span>
+                  {' '}&middot; informal share of the change:{' '}
                   <span className="font-medium">
-                    {job_quality.wage.avg_compensation_ratio_vs_economy.toFixed(2)}x
-                  </span>{' '}the economy mean
-                </div>
+                    {Math.round(job_quality.informality.informal_share_of_change * 100)}%
+                  </span>
+                  <span className="text-xs text-gray-400"> ({job_quality.informality.year})</span>
+                </span>
               )}
             </div>
-            {job_quality.informality && (
-              <div className="bg-gray-50 rounded-lg p-3">
-                <div className="text-xs text-gray-500">Informality of the change</div>
-                <div className="text-xl font-bold text-gray-800">
-                  {Math.round(job_quality.informality.informal_share_of_change * 100)}%
-                </div>
-                <div className="text-sm text-gray-600 mt-1">
-                  of jobs moved fall in predominantly-informal activities
-                  <span className="text-xs text-gray-400"> ({job_quality.informality.year})</span>
-                </div>
-              </div>
+            {job_quality.net_composition_note && (
+              <p className="text-xs text-gray-400 mt-1">{job_quality.net_composition_note}</p>
             )}
           </div>
-          <p className="text-xs text-gray-400 mt-2">{job_quality.wage.caveat}</p>
+          <p className="text-xs text-gray-400 mt-2">{job_quality.caveat || job_quality.wage.caveat}</p>
         </div>
       )}
 
@@ -423,8 +513,8 @@ function ResultsPanel({ results, loading }) {
             color="blue"
           />
           <p className="text-xs text-gray-500 mt-2">
-            Projection applies the simulated net job change to the WDI labour force;
-            the WDI (LFS) employment concept differs from the model baseline.
+            The simulated net job change is applied to the WDI labour force for
+            context; the WDI (LFS) employment concept differs from the model baseline.
           </p>
         </div>
       )}

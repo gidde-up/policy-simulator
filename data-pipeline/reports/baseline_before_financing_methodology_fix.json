@@ -1,0 +1,1064 @@
+{
+ "description": "v1.1.0 baseline snapshot before the financing and Senegal-elasticity corrections (Workstreams C, D)",
+ "conversion_helper": "backend/app/api/lever_params.py:to_engine_kwargs (percent->fraction)",
+ "lever_scenarios": {
+  "public_investment_1pct": {
+   "ZAF": {
+    "country": "ZAF",
+    "net_jobs": 75630.63770286654,
+    "direct_jobs": 66007.72863581587,
+    "indirect_jobs": 9622.909067050688,
+    "induced_jobs": null,
+    "financing_drag_jobs": -121039.12935215344,
+    "spending_cost_usd_million": 3812.2390000000005,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": 75630.63770286654,
+     "high": 75630.63770286654,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "TUN": {
+    "country": "TUN",
+    "net_jobs": 25030.503747122853,
+    "direct_jobs": 25412.426009914212,
+    "indirect_jobs": -381.92226279136156,
+    "induced_jobs": null,
+    "financing_drag_jobs": -25381.469465434617,
+    "spending_cost_usd_million": 433.536,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": 25030.503747122853,
+     "high": 25030.503747122853,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "VNM": {
+    "country": "VNM",
+    "net_jobs": -169926.59749502182,
+    "direct_jobs": -25985.399015211922,
+    "indirect_jobs": -143941.19847980991,
+    "induced_jobs": null,
+    "financing_drag_jobs": -455713.4356123368,
+    "spending_cost_usd_million": 4020.168,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": -169926.59749502182,
+     "high": -169926.59749502182,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "THA": {
+    "country": "THA",
+    "net_jobs": -80413.82636001342,
+    "direct_jobs": -34035.72286546775,
+    "indirect_jobs": -46378.10349454566,
+    "induced_jobs": null,
+    "financing_drag_jobs": -343224.82210650144,
+    "spending_cost_usd_million": 4700.933,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": -80413.82636001342,
+     "high": -80413.82636001342,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "SEN": {
+    "country": "SEN",
+    "net_jobs": 682.3424664084873,
+    "direct_jobs": 758.1670834633846,
+    "indirect_jobs": -75.82461705489618,
+    "induced_jobs": null,
+    "financing_drag_jobs": -43967.40805453635,
+    "spending_cost_usd_million": 261.523,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": 682.3424664084873,
+     "high": 682.3424664084873,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   }
+  },
+  "public_works_1pct": {
+   "ZAF": {
+    "country": "ZAF",
+    "net_jobs": 399870.5584818988,
+    "direct_jobs": 412337.2240008362,
+    "indirect_jobs": -12466.66551893745,
+    "induced_jobs": null,
+    "financing_drag_jobs": -121039.12935215344,
+    "spending_cost_usd_million": 3812.2390000000005,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": 225462.2972729027,
+     "high": 574278.819690895,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "TUN": {
+    "country": "TUN",
+    "net_jobs": 113710.40406899556,
+    "direct_jobs": 117612.28598970952,
+    "indirect_jobs": -3901.8819207139677,
+    "induced_jobs": null,
+    "financing_drag_jobs": -25381.469465434617,
+    "spending_cost_usd_million": 433.536,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": 64401.00359167659,
+     "high": 163019.80454631458,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "VNM": {
+    "country": "VNM",
+    "net_jobs": 54486.19865242414,
+    "direct_jobs": 254881.28994823896,
+    "indirect_jobs": -200395.09129581487,
+    "induced_jobs": null,
+    "financing_drag_jobs": -455713.4356123368,
+    "spending_cost_usd_million": 4020.168,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": -80710.6413130468,
+     "high": 189683.03861789493,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "THA": {
+    "country": "THA",
+    "net_jobs": 909362.4572544828,
+    "direct_jobs": 993771.5694727462,
+    "indirect_jobs": -84409.11221826344,
+    "induced_jobs": null,
+    "financing_drag_jobs": -343224.82210650144,
+    "spending_cost_usd_million": 4700.933,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": 465437.6607695974,
+     "high": 1353287.253739368,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "SEN": {
+    "country": "SEN",
+    "net_jobs": 77294.68566412029,
+    "direct_jobs": 82526.76548461232,
+    "indirect_jobs": -5232.07982049204,
+    "induced_jobs": null,
+    "financing_drag_jobs": -43967.40805453635,
+    "spending_cost_usd_million": 261.523,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": 39011.7335526876,
+     "high": 115577.63777555294,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   }
+  },
+  "direct_public_employment_1pct": {
+   "ZAF": {
+    "country": "ZAF",
+    "net_jobs": 77556.99802083116,
+    "direct_jobs": 88198.46526404223,
+    "indirect_jobs": -10641.46724321107,
+    "induced_jobs": null,
+    "financing_drag_jobs": -121039.12935215344,
+    "spending_cost_usd_million": 3812.2390000000005,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": 77556.99802083116,
+     "high": 77556.99802083116,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "TUN": {
+    "country": "TUN",
+    "net_jobs": 13236.092150814322,
+    "direct_jobs": 17967.213027639536,
+    "indirect_jobs": -4731.120876825216,
+    "induced_jobs": null,
+    "financing_drag_jobs": -25381.469465434617,
+    "spending_cost_usd_million": 433.536,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": 13236.092150814322,
+     "high": 13236.092150814322,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "VNM": {
+    "country": "VNM",
+    "net_jobs": 28611.233982125137,
+    "direct_jobs": 203216.4845057157,
+    "indirect_jobs": -174605.25052359045,
+    "induced_jobs": null,
+    "financing_drag_jobs": -455713.4356123368,
+    "spending_cost_usd_million": 4020.168,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": 28611.233982125137,
+     "high": 28611.233982125137,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "THA": {
+    "country": "THA",
+    "net_jobs": -10037.9390739784,
+    "direct_jobs": 86409.95782691425,
+    "indirect_jobs": -96447.89690089258,
+    "induced_jobs": null,
+    "financing_drag_jobs": -343224.82210650144,
+    "spending_cost_usd_million": 4700.933,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": -10037.9390739784,
+     "high": -10037.9390739784,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "SEN": {
+    "country": "SEN",
+    "net_jobs": -11957.12159428982,
+    "direct_jobs": -5351.922760841132,
+    "indirect_jobs": -6605.198833448694,
+    "induced_jobs": null,
+    "financing_drag_jobs": -43967.40805453635,
+    "spending_cost_usd_million": 261.523,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": -11957.12159428982,
+     "high": -11957.12159428982,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   }
+  },
+  "production_subsidy_1pct_mfg": {
+   "ZAF": {
+    "country": "ZAF",
+    "net_jobs": -686878.1506544,
+    "direct_jobs": -598765.9430866361,
+    "indirect_jobs": -88112.20756776383,
+    "induced_jobs": null,
+    "financing_drag_jobs": -2048446.8310261434,
+    "spending_cost_usd_million": 64517.722,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": -1162345.4564319286,
+     "high": -211410.84487687115,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "TUN": {
+    "country": "TUN",
+    "net_jobs": -234361.15604021936,
+    "direct_jobs": -159485.75529129372,
+    "indirect_jobs": -74875.40074892562,
+    "induced_jobs": null,
+    "financing_drag_jobs": -488316.48531165964,
+    "spending_cost_usd_million": 8340.84,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": -332024.059527652,
+     "high": -136698.25255278673,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "VNM": {
+    "country": "VNM",
+    "net_jobs": -33910643.85388296,
+    "direct_jobs": -13800014.812378384,
+    "indirect_jobs": -20110629.041504577,
+    "induced_jobs": null,
+    "financing_drag_jobs": -46833795.44977796,
+    "spending_cost_usd_million": 413153.774,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": -38381502.89255799,
+     "high": -29439784.81520793,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "THA": {
+    "country": "THA",
+    "net_jobs": -10783327.926598385,
+    "direct_jobs": -7013609.16202664,
+    "indirect_jobs": -3769718.764571745,
+    "induced_jobs": null,
+    "financing_drag_jobs": -15976979.436630184,
+    "spending_cost_usd_million": 218826.568,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": -12474106.02207521,
+     "high": -9092549.831121566,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "SEN": {
+    "country": "SEN",
+    "net_jobs": -245042.19271862778,
+    "direct_jobs": -202474.5067559125,
+    "indirect_jobs": -42567.68596271529,
+    "induced_jobs": null,
+    "financing_drag_jobs": -475842.0369475937,
+    "spending_cost_usd_million": 2830.361,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": -329391.16237892146,
+     "high": -160693.22305833412,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   }
+  },
+  "wage_subsidy_1pct_mfg": {
+   "ZAF": {
+    "country": "ZAF",
+    "net_jobs": -105375.35084819279,
+    "direct_jobs": -91857.88086080698,
+    "indirect_jobs": -13517.469987385783,
+    "induced_jobs": null,
+    "financing_drag_jobs": -314256.3252413827,
+    "spending_cost_usd_million": 9897.792767464,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": -178317.74116213497,
+     "high": -32432.96053425054,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "TUN": {
+    "country": "TUN",
+    "net_jobs": -51700.30538362844,
+    "direct_jobs": -35182.71710301469,
+    "indirect_jobs": -16517.588280613738,
+    "induced_jobs": null,
+    "financing_drag_jobs": -107723.10497623743,
+    "spending_cost_usd_million": 1839.99764484,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": -73244.83955585955,
+     "high": -30155.7712113973,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "VNM": {
+    "country": "VNM",
+    "net_jobs": -3511820.1881519733,
+    "direct_jobs": -1429143.3339847177,
+    "indirect_jobs": -2082676.854167255,
+    "induced_jobs": null,
+    "financing_drag_jobs": -4850154.690574455,
+    "spending_cost_usd_million": 42786.617989214,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": -3974826.8210561993,
+     "high": -3048813.5552477473,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "THA": {
+    "country": "THA",
+    "net_jobs": -656294.9042686309,
+    "direct_jobs": -426862.2808192654,
+    "indirect_jobs": -229432.6234493655,
+    "induced_jobs": null,
+    "financing_drag_jobs": -972390.922472186,
+    "spending_cost_usd_million": 13318.222581615999,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": -759199.0407155411,
+     "high": -553390.7678217206,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "SEN": {
+    "country": "SEN",
+    "net_jobs": -19323.78227559827,
+    "direct_jobs": -15966.937128264504,
+    "indirect_jobs": -3356.845147333765,
+    "induced_jobs": null,
+    "financing_drag_jobs": -37524.42719165029,
+    "spending_cost_usd_million": 223.199438099,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": -25975.457674039368,
+     "high": -12672.10687715717,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   }
+  },
+  "investment_tax_incentive_1pct": {
+   "ZAF": {
+    "country": "ZAF",
+    "net_jobs": 42852.343193696586,
+    "direct_jobs": 41474.49555696605,
+    "indirect_jobs": 1377.8476367305298,
+    "induced_jobs": null,
+    "financing_drag_jobs": -121039.12935215344,
+    "spending_cost_usd_million": 3812.2390000000005,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": -55482.540333813435,
+     "high": 206743.81573954655,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "TUN": {
+    "country": "TUN",
+    "net_jobs": 16628.508211696615,
+    "direct_jobs": 18107.822919730825,
+    "indirect_jobs": -1479.314708034206,
+    "induced_jobs": null,
+    "financing_drag_jobs": -25381.469465434617,
+    "spending_cost_usd_million": 433.536,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": -8577.478394582133,
+     "high": 58638.48588882783,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "VNM": {
+    "country": "VNM",
+    "net_jobs": -217557.73718124098,
+    "direct_jobs": -53082.354075318755,
+    "indirect_jobs": -164475.38310592217,
+    "induced_jobs": null,
+    "financing_drag_jobs": -455713.4356123368,
+    "spending_cost_usd_million": 4020.168,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": -360451.1562398985,
+     "high": 20597.961249854758,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "THA": {
+    "country": "THA",
+    "net_jobs": -124215.65898442811,
+    "direct_jobs": -63482.73181961496,
+    "indirect_jobs": -60732.927164813154,
+    "induced_jobs": null,
+    "financing_drag_jobs": -343224.82210650144,
+    "spending_cost_usd_million": 4700.933,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": -255621.15685767212,
+     "high": 94793.50413764518,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "SEN": {
+    "country": "SEN",
+    "net_jobs": -6759.28262041565,
+    "direct_jobs": -4834.199272784921,
+    "indirect_jobs": -1925.0833476307284,
+    "induced_jobs": null,
+    "financing_drag_jobs": -43967.40805453635,
+    "spending_cost_usd_million": 261.523,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": -29084.157880888073,
+     "high": 30448.842813705047,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   }
+  },
+  "stimulus_1pct_household": {
+   "ZAF": {
+    "country": "ZAF",
+    "net_jobs": 60519.56467607672,
+    "direct_jobs": 40595.83491864158,
+    "indirect_jobs": 19923.72975743514,
+    "induced_jobs": null,
+    "financing_drag_jobs": 0.0,
+    "spending_cost_usd_million": 3812.2390000000005,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": 12103.912935215345,
+     "high": 121039.12935215344,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "TUN": {
+    "country": "TUN",
+    "net_jobs": 12690.734732717308,
+    "direct_jobs": 9207.59626559309,
+    "indirect_jobs": 3483.138467124216,
+    "induced_jobs": null,
+    "financing_drag_jobs": 0.0,
+    "spending_cost_usd_million": 433.536,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": 2538.146946543462,
+     "high": 25381.469465434617,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "VNM": {
+    "country": "VNM",
+    "net_jobs": 227856.7178061684,
+    "direct_jobs": 94283.56468792644,
+    "indirect_jobs": 133573.15311824193,
+    "induced_jobs": null,
+    "financing_drag_jobs": 0.0,
+    "spending_cost_usd_million": 4020.168,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": 45571.34356123368,
+     "high": 455713.4356123368,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "THA": {
+    "country": "THA",
+    "net_jobs": 171612.41105325072,
+    "direct_jobs": 105358.88829517538,
+    "indirect_jobs": 66253.52275807531,
+    "induced_jobs": null,
+    "financing_drag_jobs": 0.0,
+    "spending_cost_usd_million": 4700.933,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": 34322.482210650145,
+     "high": 343224.82210650144,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "SEN": {
+    "country": "SEN",
+    "net_jobs": 21983.704027268173,
+    "direct_jobs": 16398.015527013227,
+    "indirect_jobs": 5585.688500254946,
+    "induced_jobs": null,
+    "financing_drag_jobs": 0.0,
+    "spending_cost_usd_million": 261.523,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": 4396.740805453635,
+     "high": 43967.40805453635,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   }
+  },
+  "depreciation_10pct": {
+   "ZAF": {
+    "country": "ZAF",
+    "net_jobs": -80370.76241887416,
+    "direct_jobs": -74850.02294062692,
+    "indirect_jobs": -5520.739478247228,
+    "induced_jobs": null,
+    "financing_drag_jobs": 0.0,
+    "spending_cost_usd_million": 0.0,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": -119216.83428643717,
+     "high": 28843.966861674686,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "TUN": {
+    "country": "TUN",
+    "net_jobs": -72637.50203700506,
+    "direct_jobs": -55098.46742625209,
+    "indirect_jobs": -17539.034610752977,
+    "induced_jobs": null,
+    "financing_drag_jobs": 0.0,
+    "spending_cost_usd_million": 0.0,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": -83456.44187560654,
+     "high": -40535.523564424686,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "VNM": {
+    "country": "VNM",
+    "net_jobs": -929583.8887113777,
+    "direct_jobs": -420765.99390934437,
+    "indirect_jobs": -508817.8948020332,
+    "induced_jobs": null,
+    "financing_drag_jobs": 0.0,
+    "spending_cost_usd_million": 0.0,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": -1053126.5418915981,
+     "high": -357871.24160000426,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "THA": {
+    "country": "THA",
+    "net_jobs": -379747.78794589016,
+    "direct_jobs": -253369.75822135236,
+    "indirect_jobs": -126378.02972453782,
+    "induced_jobs": null,
+    "financing_drag_jobs": 0.0,
+    "spending_cost_usd_million": 0.0,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": -566916.3725874776,
+     "high": 93987.47587754394,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   },
+   "SEN": {
+    "country": "SEN",
+    "net_jobs": -90883.51462271973,
+    "direct_jobs": -67791.25407141831,
+    "indirect_jobs": -23092.2605513014,
+    "induced_jobs": null,
+    "financing_drag_jobs": 0.0,
+    "spending_cost_usd_million": 0.0,
+    "tariff_revenue_usd_million": 0.0,
+    "uncertainty": {
+     "low": -92092.18067296644,
+     "high": -72255.55242345096,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+   }
+  }
+ },
+ "presets": {
+  "zaf_manufacturing_protection": {
+   "country": "ZAF",
+   "net_jobs": -11856.862235142788,
+   "direct_jobs": -25437.37451764146,
+   "indirect_jobs": 13580.512282498672,
+   "induced_jobs": null,
+   "financing_drag_jobs": 0.0,
+   "spending_cost_usd_million": 0.0,
+   "tariff_revenue_usd_million": 5583.605544800001,
+   "uncertainty": {
+    "low": -45121.50677102799,
+    "high": 8187.557168785264,
+    "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+   },
+   "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+  },
+  "zaf_construction_push": {
+   "country": "ZAF",
+   "net_jobs": 135163.34863655875,
+   "direct_jobs": 122510.19642736771,
+   "indirect_jobs": 12653.152209191028,
+   "induced_jobs": null,
+   "financing_drag_jobs": -151600.37357286896,
+   "spending_cost_usd_million": 4774.79357,
+   "tariff_revenue_usd_million": 0.0,
+   "uncertainty": {
+    "low": 135163.34863655875,
+    "high": 135163.34863655875,
+    "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+   },
+   "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+  },
+  "zaf_demand_stimulus": {
+   "country": "ZAF",
+   "net_jobs": 121039.12935215344,
+   "direct_jobs": 81191.66983728316,
+   "indirect_jobs": 39847.45951487028,
+   "induced_jobs": null,
+   "financing_drag_jobs": 0.0,
+   "spending_cost_usd_million": 7624.478000000001,
+   "tariff_revenue_usd_million": 0.0,
+   "uncertainty": {
+    "low": 24207.82587043069,
+    "high": 242078.25870430688,
+    "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+   },
+   "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+  },
+  "tun_textile_focus": {
+   "country": "TUN",
+   "net_jobs": 89.03475927434374,
+   "direct_jobs": 2195.6792800020585,
+   "indirect_jobs": -2106.6445207277184,
+   "induced_jobs": null,
+   "financing_drag_jobs": -16856.28012723772,
+   "spending_cost_usd_million": 287.91888,
+   "tariff_revenue_usd_million": 167.63984040000003,
+   "uncertainty": {
+    "low": -742.9021342842079,
+    "high": 1132.9743432572122,
+    "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+   },
+   "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+  },
+  "tun_agro_processing": {
+   "country": "TUN",
+   "net_jobs": 6363.476991919313,
+   "direct_jobs": -7137.734184608682,
+   "indirect_jobs": 13501.211176527995,
+   "induced_jobs": null,
+   "financing_drag_jobs": -53722.608683079714,
+   "spending_cost_usd_million": 917.6255500000001,
+   "tariff_revenue_usd_million": 0.0,
+   "uncertainty": {
+    "low": 6363.476991919313,
+    "high": 6363.476991919313,
+    "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+   },
+   "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+  },
+  "tun_demand_stimulus": {
+   "country": "TUN",
+   "net_jobs": 25381.469465434617,
+   "direct_jobs": 18415.19253118618,
+   "indirect_jobs": 6966.276934248432,
+   "induced_jobs": null,
+   "financing_drag_jobs": 0.0,
+   "spending_cost_usd_million": 867.072,
+   "tariff_revenue_usd_million": 0.0,
+   "uncertainty": {
+    "low": 5076.293893086924,
+    "high": 50762.93893086923,
+    "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+   },
+   "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+  },
+  "vnm_manufacturing_support": {
+   "country": "VNM",
+   "net_jobs": -1693371.8086279945,
+   "direct_jobs": -724784.797563103,
+   "indirect_jobs": -968587.0110648911,
+   "induced_jobs": null,
+   "financing_drag_jobs": -2341689.7724888977,
+   "spending_cost_usd_million": 20657.6887,
+   "tariff_revenue_usd_million": 0.0,
+   "uncertainty": {
+    "low": -1693371.8086279945,
+    "high": -1693371.8086279945,
+    "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+   },
+   "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+  },
+  "vnm_agriculture_support": {
+   "country": "VNM",
+   "net_jobs": 895929.7929965274,
+   "direct_jobs": 487442.34304521093,
+   "indirect_jobs": 408487.4499513163,
+   "induced_jobs": null,
+   "financing_drag_jobs": -1048789.2065302916,
+   "spending_cost_usd_million": 9252.10555,
+   "tariff_revenue_usd_million": 0.0,
+   "uncertainty": {
+    "low": 895929.7929965274,
+    "high": 895929.7929965274,
+    "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+   },
+   "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+  },
+  "vnm_tariff_experiment": {
+   "country": "VNM",
+   "net_jobs": -402168.3289609513,
+   "direct_jobs": -202199.49597683462,
+   "indirect_jobs": -199968.83298411677,
+   "induced_jobs": null,
+   "financing_drag_jobs": 0.0,
+   "spending_cost_usd_million": 0.0,
+   "tariff_revenue_usd_million": 15070.934785600002,
+   "uncertainty": {
+    "low": -429193.07694446004,
+    "high": -372258.38873315416,
+    "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+   },
+   "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+  },
+  "tha_automotive": {
+   "country": "THA",
+   "net_jobs": -167792.86527122933,
+   "direct_jobs": -120732.53245142437,
+   "indirect_jobs": -47060.332819804935,
+   "induced_jobs": null,
+   "financing_drag_jobs": -251343.8441786102,
+   "spending_cost_usd_million": 3442.49744,
+   "tariff_revenue_usd_million": 951.8086,
+   "uncertainty": {
+    "low": -174198.77458120626,
+    "high": -161240.9289499828,
+    "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+   },
+   "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+  },
+  "tha_construction": {
+   "country": "THA",
+   "net_jobs": 20910.010429151094,
+   "direct_jobs": 33373.00033128894,
+   "indirect_jobs": -12462.989902137837,
+   "induced_jobs": null,
+   "financing_drag_jobs": -232954.57592895688,
+   "spending_cost_usd_million": 3190.6312800000005,
+   "tariff_revenue_usd_million": 0.0,
+   "uncertainty": {
+    "low": 20910.010429151094,
+    "high": 20910.010429151094,
+    "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+   },
+   "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+  },
+  "tha_food_processing": {
+   "country": "THA",
+   "net_jobs": 557310.2989513327,
+   "direct_jobs": 125451.46813445463,
+   "indirect_jobs": 431858.8308168781,
+   "induced_jobs": null,
+   "financing_drag_jobs": -825420.3180752355,
+   "spending_cost_usd_million": 11305.2593,
+   "tariff_revenue_usd_million": 0.0,
+   "uncertainty": {
+    "low": 557310.2989513327,
+    "high": 557310.2989513327,
+    "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+   },
+   "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+  },
+  "sen_agriculture": {
+   "country": "SEN",
+   "net_jobs": 9461.83982801086,
+   "direct_jobs": 4113.865286245957,
+   "indirect_jobs": 5347.9745417649265,
+   "induced_jobs": null,
+   "financing_drag_jobs": -144785.74750124366,
+   "spending_cost_usd_million": 861.20162,
+   "tariff_revenue_usd_million": 0.0,
+   "uncertainty": {
+    "low": 9461.83982801086,
+    "high": 9461.83982801086,
+    "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+   },
+   "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+  },
+  "sen_construction": {
+   "country": "SEN",
+   "net_jobs": 24290.092374777356,
+   "direct_jobs": 13136.522440663197,
+   "indirect_jobs": 11153.569934114163,
+   "induced_jobs": null,
+   "financing_drag_jobs": -50329.3275612525,
+   "spending_cost_usd_million": 560.8874000000001,
+   "tariff_revenue_usd_million": 0.0,
+   "uncertainty": {
+    "low": 6703.129152962813,
+    "high": 46273.796402045526,
+    "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+   },
+   "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+  },
+  "sen_tariff_experiment": {
+   "country": "SEN",
+   "net_jobs": -920.7006551571959,
+   "direct_jobs": -1148.156159916529,
+   "indirect_jobs": 227.4555047593327,
+   "induced_jobs": null,
+   "financing_drag_jobs": 0.0,
+   "spending_cost_usd_million": 0.0,
+   "tariff_revenue_usd_million": 213.20621999999997,
+   "uncertainty": {
+    "low": -920.7006551571959,
+    "high": 10680.549157413077,
+    "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+   },
+   "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+  },
+  "zaf_public_works": {
+   "country": "ZAF",
+   "net_jobs": 399870.5584818988,
+   "direct_jobs": 412337.2240008362,
+   "indirect_jobs": -12466.66551893745,
+   "induced_jobs": null,
+   "financing_drag_jobs": -121039.12935215344,
+   "spending_cost_usd_million": 3812.2390000000005,
+   "tariff_revenue_usd_million": 0.0,
+   "uncertainty": {
+    "low": 225462.2972729027,
+    "high": 574278.819690895,
+    "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+   },
+   "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+  },
+  "tha_direct_public_employment": {
+   "country": "THA",
+   "net_jobs": -10037.9390739784,
+   "direct_jobs": 86409.95782691425,
+   "indirect_jobs": -96447.89690089258,
+   "induced_jobs": null,
+   "financing_drag_jobs": -343224.82210650144,
+   "spending_cost_usd_million": 4700.933,
+   "tariff_revenue_usd_million": 0.0,
+   "uncertainty": {
+    "low": -10037.9390739784,
+    "high": -10037.9390739784,
+    "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+   },
+   "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+  },
+  "sen_production_subsidy_agri": {
+   "country": "SEN",
+   "net_jobs": 13221.05505634966,
+   "direct_jobs": 11337.315432153657,
+   "indirect_jobs": 1883.7396241959987,
+   "induced_jobs": null,
+   "financing_drag_jobs": -74567.10203278322,
+   "spending_cost_usd_million": 443.53336,
+   "tariff_revenue_usd_million": 0.0,
+   "uncertainty": {
+    "low": -7011.092639069499,
+    "high": 33453.20275176881,
+    "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+   },
+   "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+  },
+  "tha_production_subsidy_auto": {
+   "country": "THA",
+   "net_jobs": -248715.47763743254,
+   "direct_jobs": -161583.4939677754,
+   "indirect_jobs": -87131.98366965713,
+   "induced_jobs": null,
+   "financing_drag_jobs": -314179.80522326275,
+   "spending_cost_usd_million": 4303.1218,
+   "tariff_revenue_usd_million": 0.0,
+   "uncertainty": {
+    "low": -274187.503521485,
+    "high": -223243.45175338004,
+    "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+   },
+   "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+  },
+  "tha_wage_subsidy_auto": {
+   "country": "THA",
+   "net_jobs": -15469.35656261539,
+   "direct_jobs": -10050.008574313728,
+   "indirect_jobs": -5419.347988301666,
+   "induced_jobs": null,
+   "financing_drag_jobs": -19541.041345471276,
+   "spending_cost_usd_million": 267.64126659460004,
+   "tariff_revenue_usd_million": 0.0,
+   "uncertainty": {
+    "low": -17053.640156525806,
+    "high": -13885.072968704984,
+    "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+   },
+   "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+  },
+  "vnm_investment_incentive": {
+   "country": "VNM",
+   "net_jobs": -217557.73718124098,
+   "direct_jobs": -53082.354075318755,
+   "indirect_jobs": -164475.38310592217,
+   "induced_jobs": null,
+   "financing_drag_jobs": -455713.4356123368,
+   "spending_cost_usd_million": 4020.168,
+   "tariff_revenue_usd_million": 0.0,
+   "uncertainty": {
+    "low": -360451.1562398985,
+    "high": 20597.961249854758,
+    "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+   },
+   "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+  },
+  "vnm_public_investment": {
+   "country": "VNM",
+   "net_jobs": -254889.8962425327,
+   "direct_jobs": -38978.09852281788,
+   "indirect_jobs": -215911.7977197148,
+   "induced_jobs": null,
+   "financing_drag_jobs": -683570.153418505,
+   "spending_cost_usd_million": 6030.2519999999995,
+   "tariff_revenue_usd_million": 0.0,
+   "uncertainty": {
+    "low": -254889.8962425327,
+    "high": -254889.8962425327,
+    "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+   },
+   "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+  },
+  "zaf_stimulus_government": {
+   "country": "ZAF",
+   "net_jobs": 341425.0759309233,
+   "direct_jobs": 205803.8571249989,
+   "indirect_jobs": 135621.2188059244,
+   "induced_jobs": null,
+   "financing_drag_jobs": 0.0,
+   "spending_cost_usd_million": 7624.478000000001,
+   "tariff_revenue_usd_million": 0.0,
+   "uncertainty": {
+    "low": 341425.0759309233,
+    "high": 341425.0759309233,
+    "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+   },
+   "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+  },
+  "tun_depreciation": {
+   "country": "TUN",
+   "net_jobs": -72637.50203700506,
+   "direct_jobs": -55098.46742625209,
+   "indirect_jobs": -17539.034610752977,
+   "induced_jobs": null,
+   "financing_drag_jobs": 0.0,
+   "spending_cost_usd_million": 0.0,
+   "tariff_revenue_usd_million": 0.0,
+   "uncertainty": {
+    "low": -83456.44187560654,
+    "high": -40535.523564424686,
+    "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+   },
+   "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+  }
+ },
+ "sen_manufacturing_tariff_10pct": {
+  "country": "SEN",
+  "net_jobs": -920.7006551571959,
+  "direct_jobs": -1148.156159916529,
+  "indirect_jobs": 227.4555047593327,
+  "induced_jobs": null,
+  "financing_drag_jobs": 0.0,
+  "spending_cost_usd_million": 0.0,
+  "tariff_revenue_usd_million": 213.20621999999997,
+  "uncertainty": {
+   "low": -920.7006551571959,
+   "high": 10680.549157413077,
+   "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+  },
+  "financing_mode": "full_crowding_out (v1.1.0 default; include_financing_drag=True)"
+ }
+}

@@ -18,7 +18,7 @@ import os
 import secrets
 from pathlib import Path
 
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware

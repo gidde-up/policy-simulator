@@ -180,9 +180,12 @@ vector:
 This makes tax-financed spending Haavelmo-consistent: a balanced-budget
 injection (spend X, tax X) leaves a net positive demand of (1 - MPC).X
 plus any difference in job intensity between the spending and the
-displaced consumption. The MPC parameter and its citation are in the
-assumptions registry. (Parameter value finalised with the financing
-verification; see CHANGELOG.)
+displaced consumption. The MPC is a registered behavioural parameter
+(central 0.8, range 0.6 to 0.9; literature_based, Haavelmo 1945 framing,
+a stylised developing-economy central rather than a country econometric
+estimate; the same value is used for every country because no
+country-specific MPC was available). It and its citation are in the
+assumptions registry.
 :::
 
 ## 6. What the tool cannot do

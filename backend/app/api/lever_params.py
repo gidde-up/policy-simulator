@@ -72,6 +72,7 @@ def to_engine_kwargs(p: dict) -> dict:
         "sme_stimulus": p.get("sme_stimulus", 0) / _PCT,
         "include_type_ii": p.get("include_type_ii", False),
         "include_retaliation": p.get("include_retaliation", False),
-        "include_financing_drag": p.get("include_financing_drag", True),
+        "financing_mode": p.get("financing_mode", "tax_financed"),
+        "include_financing_drag": p.get("include_financing_drag"),
         "extensions": ext or None,
     }

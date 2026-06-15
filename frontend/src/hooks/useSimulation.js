@@ -9,7 +9,7 @@ const DEFAULT_PARAMS = {
   sme_stimulus: 0,
   include_type_ii: false,
   include_retaliation: false,
-  include_financing_drag: true,
+  financing_mode: 'tax_financed',  // deficit | tax_financed | full_crowding_out
   // extension levers (Session F/H)
   production_subsidy: {},
   wage_subsidy: {},

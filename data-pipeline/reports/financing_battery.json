@@ -1,0 +1,1798 @@
+{
+ "public_investment": {
+  "ZAF": {
+   "deficit": {
+    "country": "ZAF",
+    "mode": "deficit",
+    "net_jobs": 196669.77,
+    "gross_jobs_before_financing": 196669.77,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 3812.24,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "public_investment": 196669.77
+    }
+   },
+   "tax_financed": {
+    "country": "ZAF",
+    "mode": "tax_financed",
+    "net_jobs": 99838.46,
+    "gross_jobs_before_financing": 196669.77,
+    "financing_offset_jobs": -96831.3,
+    "fiscal_cost_usd_million": 3812.24,
+    "financing_withdrawal_usd_million": 3049.79,
+    "financing_mpc": 0.8,
+    "channels": {
+     "public_investment": 196669.77,
+     "financing_drag": -96831.3
+    }
+   },
+   "full_crowding_out": {
+    "country": "ZAF",
+    "mode": "full_crowding_out",
+    "net_jobs": 75630.64,
+    "gross_jobs_before_financing": 196669.77,
+    "financing_offset_jobs": -121039.13,
+    "fiscal_cost_usd_million": 3812.24,
+    "financing_withdrawal_usd_million": 3812.24,
+    "financing_mpc": null,
+    "channels": {
+     "public_investment": 196669.77,
+     "financing_drag": -121039.13
+    }
+   }
+  },
+  "TUN": {
+   "deficit": {
+    "country": "TUN",
+    "mode": "deficit",
+    "net_jobs": 50411.97,
+    "gross_jobs_before_financing": 50411.97,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 433.54,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "public_investment": 50411.97
+    }
+   },
+   "tax_financed": {
+    "country": "TUN",
+    "mode": "tax_financed",
+    "net_jobs": 30106.8,
+    "gross_jobs_before_financing": 50411.97,
+    "financing_offset_jobs": -20305.18,
+    "fiscal_cost_usd_million": 433.54,
+    "financing_withdrawal_usd_million": 346.83,
+    "financing_mpc": 0.8,
+    "channels": {
+     "public_investment": 50411.97,
+     "financing_drag": -20305.18
+    }
+   },
+   "full_crowding_out": {
+    "country": "TUN",
+    "mode": "full_crowding_out",
+    "net_jobs": 25030.5,
+    "gross_jobs_before_financing": 50411.97,
+    "financing_offset_jobs": -25381.47,
+    "fiscal_cost_usd_million": 433.54,
+    "financing_withdrawal_usd_million": 433.54,
+    "financing_mpc": null,
+    "channels": {
+     "public_investment": 50411.97,
+     "financing_drag": -25381.47
+    }
+   }
+  },
+  "VNM": {
+   "deficit": {
+    "country": "VNM",
+    "mode": "deficit",
+    "net_jobs": 285786.84,
+    "gross_jobs_before_financing": 285786.84,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 4020.17,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "public_investment": 285786.84
+    }
+   },
+   "tax_financed": {
+    "country": "VNM",
+    "mode": "tax_financed",
+    "net_jobs": -78783.91,
+    "gross_jobs_before_financing": 285786.84,
+    "financing_offset_jobs": -364570.75,
+    "fiscal_cost_usd_million": 4020.17,
+    "financing_withdrawal_usd_million": 3216.13,
+    "financing_mpc": 0.8,
+    "channels": {
+     "public_investment": 285786.84,
+     "financing_drag": -364570.75
+    }
+   },
+   "full_crowding_out": {
+    "country": "VNM",
+    "mode": "full_crowding_out",
+    "net_jobs": -169926.6,
+    "gross_jobs_before_financing": 285786.84,
+    "financing_offset_jobs": -455713.44,
+    "fiscal_cost_usd_million": 4020.17,
+    "financing_withdrawal_usd_million": 4020.17,
+    "financing_mpc": null,
+    "channels": {
+     "public_investment": 285786.84,
+     "financing_drag": -455713.44
+    }
+   }
+  },
+  "THA": {
+   "deficit": {
+    "country": "THA",
+    "mode": "deficit",
+    "net_jobs": 262811.0,
+    "gross_jobs_before_financing": 262811.0,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 4700.93,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "public_investment": 262811.0
+    }
+   },
+   "tax_financed": {
+    "country": "THA",
+    "mode": "tax_financed",
+    "net_jobs": -11768.86,
+    "gross_jobs_before_financing": 262811.0,
+    "financing_offset_jobs": -274579.86,
+    "fiscal_cost_usd_million": 4700.93,
+    "financing_withdrawal_usd_million": 3760.75,
+    "financing_mpc": 0.8,
+    "channels": {
+     "public_investment": 262811.0,
+     "financing_drag": -274579.86
+    }
+   },
+   "full_crowding_out": {
+    "country": "THA",
+    "mode": "full_crowding_out",
+    "net_jobs": -80413.83,
+    "gross_jobs_before_financing": 262811.0,
+    "financing_offset_jobs": -343224.82,
+    "fiscal_cost_usd_million": 4700.93,
+    "financing_withdrawal_usd_million": 4700.93,
+    "financing_mpc": null,
+    "channels": {
+     "public_investment": 262811.0,
+     "financing_drag": -343224.82
+    }
+   }
+  },
+  "SEN": {
+   "deficit": {
+    "country": "SEN",
+    "mode": "deficit",
+    "net_jobs": 44649.75,
+    "gross_jobs_before_financing": 44649.75,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 261.52,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "public_investment": 44649.75
+    }
+   },
+   "tax_financed": {
+    "country": "SEN",
+    "mode": "tax_financed",
+    "net_jobs": 9475.82,
+    "gross_jobs_before_financing": 44649.75,
+    "financing_offset_jobs": -35173.93,
+    "fiscal_cost_usd_million": 261.52,
+    "financing_withdrawal_usd_million": 209.22,
+    "financing_mpc": 0.8,
+    "channels": {
+     "public_investment": 44649.75,
+     "financing_drag": -35173.93
+    }
+   },
+   "full_crowding_out": {
+    "country": "SEN",
+    "mode": "full_crowding_out",
+    "net_jobs": 682.34,
+    "gross_jobs_before_financing": 44649.75,
+    "financing_offset_jobs": -43967.41,
+    "fiscal_cost_usd_million": 261.52,
+    "financing_withdrawal_usd_million": 261.52,
+    "financing_mpc": null,
+    "channels": {
+     "public_investment": 44649.75,
+     "financing_drag": -43967.41
+    }
+   }
+  }
+ },
+ "public_works": {
+  "ZAF": {
+   "deficit": {
+    "country": "ZAF",
+    "mode": "deficit",
+    "net_jobs": 520909.69,
+    "gross_jobs_before_financing": 520909.69,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 3812.24,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "public_works_materials": 74072.1,
+     "public_works_direct": 446837.59
+    }
+   },
+   "tax_financed": {
+    "country": "ZAF",
+    "mode": "tax_financed",
+    "net_jobs": 424078.38,
+    "gross_jobs_before_financing": 520909.69,
+    "financing_offset_jobs": -96831.3,
+    "fiscal_cost_usd_million": 3812.24,
+    "financing_withdrawal_usd_million": 3049.79,
+    "financing_mpc": 0.8,
+    "channels": {
+     "public_works_materials": 74072.1,
+     "financing_drag": -96831.3,
+     "public_works_direct": 446837.59
+    }
+   },
+   "full_crowding_out": {
+    "country": "ZAF",
+    "mode": "full_crowding_out",
+    "net_jobs": 399870.56,
+    "gross_jobs_before_financing": 520909.69,
+    "financing_offset_jobs": -121039.13,
+    "fiscal_cost_usd_million": 3812.24,
+    "financing_withdrawal_usd_million": 3812.24,
+    "financing_mpc": null,
+    "channels": {
+     "public_works_materials": 74072.1,
+     "financing_drag": -121039.13,
+     "public_works_direct": 446837.59
+    }
+   }
+  },
+  "TUN": {
+   "deficit": {
+    "country": "TUN",
+    "mode": "deficit",
+    "net_jobs": 139091.87,
+    "gross_jobs_before_financing": 139091.87,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 433.54,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "public_works_materials": 15623.79,
+     "public_works_direct": 123468.08
+    }
+   },
+   "tax_financed": {
+    "country": "TUN",
+    "mode": "tax_financed",
+    "net_jobs": 118786.7,
+    "gross_jobs_before_financing": 139091.87,
+    "financing_offset_jobs": -20305.18,
+    "fiscal_cost_usd_million": 433.54,
+    "financing_withdrawal_usd_million": 346.83,
+    "financing_mpc": 0.8,
+    "channels": {
+     "public_works_materials": 15623.79,
+     "financing_drag": -20305.18,
+     "public_works_direct": 123468.08
+    }
+   },
+   "full_crowding_out": {
+    "country": "TUN",
+    "mode": "full_crowding_out",
+    "net_jobs": 113710.4,
+    "gross_jobs_before_financing": 139091.87,
+    "financing_offset_jobs": -25381.47,
+    "fiscal_cost_usd_million": 433.54,
+    "financing_withdrawal_usd_million": 433.54,
+    "financing_mpc": null,
+    "channels": {
+     "public_works_materials": 15623.79,
+     "financing_drag": -25381.47,
+     "public_works_direct": 123468.08
+    }
+   }
+  },
+  "VNM": {
+   "deficit": {
+    "country": "VNM",
+    "mode": "deficit",
+    "net_jobs": 510199.63,
+    "gross_jobs_before_financing": 510199.63,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 4020.17,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "public_works_materials": 126581.22,
+     "public_works_direct": 383618.41
+    }
+   },
+   "tax_financed": {
+    "country": "VNM",
+    "mode": "tax_financed",
+    "net_jobs": 145628.89,
+    "gross_jobs_before_financing": 510199.63,
+    "financing_offset_jobs": -364570.75,
+    "fiscal_cost_usd_million": 4020.17,
+    "financing_withdrawal_usd_million": 3216.13,
+    "financing_mpc": 0.8,
+    "channels": {
+     "public_works_materials": 126581.22,
+     "financing_drag": -364570.75,
+     "public_works_direct": 383618.41
+    }
+   },
+   "full_crowding_out": {
+    "country": "VNM",
+    "mode": "full_crowding_out",
+    "net_jobs": 54486.2,
+    "gross_jobs_before_financing": 510199.63,
+    "financing_offset_jobs": -455713.44,
+    "fiscal_cost_usd_million": 4020.17,
+    "financing_withdrawal_usd_million": 4020.17,
+    "financing_mpc": null,
+    "channels": {
+     "public_works_materials": 126581.22,
+     "financing_drag": -455713.44,
+     "public_works_direct": 383618.41
+    }
+   }
+  },
+  "THA": {
+   "deficit": {
+    "country": "THA",
+    "mode": "deficit",
+    "net_jobs": 1252587.28,
+    "gross_jobs_before_financing": 1252587.28,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 4700.93,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "public_works_materials": 140895.79,
+     "public_works_direct": 1111691.49
+    }
+   },
+   "tax_financed": {
+    "country": "THA",
+    "mode": "tax_financed",
+    "net_jobs": 978007.42,
+    "gross_jobs_before_financing": 1252587.28,
+    "financing_offset_jobs": -274579.86,
+    "fiscal_cost_usd_million": 4700.93,
+    "financing_withdrawal_usd_million": 3760.75,
+    "financing_mpc": 0.8,
+    "channels": {
+     "public_works_materials": 140895.79,
+     "financing_drag": -274579.86,
+     "public_works_direct": 1111691.49
+    }
+   },
+   "full_crowding_out": {
+    "country": "THA",
+    "mode": "full_crowding_out",
+    "net_jobs": 909362.46,
+    "gross_jobs_before_financing": 1252587.28,
+    "financing_offset_jobs": -343224.82,
+    "fiscal_cost_usd_million": 4700.93,
+    "financing_withdrawal_usd_million": 4700.93,
+    "financing_mpc": null,
+    "channels": {
+     "public_works_materials": 140895.79,
+     "financing_drag": -343224.82,
+     "public_works_direct": 1111691.49
+    }
+   }
+  },
+  "SEN": {
+   "deficit": {
+    "country": "SEN",
+    "mode": "deficit",
+    "net_jobs": 121262.09,
+    "gross_jobs_before_financing": 121262.09,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 261.52,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "public_works_materials": 20757.88,
+     "public_works_direct": 100504.21
+    }
+   },
+   "tax_financed": {
+    "country": "SEN",
+    "mode": "tax_financed",
+    "net_jobs": 86088.17,
+    "gross_jobs_before_financing": 121262.09,
+    "financing_offset_jobs": -35173.93,
+    "fiscal_cost_usd_million": 261.52,
+    "financing_withdrawal_usd_million": 209.22,
+    "financing_mpc": 0.8,
+    "channels": {
+     "public_works_materials": 20757.88,
+     "financing_drag": -35173.93,
+     "public_works_direct": 100504.21
+    }
+   },
+   "full_crowding_out": {
+    "country": "SEN",
+    "mode": "full_crowding_out",
+    "net_jobs": 77294.69,
+    "gross_jobs_before_financing": 121262.09,
+    "financing_offset_jobs": -43967.41,
+    "fiscal_cost_usd_million": 261.52,
+    "financing_withdrawal_usd_million": 261.52,
+    "financing_mpc": null,
+    "channels": {
+     "public_works_materials": 20757.88,
+     "financing_drag": -43967.41,
+     "public_works_direct": 100504.21
+    }
+   }
+  }
+ },
+ "direct_public_employment": {
+  "ZAF": {
+   "deficit": {
+    "country": "ZAF",
+    "mode": "deficit",
+    "net_jobs": 198596.13,
+    "gross_jobs_before_financing": 198596.13,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 3812.24,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "direct_public_employment_operating": 91229.37,
+     "direct_public_employment": 107366.75
+    }
+   },
+   "tax_financed": {
+    "country": "ZAF",
+    "mode": "tax_financed",
+    "net_jobs": 101764.82,
+    "gross_jobs_before_financing": 198596.13,
+    "financing_offset_jobs": -96831.3,
+    "fiscal_cost_usd_million": 3812.24,
+    "financing_withdrawal_usd_million": 3049.79,
+    "financing_mpc": 0.8,
+    "channels": {
+     "direct_public_employment_operating": 91229.37,
+     "financing_drag": -96831.3,
+     "direct_public_employment": 107366.75
+    }
+   },
+   "full_crowding_out": {
+    "country": "ZAF",
+    "mode": "full_crowding_out",
+    "net_jobs": 77557.0,
+    "gross_jobs_before_financing": 198596.13,
+    "financing_offset_jobs": -121039.13,
+    "fiscal_cost_usd_million": 3812.24,
+    "financing_withdrawal_usd_million": 3812.24,
+    "financing_mpc": null,
+    "channels": {
+     "direct_public_employment_operating": 91229.37,
+     "financing_drag": -121039.13,
+     "direct_public_employment": 107366.75
+    }
+   }
+  },
+  "TUN": {
+   "deficit": {
+    "country": "TUN",
+    "mode": "deficit",
+    "net_jobs": 38617.56,
+    "gross_jobs_before_financing": 38617.56,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 433.54,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "direct_public_employment_operating": 9640.37,
+     "direct_public_employment": 28977.19
+    }
+   },
+   "tax_financed": {
+    "country": "TUN",
+    "mode": "tax_financed",
+    "net_jobs": 18312.39,
+    "gross_jobs_before_financing": 38617.56,
+    "financing_offset_jobs": -20305.18,
+    "fiscal_cost_usd_million": 433.54,
+    "financing_withdrawal_usd_million": 346.83,
+    "financing_mpc": 0.8,
+    "channels": {
+     "direct_public_employment_operating": 9640.37,
+     "financing_drag": -20305.18,
+     "direct_public_employment": 28977.19
+    }
+   },
+   "full_crowding_out": {
+    "country": "TUN",
+    "mode": "full_crowding_out",
+    "net_jobs": 13236.09,
+    "gross_jobs_before_financing": 38617.56,
+    "financing_offset_jobs": -25381.47,
+    "fiscal_cost_usd_million": 433.54,
+    "financing_withdrawal_usd_million": 433.54,
+    "financing_mpc": null,
+    "channels": {
+     "direct_public_employment_operating": 9640.37,
+     "financing_drag": -25381.47,
+     "direct_public_employment": 28977.19
+    }
+   }
+  },
+  "VNM": {
+   "deficit": {
+    "country": "VNM",
+    "mode": "deficit",
+    "net_jobs": 484324.67,
+    "gross_jobs_before_financing": 484324.67,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 4020.17,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "direct_public_employment_operating": 162379.28,
+     "direct_public_employment": 321945.39
+    }
+   },
+   "tax_financed": {
+    "country": "VNM",
+    "mode": "tax_financed",
+    "net_jobs": 119753.92,
+    "gross_jobs_before_financing": 484324.67,
+    "financing_offset_jobs": -364570.75,
+    "fiscal_cost_usd_million": 4020.17,
+    "financing_withdrawal_usd_million": 3216.13,
+    "financing_mpc": 0.8,
+    "channels": {
+     "direct_public_employment_operating": 162379.28,
+     "financing_drag": -364570.75,
+     "direct_public_employment": 321945.39
+    }
+   },
+   "full_crowding_out": {
+    "country": "VNM",
+    "mode": "full_crowding_out",
+    "net_jobs": 28611.23,
+    "gross_jobs_before_financing": 484324.67,
+    "financing_offset_jobs": -455713.44,
+    "fiscal_cost_usd_million": 4020.17,
+    "financing_withdrawal_usd_million": 4020.17,
+    "financing_mpc": null,
+    "channels": {
+     "direct_public_employment_operating": 162379.28,
+     "financing_drag": -455713.44,
+     "direct_public_employment": 321945.39
+    }
+   }
+  },
+  "THA": {
+   "deficit": {
+    "country": "THA",
+    "mode": "deficit",
+    "net_jobs": 333186.88,
+    "gross_jobs_before_financing": 333186.88,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 4700.93,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "direct_public_employment_operating": 102617.42,
+     "direct_public_employment": 230569.47
+    }
+   },
+   "tax_financed": {
+    "country": "THA",
+    "mode": "tax_financed",
+    "net_jobs": 58607.03,
+    "gross_jobs_before_financing": 333186.88,
+    "financing_offset_jobs": -274579.86,
+    "fiscal_cost_usd_million": 4700.93,
+    "financing_withdrawal_usd_million": 3760.75,
+    "financing_mpc": 0.8,
+    "channels": {
+     "direct_public_employment_operating": 102617.42,
+     "financing_drag": -274579.86,
+     "direct_public_employment": 230569.47
+    }
+   },
+   "full_crowding_out": {
+    "country": "THA",
+    "mode": "full_crowding_out",
+    "net_jobs": -10037.94,
+    "gross_jobs_before_financing": 333186.88,
+    "financing_offset_jobs": -343224.82,
+    "fiscal_cost_usd_million": 4700.93,
+    "financing_withdrawal_usd_million": 4700.93,
+    "financing_mpc": null,
+    "channels": {
+     "direct_public_employment_operating": 102617.42,
+     "financing_drag": -343224.82,
+     "direct_public_employment": 230569.47
+    }
+   }
+  },
+  "SEN": {
+   "deficit": {
+    "country": "SEN",
+    "mode": "deficit",
+    "net_jobs": 32010.29,
+    "gross_jobs_before_financing": 32010.29,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 261.52,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "direct_public_employment_operating": 19579.62,
+     "direct_public_employment": 12430.67
+    }
+   },
+   "tax_financed": {
+    "country": "SEN",
+    "mode": "tax_financed",
+    "net_jobs": -3163.64,
+    "gross_jobs_before_financing": 32010.29,
+    "financing_offset_jobs": -35173.93,
+    "fiscal_cost_usd_million": 261.52,
+    "financing_withdrawal_usd_million": 209.22,
+    "financing_mpc": 0.8,
+    "channels": {
+     "direct_public_employment_operating": 19579.62,
+     "financing_drag": -35173.93,
+     "direct_public_employment": 12430.67
+    }
+   },
+   "full_crowding_out": {
+    "country": "SEN",
+    "mode": "full_crowding_out",
+    "net_jobs": -11957.12,
+    "gross_jobs_before_financing": 32010.29,
+    "financing_offset_jobs": -43967.41,
+    "fiscal_cost_usd_million": 261.52,
+    "financing_withdrawal_usd_million": 261.52,
+    "financing_mpc": null,
+    "channels": {
+     "direct_public_employment_operating": 19579.62,
+     "financing_drag": -43967.41,
+     "direct_public_employment": 12430.67
+    }
+   }
+  }
+ },
+ "production_subsidy": {
+  "ZAF": {
+   "deficit": {
+    "country": "ZAF",
+    "mode": "deficit",
+    "net_jobs": 1361568.68,
+    "gross_jobs_before_financing": 1361568.68,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 64517.72,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "production_subsidy_downstream": 950934.61,
+     "production_subsidy_real_income": 410634.07
+    }
+   },
+   "tax_financed": {
+    "country": "ZAF",
+    "mode": "tax_financed",
+    "net_jobs": -277188.78,
+    "gross_jobs_before_financing": 1361568.68,
+    "financing_offset_jobs": -1638757.46,
+    "fiscal_cost_usd_million": 64517.72,
+    "financing_withdrawal_usd_million": 51614.18,
+    "financing_mpc": 0.8,
+    "channels": {
+     "production_subsidy_downstream": 950934.61,
+     "production_subsidy_real_income": 410634.07,
+     "financing_drag": -1638757.46
+    }
+   },
+   "full_crowding_out": {
+    "country": "ZAF",
+    "mode": "full_crowding_out",
+    "net_jobs": -686878.15,
+    "gross_jobs_before_financing": 1361568.68,
+    "financing_offset_jobs": -2048446.83,
+    "fiscal_cost_usd_million": 64517.72,
+    "financing_withdrawal_usd_million": 64517.72,
+    "financing_mpc": null,
+    "channels": {
+     "production_subsidy_downstream": 950934.61,
+     "production_subsidy_real_income": 410634.07,
+     "financing_drag": -2048446.83
+    }
+   }
+  },
+  "TUN": {
+   "deficit": {
+    "country": "TUN",
+    "mode": "deficit",
+    "net_jobs": 253955.33,
+    "gross_jobs_before_financing": 253955.33,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 8340.84,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "production_subsidy_downstream": 195325.81,
+     "production_subsidy_real_income": 58629.52
+    }
+   },
+   "tax_financed": {
+    "country": "TUN",
+    "mode": "tax_financed",
+    "net_jobs": -136697.86,
+    "gross_jobs_before_financing": 253955.33,
+    "financing_offset_jobs": -390653.19,
+    "fiscal_cost_usd_million": 8340.84,
+    "financing_withdrawal_usd_million": 6672.67,
+    "financing_mpc": 0.8,
+    "channels": {
+     "production_subsidy_downstream": 195325.81,
+     "production_subsidy_real_income": 58629.52,
+     "financing_drag": -390653.19
+    }
+   },
+   "full_crowding_out": {
+    "country": "TUN",
+    "mode": "full_crowding_out",
+    "net_jobs": -234361.16,
+    "gross_jobs_before_financing": 253955.33,
+    "financing_offset_jobs": -488316.49,
+    "fiscal_cost_usd_million": 8340.84,
+    "financing_withdrawal_usd_million": 8340.84,
+    "financing_mpc": null,
+    "channels": {
+     "production_subsidy_downstream": 195325.81,
+     "production_subsidy_real_income": 58629.52,
+     "financing_drag": -488316.49
+    }
+   }
+  },
+  "VNM": {
+   "deficit": {
+    "country": "VNM",
+    "mode": "deficit",
+    "net_jobs": 12923151.6,
+    "gross_jobs_before_financing": 12923151.6,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 413153.77,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "production_subsidy_downstream": 8941718.08,
+     "production_subsidy_real_income": 3981433.52
+    }
+   },
+   "tax_financed": {
+    "country": "VNM",
+    "mode": "tax_financed",
+    "net_jobs": -24543884.76,
+    "gross_jobs_before_financing": 12923151.6,
+    "financing_offset_jobs": -37467036.36,
+    "fiscal_cost_usd_million": 413153.77,
+    "financing_withdrawal_usd_million": 330523.02,
+    "financing_mpc": 0.8,
+    "channels": {
+     "production_subsidy_downstream": 8941718.08,
+     "production_subsidy_real_income": 3981433.52,
+     "financing_drag": -37467036.36
+    }
+   },
+   "full_crowding_out": {
+    "country": "VNM",
+    "mode": "full_crowding_out",
+    "net_jobs": -33910643.85,
+    "gross_jobs_before_financing": 12923151.6,
+    "financing_offset_jobs": -46833795.45,
+    "fiscal_cost_usd_million": 413153.77,
+    "financing_withdrawal_usd_million": 413153.77,
+    "financing_mpc": null,
+    "channels": {
+     "production_subsidy_downstream": 8941718.08,
+     "production_subsidy_real_income": 3981433.52,
+     "financing_drag": -46833795.45
+    }
+   }
+  },
+  "THA": {
+   "deficit": {
+    "country": "THA",
+    "mode": "deficit",
+    "net_jobs": 5193651.51,
+    "gross_jobs_before_financing": 5193651.51,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 218826.57,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "production_subsidy_downstream": 3381556.19,
+     "production_subsidy_real_income": 1812095.32
+    }
+   },
+   "tax_financed": {
+    "country": "THA",
+    "mode": "tax_financed",
+    "net_jobs": -7587932.04,
+    "gross_jobs_before_financing": 5193651.51,
+    "financing_offset_jobs": -12781583.55,
+    "fiscal_cost_usd_million": 218826.57,
+    "financing_withdrawal_usd_million": 175061.25,
+    "financing_mpc": 0.8,
+    "channels": {
+     "production_subsidy_downstream": 3381556.19,
+     "production_subsidy_real_income": 1812095.32,
+     "financing_drag": -12781583.55
+    }
+   },
+   "full_crowding_out": {
+    "country": "THA",
+    "mode": "full_crowding_out",
+    "net_jobs": -10783327.93,
+    "gross_jobs_before_financing": 5193651.51,
+    "financing_offset_jobs": -15976979.44,
+    "fiscal_cost_usd_million": 218826.57,
+    "financing_withdrawal_usd_million": 218826.57,
+    "financing_mpc": null,
+    "channels": {
+     "production_subsidy_downstream": 3381556.19,
+     "production_subsidy_real_income": 1812095.32,
+     "financing_drag": -15976979.44
+    }
+   }
+  },
+  "SEN": {
+   "deficit": {
+    "country": "SEN",
+    "mode": "deficit",
+    "net_jobs": 230799.84,
+    "gross_jobs_before_financing": 230799.84,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 2830.36,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "production_subsidy_downstream": 168697.94,
+     "production_subsidy_real_income": 62101.9
+    }
+   },
+   "tax_financed": {
+    "country": "SEN",
+    "mode": "tax_financed",
+    "net_jobs": -149873.79,
+    "gross_jobs_before_financing": 230799.84,
+    "financing_offset_jobs": -380673.63,
+    "fiscal_cost_usd_million": 2830.36,
+    "financing_withdrawal_usd_million": 2264.29,
+    "financing_mpc": 0.8,
+    "channels": {
+     "production_subsidy_downstream": 168697.94,
+     "production_subsidy_real_income": 62101.9,
+     "financing_drag": -380673.63
+    }
+   },
+   "full_crowding_out": {
+    "country": "SEN",
+    "mode": "full_crowding_out",
+    "net_jobs": -245042.19,
+    "gross_jobs_before_financing": 230799.84,
+    "financing_offset_jobs": -475842.04,
+    "fiscal_cost_usd_million": 2830.36,
+    "financing_withdrawal_usd_million": 2830.36,
+    "financing_mpc": null,
+    "channels": {
+     "production_subsidy_downstream": 168697.94,
+     "production_subsidy_real_income": 62101.9,
+     "financing_drag": -475842.04
+    }
+   }
+  }
+ },
+ "wage_subsidy": {
+  "ZAF": {
+   "deficit": {
+    "country": "ZAF",
+    "mode": "deficit",
+    "net_jobs": 208880.97,
+    "gross_jobs_before_financing": 208880.97,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 9897.79,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "wage_subsidy_downstream": 145884.78,
+     "wage_subsidy_real_income": 62996.19
+    }
+   },
+   "tax_financed": {
+    "country": "ZAF",
+    "mode": "tax_financed",
+    "net_jobs": -42524.09,
+    "gross_jobs_before_financing": 208880.97,
+    "financing_offset_jobs": -251405.06,
+    "fiscal_cost_usd_million": 9897.79,
+    "financing_withdrawal_usd_million": 7918.23,
+    "financing_mpc": 0.8,
+    "channels": {
+     "wage_subsidy_downstream": 145884.78,
+     "wage_subsidy_real_income": 62996.19,
+     "financing_drag": -251405.06
+    }
+   },
+   "full_crowding_out": {
+    "country": "ZAF",
+    "mode": "full_crowding_out",
+    "net_jobs": -105375.35,
+    "gross_jobs_before_financing": 208880.97,
+    "financing_offset_jobs": -314256.33,
+    "fiscal_cost_usd_million": 9897.79,
+    "financing_withdrawal_usd_million": 9897.79,
+    "financing_mpc": null,
+    "channels": {
+     "wage_subsidy_downstream": 145884.78,
+     "wage_subsidy_real_income": 62996.19,
+     "financing_drag": -314256.33
+    }
+   }
+  },
+  "TUN": {
+   "deficit": {
+    "country": "TUN",
+    "mode": "deficit",
+    "net_jobs": 56022.8,
+    "gross_jobs_before_financing": 56022.8,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 1840.0,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "wage_subsidy_downstream": 43089.07,
+     "wage_subsidy_real_income": 12933.73
+    }
+   },
+   "tax_financed": {
+    "country": "TUN",
+    "mode": "tax_financed",
+    "net_jobs": -30155.68,
+    "gross_jobs_before_financing": 56022.8,
+    "financing_offset_jobs": -86178.48,
+    "fiscal_cost_usd_million": 1840.0,
+    "financing_withdrawal_usd_million": 1472.0,
+    "financing_mpc": 0.8,
+    "channels": {
+     "wage_subsidy_downstream": 43089.07,
+     "wage_subsidy_real_income": 12933.73,
+     "financing_drag": -86178.48
+    }
+   },
+   "full_crowding_out": {
+    "country": "TUN",
+    "mode": "full_crowding_out",
+    "net_jobs": -51700.31,
+    "gross_jobs_before_financing": 56022.8,
+    "financing_offset_jobs": -107723.1,
+    "fiscal_cost_usd_million": 1840.0,
+    "financing_withdrawal_usd_million": 1840.0,
+    "financing_mpc": null,
+    "channels": {
+     "wage_subsidy_downstream": 43089.07,
+     "wage_subsidy_real_income": 12933.73,
+     "financing_drag": -107723.1
+    }
+   }
+  },
+  "VNM": {
+   "deficit": {
+    "country": "VNM",
+    "mode": "deficit",
+    "net_jobs": 1338334.5,
+    "gross_jobs_before_financing": 1338334.5,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 42786.62,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "wage_subsidy_downstream": 926013.27,
+     "wage_subsidy_real_income": 412321.24
+    }
+   },
+   "tax_financed": {
+    "country": "VNM",
+    "mode": "tax_financed",
+    "net_jobs": -2541789.25,
+    "gross_jobs_before_financing": 1338334.5,
+    "financing_offset_jobs": -3880123.75,
+    "fiscal_cost_usd_million": 42786.62,
+    "financing_withdrawal_usd_million": 34229.29,
+    "financing_mpc": 0.8,
+    "channels": {
+     "wage_subsidy_downstream": 926013.27,
+     "wage_subsidy_real_income": 412321.24,
+     "financing_drag": -3880123.75
+    }
+   },
+   "full_crowding_out": {
+    "country": "VNM",
+    "mode": "full_crowding_out",
+    "net_jobs": -3511820.19,
+    "gross_jobs_before_financing": 1338334.5,
+    "financing_offset_jobs": -4850154.69,
+    "fiscal_cost_usd_million": 42786.62,
+    "financing_withdrawal_usd_million": 42786.62,
+    "financing_mpc": null,
+    "channels": {
+     "wage_subsidy_downstream": 926013.27,
+     "wage_subsidy_real_income": 412321.24,
+     "financing_drag": -4850154.69
+    }
+   }
+  },
+  "THA": {
+   "deficit": {
+    "country": "THA",
+    "mode": "deficit",
+    "net_jobs": 316096.02,
+    "gross_jobs_before_financing": 316096.02,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 13318.22,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "wage_subsidy_downstream": 205808.27,
+     "wage_subsidy_real_income": 110287.75
+    }
+   },
+   "tax_financed": {
+    "country": "THA",
+    "mode": "tax_financed",
+    "net_jobs": -461816.72,
+    "gross_jobs_before_financing": 316096.02,
+    "financing_offset_jobs": -777912.74,
+    "fiscal_cost_usd_million": 13318.22,
+    "financing_withdrawal_usd_million": 10654.58,
+    "financing_mpc": 0.8,
+    "channels": {
+     "wage_subsidy_downstream": 205808.27,
+     "wage_subsidy_real_income": 110287.75,
+     "financing_drag": -777912.74
+    }
+   },
+   "full_crowding_out": {
+    "country": "THA",
+    "mode": "full_crowding_out",
+    "net_jobs": -656294.9,
+    "gross_jobs_before_financing": 316096.02,
+    "financing_offset_jobs": -972390.92,
+    "fiscal_cost_usd_million": 13318.22,
+    "financing_withdrawal_usd_million": 13318.22,
+    "financing_mpc": null,
+    "channels": {
+     "wage_subsidy_downstream": 205808.27,
+     "wage_subsidy_real_income": 110287.75,
+     "financing_drag": -972390.92
+    }
+   }
+  },
+  "SEN": {
+   "deficit": {
+    "country": "SEN",
+    "mode": "deficit",
+    "net_jobs": 18200.64,
+    "gross_jobs_before_financing": 18200.64,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 223.2,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "wage_subsidy_downstream": 13303.35,
+     "wage_subsidy_real_income": 4897.29
+    }
+   },
+   "tax_financed": {
+    "country": "SEN",
+    "mode": "tax_financed",
+    "net_jobs": -11818.9,
+    "gross_jobs_before_financing": 18200.64,
+    "financing_offset_jobs": -30019.54,
+    "fiscal_cost_usd_million": 223.2,
+    "financing_withdrawal_usd_million": 178.56,
+    "financing_mpc": 0.8,
+    "channels": {
+     "wage_subsidy_downstream": 13303.35,
+     "wage_subsidy_real_income": 4897.29,
+     "financing_drag": -30019.54
+    }
+   },
+   "full_crowding_out": {
+    "country": "SEN",
+    "mode": "full_crowding_out",
+    "net_jobs": -19323.78,
+    "gross_jobs_before_financing": 18200.64,
+    "financing_offset_jobs": -37524.43,
+    "fiscal_cost_usd_million": 223.2,
+    "financing_withdrawal_usd_million": 223.2,
+    "financing_mpc": null,
+    "channels": {
+     "wage_subsidy_downstream": 13303.35,
+     "wage_subsidy_real_income": 4897.29,
+     "financing_drag": -37524.43
+    }
+   }
+  }
+ },
+ "investment_tax_incentive": {
+  "ZAF": {
+   "deficit": {
+    "country": "ZAF",
+    "mode": "deficit",
+    "net_jobs": 163891.47,
+    "gross_jobs_before_financing": 163891.47,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 3812.24,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "investment_incentive": 163891.47
+    }
+   },
+   "tax_financed": {
+    "country": "ZAF",
+    "mode": "tax_financed",
+    "net_jobs": 67060.17,
+    "gross_jobs_before_financing": 163891.47,
+    "financing_offset_jobs": -96831.3,
+    "fiscal_cost_usd_million": 3812.24,
+    "financing_withdrawal_usd_million": 3049.79,
+    "financing_mpc": 0.8,
+    "channels": {
+     "investment_incentive": 163891.47,
+     "financing_drag": -96831.3
+    }
+   },
+   "full_crowding_out": {
+    "country": "ZAF",
+    "mode": "full_crowding_out",
+    "net_jobs": 42852.34,
+    "gross_jobs_before_financing": 163891.47,
+    "financing_offset_jobs": -121039.13,
+    "fiscal_cost_usd_million": 3812.24,
+    "financing_withdrawal_usd_million": 3812.24,
+    "financing_mpc": null,
+    "channels": {
+     "investment_incentive": 163891.47,
+     "financing_drag": -121039.13
+    }
+   }
+  },
+  "TUN": {
+   "deficit": {
+    "country": "TUN",
+    "mode": "deficit",
+    "net_jobs": 42009.98,
+    "gross_jobs_before_financing": 42009.98,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 433.54,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "investment_incentive": 42009.98
+    }
+   },
+   "tax_financed": {
+    "country": "TUN",
+    "mode": "tax_financed",
+    "net_jobs": 21704.8,
+    "gross_jobs_before_financing": 42009.98,
+    "financing_offset_jobs": -20305.18,
+    "fiscal_cost_usd_million": 433.54,
+    "financing_withdrawal_usd_million": 346.83,
+    "financing_mpc": 0.8,
+    "channels": {
+     "investment_incentive": 42009.98,
+     "financing_drag": -20305.18
+    }
+   },
+   "full_crowding_out": {
+    "country": "TUN",
+    "mode": "full_crowding_out",
+    "net_jobs": 16628.51,
+    "gross_jobs_before_financing": 42009.98,
+    "financing_offset_jobs": -25381.47,
+    "fiscal_cost_usd_million": 433.54,
+    "financing_withdrawal_usd_million": 433.54,
+    "financing_mpc": null,
+    "channels": {
+     "investment_incentive": 42009.98,
+     "financing_drag": -25381.47
+    }
+   }
+  },
+  "VNM": {
+   "deficit": {
+    "country": "VNM",
+    "mode": "deficit",
+    "net_jobs": 238155.7,
+    "gross_jobs_before_financing": 238155.7,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 4020.17,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "investment_incentive": 238155.7
+    }
+   },
+   "tax_financed": {
+    "country": "VNM",
+    "mode": "tax_financed",
+    "net_jobs": -126415.05,
+    "gross_jobs_before_financing": 238155.7,
+    "financing_offset_jobs": -364570.75,
+    "fiscal_cost_usd_million": 4020.17,
+    "financing_withdrawal_usd_million": 3216.13,
+    "financing_mpc": 0.8,
+    "channels": {
+     "investment_incentive": 238155.7,
+     "financing_drag": -364570.75
+    }
+   },
+   "full_crowding_out": {
+    "country": "VNM",
+    "mode": "full_crowding_out",
+    "net_jobs": -217557.74,
+    "gross_jobs_before_financing": 238155.7,
+    "financing_offset_jobs": -455713.44,
+    "fiscal_cost_usd_million": 4020.17,
+    "financing_withdrawal_usd_million": 4020.17,
+    "financing_mpc": null,
+    "channels": {
+     "investment_incentive": 238155.7,
+     "financing_drag": -455713.44
+    }
+   }
+  },
+  "THA": {
+   "deficit": {
+    "country": "THA",
+    "mode": "deficit",
+    "net_jobs": 219009.16,
+    "gross_jobs_before_financing": 219009.16,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 4700.93,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "investment_incentive": 219009.16
+    }
+   },
+   "tax_financed": {
+    "country": "THA",
+    "mode": "tax_financed",
+    "net_jobs": -55570.69,
+    "gross_jobs_before_financing": 219009.16,
+    "financing_offset_jobs": -274579.86,
+    "fiscal_cost_usd_million": 4700.93,
+    "financing_withdrawal_usd_million": 3760.75,
+    "financing_mpc": 0.8,
+    "channels": {
+     "investment_incentive": 219009.16,
+     "financing_drag": -274579.86
+    }
+   },
+   "full_crowding_out": {
+    "country": "THA",
+    "mode": "full_crowding_out",
+    "net_jobs": -124215.66,
+    "gross_jobs_before_financing": 219009.16,
+    "financing_offset_jobs": -343224.82,
+    "fiscal_cost_usd_million": 4700.93,
+    "financing_withdrawal_usd_million": 4700.93,
+    "financing_mpc": null,
+    "channels": {
+     "investment_incentive": 219009.16,
+     "financing_drag": -343224.82
+    }
+   }
+  },
+  "SEN": {
+   "deficit": {
+    "country": "SEN",
+    "mode": "deficit",
+    "net_jobs": 37208.13,
+    "gross_jobs_before_financing": 37208.13,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 261.52,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "investment_incentive": 37208.13
+    }
+   },
+   "tax_financed": {
+    "country": "SEN",
+    "mode": "tax_financed",
+    "net_jobs": 2034.2,
+    "gross_jobs_before_financing": 37208.13,
+    "financing_offset_jobs": -35173.93,
+    "fiscal_cost_usd_million": 261.52,
+    "financing_withdrawal_usd_million": 209.22,
+    "financing_mpc": 0.8,
+    "channels": {
+     "investment_incentive": 37208.13,
+     "financing_drag": -35173.93
+    }
+   },
+   "full_crowding_out": {
+    "country": "SEN",
+    "mode": "full_crowding_out",
+    "net_jobs": -6759.28,
+    "gross_jobs_before_financing": 37208.13,
+    "financing_offset_jobs": -43967.41,
+    "fiscal_cost_usd_million": 261.52,
+    "financing_withdrawal_usd_million": 261.52,
+    "financing_mpc": null,
+    "channels": {
+     "investment_incentive": 37208.13,
+     "financing_drag": -43967.41
+    }
+   }
+  }
+ },
+ "stimulus_household": {
+  "ZAF": {
+   "deficit": {
+    "country": "ZAF",
+    "mode": "deficit",
+    "net_jobs": 107888.29,
+    "gross_jobs_before_financing": 107888.29,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 3812.24,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "sme_stimulus": 107888.29
+    }
+   },
+   "tax_financed": {
+    "country": "ZAF",
+    "mode": "tax_financed",
+    "net_jobs": 11056.99,
+    "gross_jobs_before_financing": 107888.29,
+    "financing_offset_jobs": -96831.3,
+    "fiscal_cost_usd_million": 3812.24,
+    "financing_withdrawal_usd_million": 3049.79,
+    "financing_mpc": 0.8,
+    "channels": {
+     "sme_stimulus": 107888.29,
+     "financing_drag": -96831.3
+    }
+   },
+   "full_crowding_out": {
+    "country": "ZAF",
+    "mode": "full_crowding_out",
+    "net_jobs": -13150.84,
+    "gross_jobs_before_financing": 107888.29,
+    "financing_offset_jobs": -121039.13,
+    "fiscal_cost_usd_million": 3812.24,
+    "financing_withdrawal_usd_million": 3812.24,
+    "financing_mpc": null,
+    "channels": {
+     "sme_stimulus": 107888.29,
+     "financing_drag": -121039.13
+    }
+   }
+  },
+  "TUN": {
+   "deficit": {
+    "country": "TUN",
+    "mode": "deficit",
+    "net_jobs": 16311.6,
+    "gross_jobs_before_financing": 16311.6,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 433.54,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "sme_stimulus": 16311.6
+    }
+   },
+   "tax_financed": {
+    "country": "TUN",
+    "mode": "tax_financed",
+    "net_jobs": -3993.57,
+    "gross_jobs_before_financing": 16311.6,
+    "financing_offset_jobs": -20305.18,
+    "fiscal_cost_usd_million": 433.54,
+    "financing_withdrawal_usd_million": 346.83,
+    "financing_mpc": 0.8,
+    "channels": {
+     "sme_stimulus": 16311.6,
+     "financing_drag": -20305.18
+    }
+   },
+   "full_crowding_out": {
+    "country": "TUN",
+    "mode": "full_crowding_out",
+    "net_jobs": -9069.87,
+    "gross_jobs_before_financing": 16311.6,
+    "financing_offset_jobs": -25381.47,
+    "fiscal_cost_usd_million": 433.54,
+    "financing_withdrawal_usd_million": 433.54,
+    "financing_mpc": null,
+    "channels": {
+     "sme_stimulus": 16311.6,
+     "financing_drag": -25381.47
+    }
+   }
+  },
+  "VNM": {
+   "deficit": {
+    "country": "VNM",
+    "mode": "deficit",
+    "net_jobs": 380874.72,
+    "gross_jobs_before_financing": 380874.72,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 4020.17,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "sme_stimulus": 380874.72
+    }
+   },
+   "tax_financed": {
+    "country": "VNM",
+    "mode": "tax_financed",
+    "net_jobs": 16303.98,
+    "gross_jobs_before_financing": 380874.72,
+    "financing_offset_jobs": -364570.75,
+    "fiscal_cost_usd_million": 4020.17,
+    "financing_withdrawal_usd_million": 3216.13,
+    "financing_mpc": 0.8,
+    "channels": {
+     "sme_stimulus": 380874.72,
+     "financing_drag": -364570.75
+    }
+   },
+   "full_crowding_out": {
+    "country": "VNM",
+    "mode": "full_crowding_out",
+    "net_jobs": -74838.71,
+    "gross_jobs_before_financing": 380874.72,
+    "financing_offset_jobs": -455713.44,
+    "fiscal_cost_usd_million": 4020.17,
+    "financing_withdrawal_usd_million": 4020.17,
+    "financing_mpc": null,
+    "channels": {
+     "sme_stimulus": 380874.72,
+     "financing_drag": -455713.44
+    }
+   }
+  },
+  "THA": {
+   "deficit": {
+    "country": "THA",
+    "mode": "deficit",
+    "net_jobs": 279139.4,
+    "gross_jobs_before_financing": 279139.4,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 4700.93,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "sme_stimulus": 279139.4
+    }
+   },
+   "tax_financed": {
+    "country": "THA",
+    "mode": "tax_financed",
+    "net_jobs": 4559.54,
+    "gross_jobs_before_financing": 279139.4,
+    "financing_offset_jobs": -274579.86,
+    "fiscal_cost_usd_million": 4700.93,
+    "financing_withdrawal_usd_million": 3760.75,
+    "financing_mpc": 0.8,
+    "channels": {
+     "sme_stimulus": 279139.4,
+     "financing_drag": -274579.86
+    }
+   },
+   "full_crowding_out": {
+    "country": "THA",
+    "mode": "full_crowding_out",
+    "net_jobs": -64085.42,
+    "gross_jobs_before_financing": 279139.4,
+    "financing_offset_jobs": -343224.82,
+    "fiscal_cost_usd_million": 4700.93,
+    "financing_withdrawal_usd_million": 4700.93,
+    "financing_mpc": null,
+    "channels": {
+     "sme_stimulus": 279139.4,
+     "financing_drag": -343224.82
+    }
+   }
+  },
+  "SEN": {
+   "deficit": {
+    "country": "SEN",
+    "mode": "deficit",
+    "net_jobs": 36818.5,
+    "gross_jobs_before_financing": 36818.5,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 261.52,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "sme_stimulus": 36818.5
+    }
+   },
+   "tax_financed": {
+    "country": "SEN",
+    "mode": "tax_financed",
+    "net_jobs": 1644.57,
+    "gross_jobs_before_financing": 36818.5,
+    "financing_offset_jobs": -35173.93,
+    "fiscal_cost_usd_million": 261.52,
+    "financing_withdrawal_usd_million": 209.22,
+    "financing_mpc": 0.8,
+    "channels": {
+     "sme_stimulus": 36818.5,
+     "financing_drag": -35173.93
+    }
+   },
+   "full_crowding_out": {
+    "country": "SEN",
+    "mode": "full_crowding_out",
+    "net_jobs": -7148.91,
+    "gross_jobs_before_financing": 36818.5,
+    "financing_offset_jobs": -43967.41,
+    "fiscal_cost_usd_million": 261.52,
+    "financing_withdrawal_usd_million": 261.52,
+    "financing_mpc": null,
+    "channels": {
+     "sme_stimulus": 36818.5,
+     "financing_drag": -43967.41
+    }
+   }
+  }
+ },
+ "stimulus_government": {
+  "ZAF": {
+   "deficit": {
+    "country": "ZAF",
+    "mode": "deficit",
+    "net_jobs": 170712.54,
+    "gross_jobs_before_financing": 170712.54,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 3812.24,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "sme_stimulus": 170712.54
+    }
+   },
+   "tax_financed": {
+    "country": "ZAF",
+    "mode": "tax_financed",
+    "net_jobs": 73881.23,
+    "gross_jobs_before_financing": 170712.54,
+    "financing_offset_jobs": -96831.3,
+    "fiscal_cost_usd_million": 3812.24,
+    "financing_withdrawal_usd_million": 3049.79,
+    "financing_mpc": 0.8,
+    "channels": {
+     "sme_stimulus": 170712.54,
+     "financing_drag": -96831.3
+    }
+   },
+   "full_crowding_out": {
+    "country": "ZAF",
+    "mode": "full_crowding_out",
+    "net_jobs": 49673.41,
+    "gross_jobs_before_financing": 170712.54,
+    "financing_offset_jobs": -121039.13,
+    "fiscal_cost_usd_million": 3812.24,
+    "financing_withdrawal_usd_million": 3812.24,
+    "financing_mpc": null,
+    "channels": {
+     "sme_stimulus": 170712.54,
+     "financing_drag": -121039.13
+    }
+   }
+  },
+  "TUN": {
+   "deficit": {
+    "country": "TUN",
+    "mode": "deficit",
+    "net_jobs": 31647.04,
+    "gross_jobs_before_financing": 31647.04,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 433.54,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "sme_stimulus": 31647.04
+    }
+   },
+   "tax_financed": {
+    "country": "TUN",
+    "mode": "tax_financed",
+    "net_jobs": 11341.86,
+    "gross_jobs_before_financing": 31647.04,
+    "financing_offset_jobs": -20305.18,
+    "fiscal_cost_usd_million": 433.54,
+    "financing_withdrawal_usd_million": 346.83,
+    "financing_mpc": 0.8,
+    "channels": {
+     "sme_stimulus": 31647.04,
+     "financing_drag": -20305.18
+    }
+   },
+   "full_crowding_out": {
+    "country": "TUN",
+    "mode": "full_crowding_out",
+    "net_jobs": 6265.57,
+    "gross_jobs_before_financing": 31647.04,
+    "financing_offset_jobs": -25381.47,
+    "fiscal_cost_usd_million": 433.54,
+    "financing_withdrawal_usd_million": 433.54,
+    "financing_mpc": null,
+    "channels": {
+     "sme_stimulus": 31647.04,
+     "financing_drag": -25381.47
+    }
+   }
+  },
+  "VNM": {
+   "deficit": {
+    "country": "VNM",
+    "mode": "deficit",
+    "net_jobs": 416065.07,
+    "gross_jobs_before_financing": 416065.07,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 4020.17,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "sme_stimulus": 416065.07
+    }
+   },
+   "tax_financed": {
+    "country": "VNM",
+    "mode": "tax_financed",
+    "net_jobs": 51494.32,
+    "gross_jobs_before_financing": 416065.07,
+    "financing_offset_jobs": -364570.75,
+    "fiscal_cost_usd_million": 4020.17,
+    "financing_withdrawal_usd_million": 3216.13,
+    "financing_mpc": 0.8,
+    "channels": {
+     "sme_stimulus": 416065.07,
+     "financing_drag": -364570.75
+    }
+   },
+   "full_crowding_out": {
+    "country": "VNM",
+    "mode": "full_crowding_out",
+    "net_jobs": -39648.37,
+    "gross_jobs_before_financing": 416065.07,
+    "financing_offset_jobs": -455713.44,
+    "fiscal_cost_usd_million": 4020.17,
+    "financing_withdrawal_usd_million": 4020.17,
+    "financing_mpc": null,
+    "channels": {
+     "sme_stimulus": 416065.07,
+     "financing_drag": -455713.44
+    }
+   }
+  },
+  "THA": {
+   "deficit": {
+    "country": "THA",
+    "mode": "deficit",
+    "net_jobs": 261123.47,
+    "gross_jobs_before_financing": 261123.47,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 4700.93,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "sme_stimulus": 261123.47
+    }
+   },
+   "tax_financed": {
+    "country": "THA",
+    "mode": "tax_financed",
+    "net_jobs": -13456.38,
+    "gross_jobs_before_financing": 261123.47,
+    "financing_offset_jobs": -274579.86,
+    "fiscal_cost_usd_million": 4700.93,
+    "financing_withdrawal_usd_million": 3760.75,
+    "financing_mpc": 0.8,
+    "channels": {
+     "sme_stimulus": 261123.47,
+     "financing_drag": -274579.86
+    }
+   },
+   "full_crowding_out": {
+    "country": "THA",
+    "mode": "full_crowding_out",
+    "net_jobs": -82101.35,
+    "gross_jobs_before_financing": 261123.47,
+    "financing_offset_jobs": -343224.82,
+    "fiscal_cost_usd_million": 4700.93,
+    "financing_withdrawal_usd_million": 4700.93,
+    "financing_mpc": null,
+    "channels": {
+     "sme_stimulus": 261123.47,
+     "financing_drag": -343224.82
+    }
+   }
+  },
+  "SEN": {
+   "deficit": {
+    "country": "SEN",
+    "mode": "deficit",
+    "net_jobs": 18934.94,
+    "gross_jobs_before_financing": 18934.94,
+    "financing_offset_jobs": 0.0,
+    "fiscal_cost_usd_million": 261.52,
+    "financing_withdrawal_usd_million": 0.0,
+    "financing_mpc": null,
+    "channels": {
+     "sme_stimulus": 18934.94
+    }
+   },
+   "tax_financed": {
+    "country": "SEN",
+    "mode": "tax_financed",
+    "net_jobs": -16238.99,
+    "gross_jobs_before_financing": 18934.94,
+    "financing_offset_jobs": -35173.93,
+    "fiscal_cost_usd_million": 261.52,
+    "financing_withdrawal_usd_million": 209.22,
+    "financing_mpc": 0.8,
+    "channels": {
+     "sme_stimulus": 18934.94,
+     "financing_drag": -35173.93
+    }
+   },
+   "full_crowding_out": {
+    "country": "SEN",
+    "mode": "full_crowding_out",
+    "net_jobs": -25032.47,
+    "gross_jobs_before_financing": 18934.94,
+    "financing_offset_jobs": -43967.41,
+    "fiscal_cost_usd_million": 261.52,
+    "financing_withdrawal_usd_million": 261.52,
+    "financing_mpc": null,
+    "channels": {
+     "sme_stimulus": 18934.94,
+     "financing_drag": -43967.41
+    }
+   }
+  }
+ }
+}

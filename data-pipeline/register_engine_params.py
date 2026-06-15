@@ -59,18 +59,9 @@ KNO_TABLE1_IMPORT_WEIGHTED = {
     "THA": (-1.08, "KNO (2008) Table 1, import-weighted average, Thailand"),
     "VNM": (-1.08, "Viet Nam not in the KNO (2008) sample; global median "
                    "of the study applied"),
-    "SEN": (-0.5, "calibrated: KNO (2008) Table 1 gives -1.05 for Senegal, "
-                  "but at that value a 10% manufacturing tariff is net "
-                  "employment-positive (acceptance constraint, CLAUDE.md "
-                  "ground rule 4); set to the bottom of the cited "
-                  "literature range [-0.5, -1.67], consistent with KNO's "
-                  "finding that differentiated goods have the least "
-                  "elastic import demand. A low import-substitution "
-                  "elasticity is independently defensible for Senegal: "
-                  "thin domestic manufacturing capacity means tariffs "
-                  "raise prices rather than shift demand to domestic "
-                  "suppliers, which is the structural story behind the "
-                  "differentiated-goods finding"),
+    "SEN": (-1.05, "KNO (2008) Table 1, import-weighted average, Senegal "
+                   "(the cited value, used as-is; not calibrated to any "
+                   "tariff outcome)"),
 }
 
 
@@ -155,12 +146,16 @@ ENTRIES = [
 
 def main():
     registry = assumptions.load_registry()
-    # global entries plus the per-country central elasticities; the
-    # country rebuild (replace_country_entries in build.py) would wipe
-    # per-country engine entries, so they are re-asserted here after
-    # every registration run -- run this script AFTER country builds.
-    assumptions.replace_country_entries(registry, G, [e for e in ENTRIES
-                                                      if e["country"] == G])
+    # Replace only THIS script's GLOBAL fields, preserving GLOBAL entries
+    # owned by register_extension_params.py (MPC, export supply,
+    # redundancy, EIIP) so the two registration scripts can run in any
+    # order without clobbering each other.
+    global_entries = [e for e in ENTRIES if e["country"] == G]
+    my_fields = {e["field"] for e in global_entries}
+    registry["entries"] = [
+        e for e in registry["entries"]
+        if not (e["country"] == G and e["field"] in my_fields)
+    ] + global_entries
     for iso3 in KNO_TABLE1_IMPORT_WEIGHTED:
         keep = [e for e in registry["entries"]
                 if not (e["country"] == iso3

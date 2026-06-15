@@ -111,8 +111,12 @@ behavioural constants — an AST test asserts no numeric literal outside
 Kee/Nicita/Olarreaga 2008, Table 1).
 
 **Core:** `run_scenario(iso3, tariffs, sector_support, sme_stimulus,
-include_type_ii, include_retaliation, include_financing_drag)` —
-all rates as fractions; returns USD million / persons. dE = ê L dF with
+include_type_ii, include_retaliation, financing_mode, extensions)` —
+all rates as fractions; returns USD million / persons. `financing_mode`
+(v1.2) is `deficit | tax_financed | full_crowding_out` (default
+`tax_financed`; offset = MPC x fiscal cost, MPC 0.8 registered); the old
+`include_financing_drag` boolean is a deprecated alias. The response gains
+a `financing` object and gross/net aggregate keys. dE = ê L dF with
 direct/indirect/induced decomposition (Type II = Miyazawa, labelled
 upper bound). Tariff channels computed separately: import substitution
 (bounded by the data-derived domestic absorption share), downstream
@@ -352,41 +356,36 @@ scripted. Pushing to main requires `pytest` green (CLAUDE.md rule 6).
 
 Open the project in Claude Code. CLAUDE.md at the project root is loaded automatically and contains workflow instructions. See CHANGELOG.md for version history and planned work.
 
-The post-audit overhaul is COMPLETE (v1.0.0): verified data pipeline
-(Session A), engine rebuild with cited parameters and acceptance gates
-(Session B), didactic UI rebuild (Session C), CI + documentation
-hygiene (Session D). Both external verifications passed. CI:
+The post-audit overhaul (v1.0.0) and the policy-lever + job-quality
+extension (v1.1.0, Sessions E-H) are complete and verified. CI:
 `.github/workflows/tests.yml` (pytest suite, API-contract smoke,
 frontend build).
 
-**Extension in progress (Sessions E–H, on top of 1.0.0):** policy-lever
-expansion (public investment, stimulus composition, production/wage
-subsidies, investment tax incentive, public works/EIIP, direct public
-employment, stylised depreciation) and a job-quality module
-(wage + informality composition of simulated job changes). Foregrounds
-industrial/sectoral policy; trade goes last in the taxonomy. Per user
-decision: `__version__` stays 1.0.0, no push/deploy until verified at
-the end of Session H. **Sessions E-H all implemented** (local commits only; not yet pushed;
-`__version__` still 1.0.0 pending the user's end-of-H verification and
-version decision):
-- **E**: composable-shock engine refactor with a 35-case regression lock
-  (v1.0.0 output byte-identical); informality data gate (per-country
-  blocks in the JSONs); EIIP + data-derived construction labour shares;
-  availability matrix.
-- **F**: 8 new levers (public investment, stimulus composition,
-  production/wage subsidy, investment tax incentive, public works/EIIP,
-  direct public employment, stylised depreciation); cited parameters
-  (Tokarick export *supply* elasticity - the paper has no demand table;
-  James 2013 + IMF-OECD-UN-WB 2015 redundancy 0.75); docs/levers/*.md +
-  docs/not-in-this-tool.md.
-- **G**: job-quality module (engine.job_quality: wage-bill, compensation
-  ratio, informality composition; gated). run_scenario untouched.
-- **H**: 4-group lever taxonomy UI (trade last), 24 test-enforced
-  presets, job-quality + windfall + job-years panels, not-in-tool panel,
-  country labour-market context, new endpoints (/api/not-in-tool,
-  /api/context, /api/sectors shares, /api/assumptions).
-Engine entry point: `run_scenario(..., extensions=None)`; job quality via
-`engine.job_quality(iso3, result)`. Test count: 142 (v1.0.0) -> 308.
+**v1.2.0 (Integrated Prompt v5) - financing transparency and
+methodology.** Implemented and locally green; see CHANGELOG for the full
+entry. Key changes:
+- **Financing modes** (`financing_mode` = deficit | tax_financed |
+  full_crowding_out, default tax_financed; MPC 0.8 registered). Applies
+  to every positive-cost fiscal lever incl. the stimulus (old 0.5 fiscal
+  multiplier deprecated). `run_scenario` returns a `financing` object.
+- **Senegal import-demand elasticity** corrected -0.5 -> -1.05 (KNO
+  2008); tariff sign-forcing tests removed, replaced by accounting and
+  no-sign-forcing guards. The former net-non-positive tariff acceptance
+  constraint is retired.
+- **Two-tier methodology** `docs/methodology.md` + `GET /api/methodology`
+  + `MethodologyPanel`.
+- **Job quality** gained/lost split (`engine.job_quality` returns gained
+  and lost profiles + net composition).
+- **UI**: title "Employment Policy Learning Simulator", financing-mode
+  selector + gross/offset/net display, central `channelLabels.js`
+  (no snake_case), lever assumption popovers, country "Data and model
+  caveats" panel (`/api/context` caveats), guided-mode metadata.
+- New endpoints since v1.1.0: `/api/methodology`; `/api/context` now
+  returns `caveats`. New FastAPI-free helper
+  `backend/app/api/country_caveats.py`.
+Engine entry point: `run_scenario(..., financing_mode="tax_financed",
+extensions=None)`; job quality via `engine.job_quality(iso3, result)`.
+Test count: 308 (v1.1.0) -> 300+ (v1.2.0; regression lock regenerated).
 
 ---
 

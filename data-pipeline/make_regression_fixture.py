@@ -43,17 +43,26 @@ def load_presets():
     return mod.PRESETS
 
 
+def _load_to_engine_kwargs():
+    """The shared API percent->fraction helper (loaded by file path; no
+    FastAPI dependency), so the fixture exercises every lever exactly as
+    the live /api/simulate route and the preset tests do."""
+    path = config.REPO_ROOT / "backend" / "app" / "api" / "lever_params.py"
+    spec = importlib.util.spec_from_file_location("lever_params", path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod.to_engine_kwargs
+
+
+_TO_ENGINE_KWARGS = _load_to_engine_kwargs()
+
+
 def preset_kwargs(preset):
-    """Exactly how tests/test_presets.py::_run builds the call."""
-    p = preset["params"]
-    return {
-        "iso3": preset["country_code"],
-        "tariffs": {s: v / 100
-                    for s, v in p.get("tariff_changes", {}).items()},
-        "sector_support": {s: v / 100
-                           for s, v in p.get("sector_support", {}).items()},
-        "sme_stimulus": p.get("sme_stimulus", 0) / 100,
-    }
+    """Exactly how the API route and tests/test_presets.py build the call
+    (covers every lever and the financing mode, not just v1.0 levers)."""
+    kw = _TO_ENGINE_KWARGS(preset["params"])
+    kw["iso3"] = preset["country_code"]
+    return kw
 
 
 def battery_cases():
@@ -102,9 +111,10 @@ def main():
         case["kwargs"]["iso3"] = iso3
 
     fixture = {
-        "description": "v1.0.0 engine regression lock (Session E): the "
-                       "composable-shock refactor must reproduce every "
-                       "value at rel=1e-6 / abs=1e-8",
+        "description": "v1.2.0 engine regression lock: locks run_scenario "
+                       "output (default tax_financed financing, corrected "
+                       "Senegal elasticity, all levers via to_engine_kwargs) "
+                       "at rel=1e-6 / abs=1e-8 to catch future drift",
         "generated": datetime.date.today().isoformat(),
         "head_commit": head,
         "engine_sha256": engine_sha,

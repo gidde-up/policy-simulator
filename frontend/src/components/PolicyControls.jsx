@@ -194,7 +194,7 @@ function PolicyControls({ countryCode, params, onUpdateTariff, onUpdateSupport,
 
       {/* 2. Public investment & employment programmes */}
       <Group id="public" label={POLICY_GROUPS[1].label}>
-        <LeverCard id="public_investment" title="Public investment">
+        <LeverCard id="public_investment" title="Public investment" lever="public_investment">
           {numField('Amount', params.public_investment?.amount_pct_gdp || 0,
             (v) => onUpdateParam('public_investment',
               v > 0 ? { ...(params.public_investment || {}), amount_pct_gdp: v } : null))}
@@ -202,7 +202,7 @@ function PolicyControls({ countryCode, params, onUpdateTariff, onUpdateSupport,
             params.public_investment.target,
             (t) => setObj('public_investment', { target: t }))}
         </LeverCard>
-        <LeverCard id="public_works" title="Public works / EIIP (job-years)">
+        <LeverCard id="public_works" title="Public works / EIIP (job-years)" lever="public_works">
           {numField('Budget', params.public_works?.budget_pct_gdp || 0,
             (v) => onUpdateParam('public_works',
               v > 0 ? { ...(params.public_works || { method: 'labour_based' }), budget_pct_gdp: v } : null))}
@@ -218,7 +218,7 @@ function PolicyControls({ countryCode, params, onUpdateTariff, onUpdateSupport,
             </label>
           )}
         </LeverCard>
-        <LeverCard id="direct_public_employment" title="Direct public hiring (job-years)">
+        <LeverCard id="direct_public_employment" title="Direct public hiring (job-years)" lever="direct_public_employment">
           {numField('Budget', params.direct_public_employment?.budget_pct_gdp || 0,
             (v) => onUpdateParam('direct_public_employment',
               v > 0 ? { budget_pct_gdp: v } : null))}
@@ -278,14 +278,23 @@ function PolicyControls({ countryCode, params, onUpdateTariff, onUpdateSupport,
               Export demand falls in the top export sectors.
             </span>
           </label>
-          <label className="flex items-start space-x-3 cursor-pointer">
-            <input type="checkbox" className="mt-1" checked={params.include_financing_drag}
-              onChange={(e) => onUpdateParam('include_financing_drag', e.target.checked)} />
-            <span className="text-sm text-gray-700">
-              <span className="font-medium">Financing drag (tax-financed)</span><br />
-              Subtract spending from household consumption: net vs gross.
-            </span>
-          </label>
+          <div className="text-sm text-gray-700">
+            <label htmlFor="financing-mode" className="font-medium block mb-1">
+              Financing of fiscal levers
+            </label>
+            <select id="financing-mode" value={params.financing_mode || 'tax_financed'}
+              onChange={(e) => onUpdateParam('financing_mode', e.target.value)}
+              className="w-full border rounded px-2 py-1 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">
+              <option value="deficit">Deficit-financed, no immediate offset</option>
+              <option value="tax_financed">Tax-financed, MPC-scaled offset (default)</option>
+              <option value="full_crowding_out">Full crowding-out upper bound</option>
+            </select>
+            <p className="text-xs text-gray-500 mt-1">
+              How positive-cost fiscal levers are paid for. Tax-financed
+              withdraws the consumed share of the cost from household spending;
+              full crowding-out is a deliberately strong upper bound.
+            </p>
+          </div>
         </div>
       </div>
     </div>

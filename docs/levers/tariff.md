@@ -37,7 +37,20 @@ episode (Fajgelbaum et al. 2020); labelled illustrative.
 Tariff revenue = t × remaining imports (post-substitution), valued
 pre-tariff.
 
-## Acceptance constraint
-Under default parameters a 10% manufacturing tariff must not be net
-employment-positive in any country (automated test;
-Flaaen & Pierce 2019; Amiti, Redding & Weinstein 2019).
+## No forced sign (v1.2 correction)
+Earlier versions forced the tariff result to be net employment-negative
+and calibrated Senegal's import-demand elasticity downward to achieve
+it. That was outcome-forcing and has been removed: every country now
+uses its cited import-weighted elasticity from KNO (2008), and the sign
+is whatever the data and parameters produce. Tests check the channel
+accounting and the caveats, never a required sign. With strong domestic
+substitution and weak downstream linkages (Senegal), a manufacturing
+tariff can come out modestly net-positive in this static model.
+
+## Caveat (shown in the UI and methodology)
+Tariff results are static simulated effects, not a policy
+recommendation. The model can show gross gains in protected sectors and
+losses through import costs, downstream users, consumption and trade
+channels. It does not fully model retaliation, long-run productivity,
+consumer welfare, firm dynamics, distributional price effects, or
+macroeconomic adjustment.

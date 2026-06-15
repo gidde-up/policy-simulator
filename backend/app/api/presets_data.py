@@ -86,13 +86,15 @@ PRESETS = [
         "walkthrough": [
             {"title": "The injection",
              "text": "The stimulus reaches sectors in proportion to "
-                     "household spending patterns, scaled by a cited "
-                     "first-round fiscal multiplier (0.5, range 0.1-1.0) "
+                     "household spending patterns; its only first-round "
+                     "leakage is the imported content of that basket, "
                      "before supply-chain effects."},
-            {"title": "Read the range",
-             "text": "The result is shown as a range over the cited "
-                     "multiplier values: the honest statement is an "
-                     "order of magnitude, not a point."},
+            {"title": "Net of financing",
+             "text": "Under the default tax-financed mode the offset "
+                     "withdraws the consumed share (MPC 0.8) of the cost "
+                     "from household consumption. South Africa's low "
+                     "import content keeps the net positive; the "
+                     "deficit-financed mode shows the larger gross effect."},
         ],
         "expected": {"net_sign": "positive", "has_tariff_channels": False},
     },
@@ -152,10 +154,17 @@ PRESETS = [
             {"title": "Small open economy",
              "text": "Part of any demand stimulus leaks into imports; "
                      "Tunisia's import shares are roughly double South "
-                     "Africa's, so its multipliers are lower. Compare "
-                     "the same preset across countries."},
+                     "Africa's, so less of the spending stays at home. "
+                     "Compare the same preset across countries."},
+            {"title": "Tax-financed is not costless",
+             "text": "Under the default tax-financed mode the offset "
+                     "withdraws the consumed share (MPC 0.8) of the cost "
+                     "from household spending. Here the import leakage on "
+                     "the injection plus that offset tip the net modestly "
+                     "negative: a transfer is not free to finance. The "
+                     "deficit-financed mode shows the gross effect."},
         ],
-        "expected": {"net_sign": "positive", "has_tariff_channels": False},
+        "expected": {"net_sign": "negative", "has_tariff_channels": False},
     },
     # --------------------------------------------------------- Viet Nam
     {
@@ -330,23 +339,27 @@ PRESETS = [
         "id": "sen_tariff_experiment",
         "country_code": "SEN",
         "name": "Tariff Experiment",
-        "description": "A 10% manufacturing tariff where domestic "
-                       "substitutes are thin",
+        "description": "A 10% manufacturing tariff at Senegal's cited "
+                       "import-demand elasticity",
         "params": {"tariff_changes": {"manufacturing": 10}},
         "walkthrough": [
-            {"title": "Thin substitution",
-             "text": "With little domestic manufacturing capacity, a "
-                     "tariff mostly raises prices instead of shifting "
-                     "demand to local producers (Senegal's import-demand "
-                     "elasticity sits at the bottom of the cited range - "
-                     "see the assumptions panel)."},
-            {"title": "The net result",
-             "text": "Marginally negative, with the parameter range "
-                     "straddling zero: gains and losses nearly cancel. "
-                     "The robust message is the reallocation, not the "
-                     "small net number."},
+            {"title": "Where the channels land",
+             "text": "At Senegal's cited import-demand elasticity (-1.05, "
+                     "KNO 2008), a manufacturing tariff shifts demand to "
+                     "domestic producers - a labour-intensive sector here "
+                     "- while the downstream input-cost and consumer-price "
+                     "losses are smaller, because manufacturing is a "
+                     "modest share of inputs and consumption."},
+            {"title": "Net positive here - read it carefully",
+             "text": "The protected-sector gain outweighs the costs in "
+                     "this static accounting, so the net is modestly "
+                     "positive. That is a property of Senegal's data, NOT "
+                     "a recommendation to raise tariffs: the model leaves "
+                     "out retaliation, long-run productivity, consumer "
+                     "welfare, firm dynamics and macro adjustment. The "
+                     "lesson is how the channels balance, not the sign."},
         ],
-        "expected": {"net_sign": "negative", "has_tariff_channels": True,
+        "expected": {"net_sign": "positive", "has_tariff_channels": True,
                      "gains_positive": True},
     },
 
@@ -392,13 +405,14 @@ PRESETS = [
                      "and a non-wage operating component flowing through "
                      "the public-services input chain."},
             {"title": "Net of financing",
-             "text": "With the tax-financing drag on, the net effect is "
-                     "close to zero here: public services are only "
-                     "moderately labour-intensive relative to the "
-                     "household basket the tax falls on. Toggle the drag "
-                     "off to see the gross programme effect."},
+             "text": "Under the default tax-financed mode the offset "
+                     "withdraws the consumed share (MPC 0.8) of the cost "
+                     "from household consumption. Direct hiring puts the "
+                     "whole budget into labour, so the programme still "
+                     "nets positive here. The full-crowding-out mode "
+                     "(the old 100% withdrawal) brings it close to zero."},
         ],
-        "expected": {"net_sign": "negative", "has_tariff_channels": False,
+        "expected": {"net_sign": "positive", "has_tariff_channels": False,
                      "has_job_years": True},
     },
     {
@@ -529,11 +543,12 @@ PRESETS = [
                      "enters demand at full value (its only leakage is "
                      "the imported content of what government buys)."},
             {"title": "Compare the transfer",
-             "text": "The household-transfer default is scaled by a "
-                     "first-round fiscal multiplier below 1 (transfers "
-                     "are partly saved or spent on imports), so it "
-                     "creates fewer jobs for the same budget. How you "
-                     "spend matters as much as how much."},
+             "text": "The household-transfer default lands on the "
+                     "consumption basket instead, with its own import "
+                     "leakage; both targets face the same tax-financed "
+                     "offset, so the difference is the spending basket, "
+                     "not privileged financing. How you spend matters as "
+                     "much as how much."},
         ],
         "expected": {"net_sign": "positive", "has_tariff_channels": False},
     },
@@ -560,3 +575,123 @@ PRESETS = [
         "expected": {"net_sign": "negative", "has_tariff_channels": False},
     },
 ]
+
+
+# --------------------------------------------------------------------
+# Guided-mode metadata (Workstream I.1): every preset carries its lever
+# group, financing mode, a one-line "what this illustrates" and "do not
+# conclude", and caveat tags. Derived from the lever mix so the four-group
+# taxonomy and the financing default stay in sync with the engine.
+# --------------------------------------------------------------------
+_FISCAL_LEVERS = ("sector_support", "sme_stimulus", "production_subsidy",
+                  "wage_subsidy", "public_investment", "public_works",
+                  "direct_public_employment", "investment_tax_incentive")
+
+# params key -> (lever group, illustrates, do_not_conclude, caveat tags)
+_LEVER_META = {
+    "tariff_changes": (
+        "Trade & exchange rate",
+        "How protected-sector gains can coexist with downstream, consumer "
+        "and trade-channel losses.",
+        "This is not a complete welfare analysis or a trade-policy "
+        "recommendation.",
+        ["static-accounting", "no-consumer-welfare", "retaliation-optional"]),
+    "depreciation": (
+        "Trade & exchange rate",
+        "How export-competitiveness gains can be offset by import-cost and "
+        "real-income losses.",
+        "This is not an exchange-rate forecast and does not model "
+        "monetary-policy reactions.",
+        ["stylised-shock", "no-exchange-rate-dynamics"]),
+    "investment_tax_incentive": (
+        "Industrial & sectoral policy",
+        "How the windfall share reduces the employment additionality of a "
+        "tax incentive.",
+        "This does not model firm-level investment decisions or long-run "
+        "productivity.",
+        ["windfall", "static-accounting"]),
+    "production_subsidy": (
+        "Industrial & sectoral policy",
+        "How a price subsidy raises real incomes and downstream demand, net "
+        "of financing.",
+        "This does not model firm behaviour, market structure or long-run "
+        "productivity.",
+        ["static-accounting"]),
+    "wage_subsidy": (
+        "Industrial & sectoral policy",
+        "How subsidising the labour-cost share compares with a production "
+        "subsidy of the same sector.",
+        "This does not model hiring decisions, displacement or deadweight "
+        "loss.",
+        ["static-accounting"]),
+    "sector_support": (
+        "Industrial & sectoral policy",
+        "How a sector's jobs per dollar compare with the household basket "
+        "the financing falls on.",
+        "This is not a sectoral cost-benefit analysis or an industrial-"
+        "policy recommendation.",
+        ["static-accounting"]),
+    "public_investment": (
+        "Public investment & employment programmes",
+        "How sector allocation and supplier chains shape the employment "
+        "effect of public investment.",
+        "This is not a full appraisal of infrastructure productivity, "
+        "project quality, debt sustainability or long-run growth.",
+        ["static-accounting"]),
+    "public_works": (
+        "Public investment & employment programmes",
+        "How labour intensity changes direct job-years and supplier demand.",
+        "This does not estimate long-run productivity effects or individual "
+        "employment trajectories after the programme ends.",
+        ["job-years"]),
+    "direct_public_employment": (
+        "Public investment & employment programmes",
+        "How a direct-hiring budget splits into wages and operating costs.",
+        "This does not assess service quality, fiscal sustainability or "
+        "long-run effects.",
+        ["job-years"]),
+    "sme_stimulus": (
+        "Macro-fiscal",
+        "How import leakage and the financing offset shape the net effect "
+        "of a demand stimulus.",
+        "This is not a forecast; the result depends on the financing mode "
+        "and the spending composition.",
+        ["composition-matters"]),
+}
+
+# detection priority: the most salient lever decides the group/illustration
+_PRIORITY = ("tariff_changes", "depreciation", "investment_tax_incentive",
+             "public_works", "direct_public_employment", "public_investment",
+             "production_subsidy", "wage_subsidy", "sector_support",
+             "sme_stimulus")
+
+
+def _primary_lever(params):
+    for k in _PRIORITY:
+        if params.get(k):
+            return k
+    return None
+
+
+def _enrich(p):
+    params = p["params"]
+    key = _primary_lever(params)
+    group, illus, dnc, tags = _LEVER_META.get(
+        key, ("Other", "How a policy choice transmits to employment.",
+              "This is a didactic illustration, not a forecast or "
+              "recommendation.", ["static-accounting"]))
+    tags = list(tags)
+    has_fiscal = any(params.get(k) for k in _FISCAL_LEVERS)
+    if has_fiscal:
+        tags.append("financing-mode-applies")
+    p.setdefault("lever_group", group)
+    p.setdefault("illustrates", illus)
+    p.setdefault("do_not_conclude", dnc)
+    p.setdefault("caveat_tags", tags)
+    # presets run at the engine default (tax_financed) whenever they carry
+    # a positive-cost fiscal lever; pure trade shocks have no financing mode
+    p.setdefault("financing_mode", "tax_financed" if has_fiscal else None)
+    return p
+
+
+PRESETS = [_enrich(p) for p in PRESETS]

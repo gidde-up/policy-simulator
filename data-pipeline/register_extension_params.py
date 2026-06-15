@@ -194,6 +194,65 @@ def redundancy_entries():
     ]
 
 
+HAAVELMO = ("Haavelmo, T. (1945), 'Multiplier Effects of a Balanced "
+            "Budget', Econometrica 13(4), 311-318 (the balanced-budget "
+            "reasoning); magnitude is a stylised developing-economy "
+            "central, not a country econometric estimate.")
+
+
+def mpc_entries():
+    """GLOBAL marginal propensity to consume, used by the tax-financing
+    withdrawal (a tax cuts consumption by MPC x the tax; the saved share
+    1-MPC is not withdrawn -- the Haavelmo result). Stylised central with
+    a wide range: developing-economy households save little, so the
+    propensity to consume out of a sustained income change is high. Data
+    cross-check: the country files' implied propensity to consume out of
+    labour income (type_ii) times the economy labour share is ~0.55-0.65,
+    a lower bound (it omits non-labour income that households also
+    consume); the registered range brackets it. The 'modest net positive'
+    framing of tax-financed results reflects this uncertainty."""
+    def e(variant, value, basis):
+        return assumptions.make_entry(
+            entry_id=f"GLOBAL-marginal-propensity-to-consume-{variant}",
+            country=assumptions.GLOBAL_COUNTRY, scope="other",
+            sector="all", field="marginal_propensity_to_consume",
+            icio_codes=[], value=value, unit="ratio",
+            method="authored_constant", basis=basis,
+            source={"dataset": "stylised (developing-economy saving "
+                               "rates); Haavelmo 1945 framing",
+                    "url": "", "accessed": TODAY,
+                    "reference_period": "n/a"},
+            citation=HAAVELMO,
+            notes="financing-drag parameter (Workstream J / v1.2): tax "
+                  "withdrawal = MPC x fiscal cost from household "
+                  "consumption; full_crowding_out uses 1.0, deficit 0.")
+    return [
+        e("central", 0.8, "stylised central for low-saving developing "
+                          "economies; consumption out of a sustained "
+                          "income change"),
+        e("low", 0.6, "lower bound; brackets the data cross-check "
+                      "(propensity-out-of-labour-income x labour share)"),
+        e("high", 0.9, "upper bound; near-unity for the lowest-saving "
+                       "households"),
+    ]
+
+
+def deprecate_fiscal_multiplier(registry):
+    """Mark the v1.1.0 stimulus fiscal multiplier deprecated (the
+    stimulus is reformulated under the symmetric financing model; the
+    audit trail is preserved, the entries are no longer read)."""
+    for entry in registry["entries"]:
+        if entry.get("field") == "fiscal_multiplier" and "[DEPRECATED" \
+                not in entry.get("notes", ""):
+            entry["notes"] = (entry.get("notes", "")
+                              + " [DEPRECATED v1.2: the stimulus is "
+                              "reformulated under the symmetric financing "
+                              "model (Workstream J); placed on its demand "
+                              "vector with import leakage, no separate "
+                              "multiplier. Entry kept for audit; not read "
+                              "by the engine.]")
+
+
 def record_source_pdfs():
     for key, (fname, url) in SOURCE_PDFS.items():
         path = config.RAW_DIR / fname
@@ -210,15 +269,17 @@ def main():
         if not (e["country"] == assumptions.GLOBAL_COUNTRY
                 and e.get("field") == "eiip_labour_cost_share")
     ] + eiip_entries()
-    # GLOBAL export supply elasticity + redundancy share
+    # GLOBAL export supply elasticity + redundancy share + MPC
     for field, builder in [("export_supply_elasticity", export_supply_entries),
                            ("investment_incentive_redundancy",
-                            redundancy_entries)]:
+                            redundancy_entries),
+                           ("marginal_propensity_to_consume", mpc_entries)]:
         registry["entries"] = [
             e for e in registry["entries"]
             if not (e["country"] == assumptions.GLOBAL_COUNTRY
                     and e.get("field") == field)
         ] + builder()
+    deprecate_fiscal_multiplier(registry)
     # per-country conventional construction labour share (data-derived)
     for e in conventional_construction_entries():
         registry["entries"] = [

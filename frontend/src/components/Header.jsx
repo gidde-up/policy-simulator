@@ -17,8 +17,8 @@ function Header({ selectedCountry, onCountryChange }) {
           <div className="flex items-center space-x-3">
             <Globe className="w-8 h-8 text-wb-light" />
             <div>
-              <h1 className="text-xl font-bold">Economic Policy Simulator</h1>
-              <p className="text-sm text-blue-200">Job Creation Analysis Tool</p>
+              <h1 className="text-xl font-bold">Employment Policy Learning Simulator</h1>
+              <p className="text-sm text-blue-200">A didactic training simulator - not a forecast</p>
             </div>
           </div>
 
@@ -62,7 +62,7 @@ function Header({ selectedCountry, onCountryChange }) {
         <div className="max-w-7xl mx-auto px-4">
           <p className="text-sm text-blue-100 flex items-center">
             <HelpCircle className="w-4 h-4 mr-2" />
-            Explore how economic policies affect job creation. Adjust policy levers below and see projected employment impacts.
+            Explore how policy choices transmit to employment. Adjust the policy levers and see the simulated employment effects.
           </p>
         </div>
       </div>

@@ -61,17 +61,20 @@ def test_every_lever_smoke(engine, iso3):
 
 
 def test_expected_signs(engine, iso3):
-    # support without drag must create jobs
-    r = engine.run_scenario(iso3, sector_support={"manufacturing": 0.05},
-                            include_financing_drag=False)
+    # deficit-financed sector support creates jobs
+    r_deficit = engine.run_scenario(iso3,
+                                    sector_support={"manufacturing": 0.05},
+                                    financing_mode="deficit")
+    assert r_deficit["aggregate"]["total_jobs"] > 0
+    # a deficit-financed demand stimulus creates jobs
+    r = engine.run_scenario(iso3, sme_stimulus=0.01, financing_mode="deficit")
     assert r["aggregate"]["total_jobs"] > 0
-    # stimulus creates jobs
-    r = engine.run_scenario(iso3, sme_stimulus=0.01)
-    assert r["aggregate"]["total_jobs"] > 0
-    # support with drag creates fewer jobs than without
-    r_drag = engine.run_scenario(iso3, sector_support={"manufacturing": 0.05})
-    assert r_drag["aggregate"]["total_jobs"] < r["aggregate"]["total_jobs"] \
-        or r_drag["costs"]["financing_drag_included"]
+    # financing the same support (tax-financed) yields fewer net jobs
+    r_tax = engine.run_scenario(iso3,
+                                sector_support={"manufacturing": 0.05},
+                                financing_mode="tax_financed")
+    assert r_tax["aggregate"]["total_jobs"] \
+        < r_deficit["aggregate"]["total_jobs"]
 
 
 def test_induced_labelled(engine, iso3):

@@ -3,16 +3,36 @@ import { Info, X } from 'lucide-react';
 import { getAssumptions } from '../services/api';
 
 // which registry fields are relevant to each lever
+const MPC = 'marginal_propensity_to_consume';   // financing offset parameter
 const LEVER_FIELDS = {
   tariffs: ['import_demand_elasticity', 'own_price_demand_elasticity',
             'retaliation_share', 'retaliation_top_n'],
-  support: [],   // pure accounting; show data-substitution entries instead
-  stimulus: ['fiscal_multiplier'],
-  production_subsidy: ['own_price_demand_elasticity'],
+  support: [MPC],   // pure accounting; financing offset uses the MPC
+  stimulus: [MPC],
+  production_subsidy: ['own_price_demand_elasticity', MPC],
   wage_subsidy: ['own_price_demand_elasticity',
-                 'conventional_construction_labour_share'],
-  investment_tax_incentive: ['investment_incentive_redundancy'],
+                 'conventional_construction_labour_share', MPC],
+  investment_tax_incentive: ['investment_incentive_redundancy', MPC],
+  public_investment: [MPC],
+  public_works: ['eiip_labour_cost_share',
+                 'conventional_construction_labour_share', MPC],
+  direct_public_employment: [MPC],
   depreciation: ['export_supply_elasticity', 'own_price_demand_elasticity'],
+};
+
+// per-lever context: what it changes, whether it is fiscal, whether the
+// financing mode applies (Workstream F.2)
+const LEVER_META = {
+  tariffs: { fiscal: false, financing: false, what: 'Raises import prices in the tariffed sector; works through import substitution, downstream input costs and consumer prices.' },
+  support: { fiscal: true, financing: true, what: 'Government demand for the supported sector, routed through the input-output system.' },
+  stimulus: { fiscal: true, financing: true, what: 'A demand injection spread through the chosen spending basket (household, government or investment).' },
+  production_subsidy: { fiscal: true, financing: true, what: 'Lowers output prices in the subsidised sector, raising real incomes and downstream demand.' },
+  wage_subsidy: { fiscal: true, financing: true, what: 'Lowers the labour-cost share of the subsidised sector.' },
+  investment_tax_incentive: { fiscal: true, financing: true, what: 'Subsidises investment; the windfall share is investment that would have happened anyway.' },
+  public_investment: { fiscal: true, financing: true, what: 'Investment spending allocated across sectors (broad GFCF mix or a chosen target).' },
+  public_works: { fiscal: true, financing: true, what: 'Labour-based or conventional infrastructure programme, reported in job-years.' },
+  direct_public_employment: { fiscal: true, financing: true, what: 'Direct public-service hiring; the budget splits into wages and operating costs.' },
+  depreciation: { fiscal: false, financing: false, what: 'A stylised exogenous exchange-rate shock: export gains against import-cost and real-income losses.' },
 };
 
 function AssumptionsPopover({ lever, countryCode }) {
@@ -30,6 +50,7 @@ function AssumptionsPopover({ lever, countryCode }) {
   useEffect(() => { setEntries(null); }, [countryCode]);
 
   const fields = LEVER_FIELDS[lever] || [];
+  const meta = LEVER_META[lever];
   const relevant = (entries || []).filter((e) =>
     fields.includes(e.field) ||
     (lever === 'support' && e.method !== 'authored_constant'));
@@ -56,13 +77,29 @@ function AssumptionsPopover({ lever, countryCode }) {
             </button>
           </div>
 
+          {meta && (
+            <div className="mb-3 text-xs text-gray-700 bg-gray-50 rounded p-2">
+              <p>{meta.what}</p>
+              <p className="mt-1 text-gray-500">
+                {meta.fiscal ? 'Fiscal lever' : 'Not a fiscal lever'}
+                {' · '}
+                {meta.financing
+                  ? 'financing mode applies (default tax-financed; offset scaled by the MPC)'
+                  : 'financing mode does not apply'}
+              </p>
+              <p className="mt-1 text-gray-500">
+                Full detail: the Methodology tab (sections 7 and 8).
+              </p>
+            </div>
+          )}
+
           {entries === null && (
             <p className="text-xs text-gray-600">Loading…</p>
           )}
           {entries !== null && relevant.length === 0 && (
             <p className="text-xs text-gray-600">
               {lever === 'support'
-                ? 'No behavioural parameters: this lever is pure final-demand accounting through the input-output system. The financing drag is the spending amount itself.'
+                ? 'No behavioural parameters: this lever is pure final-demand accounting through the input-output system. The financing offset is scaled by the MPC.'
                 : 'No registry entries found.'}
             </p>
           )}

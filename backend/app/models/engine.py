@@ -175,6 +175,7 @@ class EngineParams:
     export_supply: float = 0.0    # export supply elasticity (positive)
     redundancy: float = 0.0       # investment-incentive redundancy share
     eiip_labour_share: float = 0.0  # labour-based infrastructure labour share
+    mpc: float = 1.0              # marginal propensity to consume (financing)
 
 
 def _registry():
@@ -218,6 +219,7 @@ def load_params(variant: str = "central", iso3: str | None = None
         "export_supply": f"GLOBAL-export-supply-elasticity-{variant}",
         "redundancy": f"GLOBAL-investment-incentive-redundancy-{variant}",
         "eiip_labour_share": f"GLOBAL-eiip-labour-cost-share-{variant}",
+        "mpc": f"GLOBAL-marginal-propensity-to-consume-{variant}",
     }
     # NOTE: ext ids are deliberately NOT added to entry_ids -- only the
     # levers actually used add their assumptions to the response
@@ -236,6 +238,8 @@ def load_params(variant: str = "central", iso3: str | None = None
         export_supply=ext["export_supply"],
         redundancy=ext["redundancy"],
         eiip_labour_share=ext["eiip_labour_share"],
+        # absent MPC (pre-J registry) -> 1.0 = full crowding out = v1.1.0
+        mpc=ext["mpc"] if ext["mpc"] else 1.0,
     )
 
 
@@ -356,10 +360,13 @@ def financing_drag_dF(cd, total_spending: float):
     return -total_spending * hh / float(hh.sum())
 
 
-def stimulus_dF(cd, rate_of_gdp: float, p: EngineParams):
-    amount = rate_of_gdp * cd.gdp
-    hh = cd.fd["households"]
-    return p.fiscal_multiplier * amount * hh / float(hh.sum())
+def stimulus_dF(cd, rate_of_gdp: float, p: EngineParams = None):
+    """Household-transfer stimulus (v1.2): the transfer is spent on the
+    household consumption basket, with the basket's import content as
+    leakage. Saving leakage is handled symmetrically on the financing
+    side (the tax-financing MPC), so there is no separate first-round
+    fiscal multiplier (the v1.1.0 0.5 factor is deprecated)."""
+    return _compose_with_leakage(cd, rate_of_gdp * cd.gdp, "household")
 
 
 # --------------------------------------------------------------------
@@ -509,11 +516,13 @@ class FiscalCost:
     drag_eligible: bool
 
 
-def _evaluate_channel_dFs(cd, p, shocks, include_financing_drag):
+def _evaluate_channel_dFs(cd, p, shocks, drag_factor):
     """Single evaluation pass over a shock list, in emission order.
-    Returns (channels dict in insertion order, direct_employment list).
-    The financing-drag channel is reserved at the first drag-eligible
-    FiscalCost so its dict position matches the v1 channel order."""
+    `drag_factor` is the financing withdrawal per unit of fiscal cost:
+    0 (deficit), MPC (tax-financed), or 1 (full crowding-out). The
+    financing-drag channel is reserved at the first drag-eligible
+    FiscalCost so its dict position matches the v1 channel order.
+    (A boolean True/False still works: True -> 1.0, False -> 0.0.)"""
     n = len(cd.sectors)
     channels: dict = {}
     drag_total = 0.0
@@ -538,7 +547,7 @@ def _evaluate_channel_dFs(cd, p, shocks, include_financing_drag):
             add(s.channel_real_income,
                 _real_income_dF(cd, dp, np.zeros(n)))
         elif isinstance(s, FiscalCost):
-            if s.drag_eligible and include_financing_drag:
+            if s.drag_eligible and drag_factor:
                 drag_total += s.amount
                 if not drag_reserved:
                     channels["financing_drag"] = np.zeros(n)  # reserve slot
@@ -547,7 +556,8 @@ def _evaluate_channel_dFs(cd, p, shocks, include_financing_drag):
             direct_employment.append(s)
 
     if drag_reserved:
-        channels["financing_drag"] = financing_drag_dF(cd, drag_total)
+        channels["financing_drag"] = financing_drag_dF(
+            cd, drag_total * drag_factor)
     return channels, direct_employment
 
 
@@ -571,8 +581,7 @@ def compile_sector_support(cd, support):
 
 
 def compile_stimulus(cd, p, rate_of_gdp):
-    return [DemandShock(stimulus_dF(cd, rate_of_gdp, p), "sme_stimulus"),
-            FiscalCost(rate_of_gdp * cd.gdp, drag_eligible=False)]
+    return compile_stimulus_variant(cd, p, rate_of_gdp, "household")
 
 
 # --------------------------------------------------------------------
@@ -631,8 +640,11 @@ def compile_stimulus_variant(cd, p, rate_of_gdp, target):
         dF = stimulus_dF(cd, rate_of_gdp, p)
     else:
         dF = _compose_with_leakage(cd, amount, target)
+    # symmetric financing (v1.2): the stimulus is subject to the chosen
+    # financing mode like every other fiscal lever -- it is no longer
+    # costless to finance
     return [DemandShock(dF, "sme_stimulus"),
-            FiscalCost(amount, drag_eligible=False)]
+            FiscalCost(amount, drag_eligible=True)]
 
 
 def compile_production_subsidy(cd, subsidies):
@@ -814,17 +826,42 @@ _LEVER_ASSUMPTIONS = {
 }
 
 
+_FINANCING_MODES = ("deficit", "tax_financed", "full_crowding_out")
+
+
+def _resolve_financing(p, financing_mode, include_financing_drag):
+    """Returns (mode, drag_factor, deprecated_used). The financing
+    withdrawal per unit of fiscal cost is 0 (deficit), MPC (tax-financed)
+    or 1 (full crowding-out). The old boolean is a deprecated alias."""
+    deprecated = False
+    if include_financing_drag is not None:
+        deprecated = True
+        mode = "full_crowding_out" if include_financing_drag else "deficit"
+    else:
+        mode = financing_mode
+    if mode not in _FINANCING_MODES:
+        raise ValueError(f"financing_mode must be one of {_FINANCING_MODES}")
+    factor = {"deficit": 0.0, "tax_financed": p.mpc,
+              "full_crowding_out": 1.0}[mode]
+    return mode, factor, deprecated
+
+
 def run_scenario(iso3: str, tariffs: dict | None = None,
                  sector_support: dict | None = None,
                  sme_stimulus: float = 0,
                  include_type_ii: bool = False,
                  include_retaliation: bool = False,
-                 include_financing_drag: bool = True,
+                 financing_mode: str = "tax_financed",
+                 include_financing_drag: bool | None = None,
                  extensions: dict | None = None) -> dict:
     """All rates are fractions; returns USD million / persons.
 
-    `extensions` (optional) carries the Session F levers; when omitted
-    the result is byte-for-byte the v1.0.0 contract (regression-locked).
+    `financing_mode` (deficit | tax_financed | full_crowding_out;
+    default tax_financed) chooses the financing withdrawal. The legacy
+    `include_financing_drag` boolean is a deprecated alias
+    (True -> full_crowding_out, False -> deficit). `extensions` carries
+    the Session F levers; with default financing_mode=full_crowding_out
+    and no extensions the result reproduces the v1.0.0 contract.
     """
     cd = load_country(iso3)
     tariffs = tariffs or {}
@@ -832,10 +869,12 @@ def run_scenario(iso3: str, tariffs: dict | None = None,
     ext = extensions or {}
 
     p = load_params("central", iso3)
+    mode, drag_factor, deprecated_used = _resolve_financing(
+        p, financing_mode, include_financing_drag)
     shocks = _compile_all(cd, p, tariffs, sector_support, sme_stimulus,
                           include_retaliation, ext)
     channels, direct_employment = _evaluate_channel_dFs(
-        cd, p, shocks, include_financing_drag)
+        cd, p, shocks, drag_factor)
     main = _aggregate(cd, channels, direct_employment, include_type_ii)
 
     channel_jobs = {
@@ -854,9 +893,11 @@ def run_scenario(iso3: str, tariffs: dict | None = None,
     totals = [float(main["total"].sum())]
     for variant in ("low", "high"):
         pv = load_params(variant, iso3)
+        _, drag_v, _ = _resolve_financing(pv, financing_mode,
+                                          include_financing_drag)
         shv = _compile_all(cd, pv, tariffs, sector_support, sme_stimulus,
                            include_retaliation, ext)
-        chv, dev = _evaluate_channel_dFs(cd, pv, shv, include_financing_drag)
+        chv, dev = _evaluate_channel_dFs(cd, pv, shv, drag_v)
         aggv = _aggregate(cd, chv, dev, include_type_ii)
         totals.append(float(aggv["total"].sum()))
 
@@ -868,6 +909,49 @@ def run_scenario(iso3: str, tariffs: dict | None = None,
     spending = float(sum(s.amount for s in shocks
                          if isinstance(s, FiscalCost)))
     total_jobs = float(main["total"].sum())
+
+    # --- financing object (gross before financing / net after) -------
+    drag_eligible_cost = float(sum(s.amount for s in shocks
+                                   if isinstance(s, FiscalCost)
+                                   and s.drag_eligible))
+    drag_channel = channel_jobs.get("financing_drag")
+    financing_offset_jobs = float(drag_channel["jobs"]) if drag_channel else 0.0
+    financing_withdrawal = drag_eligible_cost * drag_factor
+    gross_jobs_before = total_jobs - financing_offset_jobs
+    dx_net = float(main["dx"].sum())
+    drag_dx = (float(decompose(cd, channels["financing_drag"],
+                               include_type_ii)["dx"].sum())
+               if "financing_drag" in channels else 0.0)
+    mpc_central = load_params("central", iso3).mpc
+    financing = {
+        "mode": mode,
+        "label": {"deficit": "Deficit-financed, no immediate offset",
+                  "tax_financed": "Tax-financed, MPC-scaled offset",
+                  "full_crowding_out": "Full crowding-out upper bound"}[mode],
+        "fiscal_cost_usd_million": drag_eligible_cost,
+        "financing_withdrawal_usd_million": financing_withdrawal,
+        "financing_mpc": (mpc_central if mode == "tax_financed" else None),
+        "financing_mpc_source": (
+            "GLOBAL-marginal-propensity-to-consume-central (stylised "
+            "developing-economy central; Haavelmo 1945 framing)"
+            if mode == "tax_financed" else None),
+        "financing_mpc_status": ("literature_based"
+                                 if mode == "tax_financed" else None),
+        "household_consumption_vector_source":
+            "OECD ICIO 2025 household final demand (HFCE+NPISH)",
+        "financing_offset_jobs": financing_offset_jobs,
+        "financing_offset_output": drag_dx,
+        "caveat": ("the offset is scaled by the marginal propensity to "
+                   "consume; it is a simplified static assumption and "
+                   "does not model fiscal sustainability, interest rates, "
+                   "expectations, debt dynamics or tax incidence"
+                   if mode == "tax_financed" else
+                   ("gross demand effect before any financing offset"
+                    if mode == "deficit" else
+                    "deliberately strong upper bound: every unit of "
+                    "fiscal cost reduces household consumption one for one")),
+        "deprecated_input_used": deprecated_used,
+    }
 
     baseline_emp = cd.baseline_employment
     meta = cd.metadata
@@ -884,7 +968,11 @@ def run_scenario(iso3: str, tariffs: dict | None = None,
             "total_jobs_high": max(totals),
             # fraction; the API layer converts to percent
             "share_of_baseline_employment": total_jobs / baseline_emp,
+            "gross_jobs_before_financing": gross_jobs_before,
+            "net_jobs_after_financing": total_jobs,
+            "financing_offset_jobs": financing_offset_jobs,
         },
+        "financing": financing,
         "baseline": {
             "sector_sum_employment_persons": baseline_emp,
             "reference_year": meta["reference_year"],
@@ -1041,7 +1129,62 @@ def job_quality(iso3: str, result: dict) -> dict:
                           "specific jobs are informal",
             }
 
-    return {"wage": wage, "informality": informality}
+    # --- gained vs lost profiles (Workstream G) ---------------------
+    # weights are the per-sector gains (positive dE) and losses (|negative
+    # dE|). Each profile reports its own weighted average compensation and
+    # informality. Missing informality sectors are excluded (never zero),
+    # and a coverage fraction is reported.
+    def _profile(weights):
+        total = float(weights.sum())
+        if total <= 0:
+            return {
+                "total_jobs": total,
+                "avg_compensation_usd_million": None,
+                "avg_compensation_ratio_vs_economy": None,
+                "informal_share": None,
+                "informality_coverage": None,
+                "informality_note": "not applicable (no jobs in this group)",
+            }
+        avg_c = float((weights @ comp_per_worker) / total)
+        ratio = (avg_c / economy_comp_per_worker
+                 if economy_comp_per_worker > 0 else None)
+        inf_share, coverage, note = None, None, "no informality data for this country"
+        if cd.informal_share is not None:
+            m = ~np.isnan(cd.informal_share)
+            wc = weights[m]
+            covered = float(wc.sum())
+            if covered > 0:
+                inf_share = float((wc @ cd.informal_share[m]) / covered)
+                coverage = covered / total
+                note = ("share of this group in predominantly-informal "
+                        "activities, over the sectors that have informality "
+                        "data (see coverage)")
+            else:
+                note = "no informality data for the sectors in this group"
+        return {
+            "total_jobs": total,
+            "avg_compensation_usd_million": avg_c,
+            "avg_compensation_ratio_vs_economy": ratio,
+            "informal_share": inf_share,
+            "informality_coverage": coverage,
+            "informality_note": note,
+        }
+
+    gained = _profile(np.where(dE > 0, dE, 0.0))
+    lost = _profile(np.where(dE < 0, -dE, 0.0))
+
+    return {
+        "wage": wage,
+        "informality": informality,
+        "gained": gained,
+        "lost": lost,
+        "net_composition_note": "the wage-bill and informality figures above "
+                                "are net/compositional indicators of the whole "
+                                "change, not the quality of newly created jobs",
+        "caveat": "These indicators describe the sectoral composition of "
+                  "simulated employment changes. They do not predict the wage, "
+                  "contract status, or informality status of individual workers.",
+    }
 
 
 def employment_multipliers(iso3: str) -> dict:

@@ -40,6 +40,11 @@ def _load_lever_params():
 _to_engine_kwargs = _load_lever_params().to_engine_kwargs
 
 
+_FISCAL_LEVERS = ("sector_support", "sme_stimulus", "production_subsidy",
+                  "wage_subsidy", "public_investment", "public_works",
+                  "direct_public_employment", "investment_tax_incentive")
+
+
 def test_presets_structure(presets):
     assert len(presets) == 24
     ids = [p["id"] for p in presets]
@@ -49,6 +54,30 @@ def test_presets_structure(presets):
         assert p["walkthrough"], p["id"]
         assert p["expected"]["net_sign"] in ("positive", "negative",
                                              "near_zero")
+
+
+def test_presets_guided_metadata(presets):
+    """Workstream I.1: every preset carries the guided-mode metadata, every
+    fiscal preset has a financing mode, and no user-facing summary leaks a
+    raw snake_case key."""
+    import re
+    snake = re.compile(r"[a-z]_[a-z]")
+    for p in presets:
+        assert p.get("lever_group"), p["id"]
+        assert p.get("illustrates"), p["id"]
+        assert p.get("do_not_conclude"), p["id"]
+        assert isinstance(p.get("caveat_tags"), list) and p["caveat_tags"], p["id"]
+        # summaries are prose -- no raw snake_case channel/param keys
+        for fld in ("illustrates", "do_not_conclude"):
+            assert not snake.search(p[fld]), (p["id"], fld, p[fld])
+        # caveat tags are kebab-case, never snake_case
+        for t in p["caveat_tags"]:
+            assert "_" not in t, (p["id"], t)
+        has_fiscal = any(p["params"].get(k) for k in _FISCAL_LEVERS)
+        if has_fiscal:
+            assert p.get("financing_mode") == "tax_financed", p["id"]
+        else:
+            assert p.get("financing_mode") is None, p["id"]
 
 
 def test_presets_tell_true_stories(engine, presets, capsys):

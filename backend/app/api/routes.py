@@ -21,6 +21,7 @@ from .schemas import (
     UncertaintyInfo,
     InvestmentIncentiveInfo,
     JobQuality,
+    Financing,
     DataSourceInfo,
     BaselineIndicator,
     BaselineIndicators,
@@ -154,6 +155,9 @@ async def run_simulation(request: PolicyScenarioRequest):
             total_jobs_high=agg["total_jobs_high"],
             pct_of_baseline_employment=
                 agg["share_of_baseline_employment"] * 100,
+            gross_jobs_before_financing=agg["gross_jobs_before_financing"],
+            net_jobs_after_financing=agg["net_jobs_after_financing"],
+            financing_offset_jobs=agg["financing_offset_jobs"],
         ),
         baseline=BaselineInfo(**r["baseline"]),
         sector_effects=[SectorEffectResponse(**se)
@@ -167,6 +171,7 @@ async def run_simulation(request: PolicyScenarioRequest):
             cost_per_job_fiscal_usd=cost_per_job_usd,
             financing_drag_included=costs["financing_drag_included"],
         ),
+        financing=Financing(**r["financing"]),
         induced_note=r["induced_note"],
         uncertainty=UncertaintyInfo(**r["uncertainty"]),
         data_source=DataSourceInfo(**r["data_source"],
@@ -301,7 +306,9 @@ async def get_country_context(country_code: str):
             / f"{iso3}.json")
     d = _json.loads(path.read_text(encoding="utf-8"))
     ctx = (d.get("informality") or {}).get("context", {})
-    return {"country": iso3, "context": ctx}
+    from .country_caveats import country_caveats
+    return {"country": iso3, "context": ctx,
+            "caveats": country_caveats(iso3, d)}
 
 
 # ============== WDI Data Routes ==============
@@ -413,6 +420,11 @@ PRESET_SCENARIOS = [
         params=PolicyScenarioRequest(country_code=p["country_code"],
                                      name=p["name"], **p["params"]),
         walkthrough=p["walkthrough"],
+        lever_group=p.get("lever_group"),
+        financing_mode=p.get("financing_mode"),
+        illustrates=p.get("illustrates"),
+        do_not_conclude=p.get("do_not_conclude"),
+        caveat_tags=p.get("caveat_tags", []),
     )
     for p in presets_data.PRESETS
 ]
