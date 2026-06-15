@@ -17,20 +17,14 @@ from pathlib import Path
 
 import pytest
 
-# The v1.0.0 lock proved the Session-E composable-shock refactor was
-# numerically inert (verified). The v1.2 financing model (Workstream C)
-# intentionally changes outputs: the response gains a `financing` block
-# and gross/net keys, tax-financed becomes the default, the stimulus is
-# reformulated, and Senegal's elasticity is corrected (Workstream D).
-# Per the prompt, this fixture is preserved for audit and the lock is
-# REGENERATED from the new engine only after the financing change is
-# verified. Until then it is skipped; the interim guard that
-# full_crowding_out still reproduces v1.1.0 spending-lever numbers lives
-# in test_financing.py::test_full_crowding_out_matches_baseline.
-pytestmark = pytest.mark.skip(
-    reason="v1.0.0 lock superseded by the v1.2 financing model + Senegal "
-           "elasticity correction; fixture preserved for audit; regenerated "
-           "after Workstream C verification")
+# History: the v1.0.0 lock proved the Session-E composable-shock refactor
+# was numerically inert. The v1.2 financing model (Workstream C) and the
+# Senegal elasticity correction (Workstream D) intentionally changed
+# outputs, so after the Workstream C verification stop the fixture was
+# REGENERATED from the committed v1.2 engine (default tax_financed
+# financing, all levers compiled through to_engine_kwargs). It now locks
+# the v1.2 behaviour against future drift. Regenerate with
+# make_regression_fixture.py (which refuses to run on a dirty engine.py).
 
 FIXTURE = Path(__file__).parent / "fixtures" / "engine_regression_v1.json"
 
