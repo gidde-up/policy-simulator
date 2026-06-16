@@ -1,10 +1,10 @@
 {
  "description": "v1.2.0 engine regression lock: locks run_scenario output (default tax_financed financing, corrected Senegal elasticity, all levers via to_engine_kwargs) at rel=1e-6 / abs=1e-8 to catch future drift",
- "generated": "2026-06-15",
- "head_commit": "18e64680607a0da08c5ae0412ce30c84930dccd5",
- "engine_sha256": "e71fa357d410c3532c0677f03422024e0b7d61857a95bebf6f8b3159f7b02efc",
+ "generated": "2026-06-16",
+ "head_commit": "6fcf49f5e8ac7f11fd86cfd49373a715ecaf795c",
+ "engine_sha256": "7271462180215058edddcce9af4759e6f4c6eb5e231aa704635ddb1b9217b251",
  "numpy_version": "2.4.6",
- "n_cases": 44,
+ "n_cases": 48,
  "cases": [
   {
    "case_id": "preset_zaf_manufacturing_protection",
@@ -3744,7 +3744,964 @@
      "GLOBAL-retaliation-top-sectors",
      "GLOBAL-fiscal-multiplier-central"
     ],
-    "job_years_note": "programme jobs are reported as JOB-YEARS, not permanent posts; one job-year is one person employed for one year"
+    "job_years_note": "programme jobs are reported as JOB-YEARS, not permanent posts; one job-year is one person employed for one year",
+    "employment_programme_note": "Public employment programmes (EIIP / EPWP-style) are an intervention on a different plane from the other levers. They create temporary job-years, not permanent posts, usually at low or stipend-level pay and outside standard employment relations. Their cost-per-job and headline job count are therefore NOT comparable with permanent-job levers - it is apples to oranges. The model also assumes constant returns, so it does not capture the project-pipeline, institutional and fiscal limits that make large marginal expansion difficult where such a programme already operates at scale (for example South Africa's EPWP). The job-quality figures use host-sector averages and so overstate the actual pay and conditions of programme work."
+   }
+  },
+  {
+   "case_id": "preset_sen_public_works",
+   "kwargs": {
+    "tariffs": {},
+    "sector_support": {},
+    "sme_stimulus": 0.0,
+    "include_type_ii": false,
+    "include_retaliation": false,
+    "financing_mode": "tax_financed",
+    "include_financing_drag": null,
+    "extensions": {
+     "public_works": {
+      "budget_pct_gdp": 0.01,
+      "method": "labour_based"
+     }
+    },
+    "iso3": "SEN"
+   },
+   "result": {
+    "country": "SEN",
+    "sectors": [
+     "agriculture",
+     "mining",
+     "manufacturing",
+     "textiles",
+     "automotive",
+     "food_processing",
+     "chemicals",
+     "construction",
+     "utilities",
+     "trade",
+     "transport",
+     "finance",
+     "public_services",
+     "other_services"
+    ],
+    "aggregate": {
+     "direct_jobs": 89085.97169541761,
+     "indirect_jobs": -2997.8044203900618,
+     "induced_jobs": null,
+     "total_jobs": 86088.16727502758,
+     "total_jobs_low": 56598.69677450213,
+     "total_jobs_high": 119974.3785810066,
+     "share_of_baseline_employment": 0.017299633718832783,
+     "gross_jobs_before_financing": 121262.09371865666,
+     "net_jobs_after_financing": 86088.16727502758,
+     "financing_offset_jobs": -35173.92644362908
+    },
+    "financing": {
+     "mode": "tax_financed",
+     "label": "Tax-financed, MPC-scaled offset",
+     "fiscal_cost_usd_million": 261.523,
+     "financing_withdrawal_usd_million": 209.21840000000003,
+     "financing_mpc": 0.8,
+     "financing_mpc_source": "GLOBAL-marginal-propensity-to-consume-central (stylised developing-economy central; Haavelmo 1945 framing)",
+     "financing_mpc_status": "literature_based",
+     "household_consumption_vector_source": "OECD ICIO 2025 household final demand (HFCE+NPISH)",
+     "financing_offset_jobs": -35173.92644362908,
+     "financing_offset_output": -279.36545917438605,
+     "caveat": "the offset is scaled by the marginal propensity to consume; it is a simplified static assumption and does not model fiscal sustainability, interest rates, expectations, debt dynamics or tax incidence",
+     "deprecated_input_used": false
+    },
+    "baseline": {
+     "sector_sum_employment_persons": 4976300.0,
+     "reference_year": 2022,
+     "note": "denominator = sector-sum employment (TiM, national-accounts concept); ILOSTAT LFS total differs (see country metadata)"
+    },
+    "sector_effects": [
+     {
+      "sector": "agriculture",
+      "direct_jobs": -6502.662254021251,
+      "indirect_jobs": -2794.144918315857,
+      "induced_jobs": null,
+      "total_jobs": -9296.807172337109,
+      "output_change_usd_million": -51.23054791949604,
+      "value_added_change_usd_million": -40.03111497681501
+     },
+     {
+      "sector": "mining",
+      "direct_jobs": 880.7099974028189,
+      "indirect_jobs": 508.8002487556345,
+      "induced_jobs": null,
+      "total_jobs": 1389.5102461584534,
+      "output_change_usd_million": 50.6870662757032,
+      "value_added_change_usd_million": 31.979180327714424
+     },
+     {
+      "sector": "manufacturing",
+      "direct_jobs": 4660.268989509547,
+      "indirect_jobs": 614.2757073900293,
+      "induced_jobs": null,
+      "total_jobs": 5274.544696899577,
+      "output_change_usd_million": 84.39155797335029,
+      "value_added_change_usd_million": 32.41143828374295
+     },
+     {
+      "sector": "textiles",
+      "direct_jobs": -1489.6125243630875,
+      "indirect_jobs": -101.18763907231713,
+      "induced_jobs": null,
+      "total_jobs": -1590.8001634354046,
+      "output_change_usd_million": -7.723613385217764,
+      "value_added_change_usd_million": -4.908444650470871
+     },
+     {
+      "sector": "automotive",
+      "direct_jobs": 0.20858538272346808,
+      "indirect_jobs": 0.04520849013389846,
+      "induced_jobs": null,
+      "total_jobs": 0.25379387285736654,
+      "output_change_usd_million": 0.004874872708245338,
+      "value_added_change_usd_million": 0.002772409387692885
+     },
+     {
+      "sector": "food_processing",
+      "direct_jobs": -1708.3833345640369,
+      "indirect_jobs": -159.48326623686484,
+      "induced_jobs": null,
+      "total_jobs": -1867.8666008009018,
+      "output_change_usd_million": -49.820314014177654,
+      "value_added_change_usd_million": -17.692660729639748
+     },
+     {
+      "sector": "chemicals",
+      "direct_jobs": 213.11247118492685,
+      "indirect_jobs": -13.614012887878367,
+      "induced_jobs": null,
+      "total_jobs": 199.49845829704847,
+      "output_change_usd_million": 5.580480572799735,
+      "value_added_change_usd_million": 2.0162065066274004
+     },
+     {
+      "sector": "construction",
+      "direct_jobs": 101000.68479479596,
+      "indirect_jobs": 7.631010258573178,
+      "induced_jobs": null,
+      "total_jobs": 101008.31580505453,
+      "output_change_usd_million": 4.402312613662351,
+      "value_added_change_usd_million": 0.7898076268156812
+     },
+     {
+      "sector": "utilities",
+      "direct_jobs": -189.45623721986126,
+      "indirect_jobs": 41.688937953209205,
+      "induced_jobs": null,
+      "total_jobs": -147.76729926665206,
+      "output_change_usd_million": -7.289641350522478,
+      "value_added_change_usd_million": -2.2828655369728765
+     },
+     {
+      "sector": "trade",
+      "direct_jobs": -2728.8303690196335,
+      "indirect_jobs": -775.1324262834648,
+      "induced_jobs": null,
+      "total_jobs": -3503.9627953030986,
+      "output_change_usd_million": -13.077836065804377,
+      "value_added_change_usd_million": -9.761881882710249
+     },
+     {
+      "sector": "transport",
+      "direct_jobs": 193.93715776939516,
+      "indirect_jobs": 130.99783316235965,
+      "induced_jobs": null,
+      "total_jobs": 324.9349909317548,
+      "output_change_usd_million": 2.252261322012346,
+      "value_added_change_usd_million": 0.9097532479657027
+     },
+     {
+      "sector": "finance",
+      "direct_jobs": -107.30609640557476,
+      "indirect_jobs": -16.1563116222035,
+      "induced_jobs": null,
+      "total_jobs": -123.46240802777827,
+      "output_change_usd_million": -4.069642736037996,
+      "value_added_change_usd_million": -2.2241264631982047
+     },
+     {
+      "sector": "public_services",
+      "direct_jobs": -233.02765977979337,
+      "indirect_jobs": -1.5771049909010415,
+      "induced_jobs": null,
+      "total_jobs": -234.6047647706944,
+      "output_change_usd_million": -4.935740836932629,
+      "value_added_change_usd_million": -3.61892612385859
+     },
+     {
+      "sector": "other_services",
+      "direct_jobs": -4903.671825254521,
+      "indirect_jobs": -439.94768699051497,
+      "induced_jobs": null,
+      "total_jobs": -5343.619512245035,
+      "output_change_usd_million": -44.63595651437451,
+      "value_added_change_usd_million": -29.138563703326184
+     }
+    ],
+    "tariff_channels": null,
+    "other_channels": {
+     "public_works_materials": {
+      "jobs": 20757.883548120553,
+      "demand_usd_million": 169.98995000000005
+     },
+     "financing_drag": {
+      "jobs": -35173.92644362908,
+      "demand_usd_million": -209.21840000000003
+     },
+     "public_works_direct": {
+      "jobs": 100504.21017053608,
+      "demand_usd_million": 91.53305
+     }
+    },
+    "costs": {
+     "tariff_revenue_usd_million": 0.0,
+     "spending_cost_usd_million": 261.523,
+     "net_fiscal_usd_million": -261.523,
+     "cost_per_job_fiscal_usd_million": 0.003037850709081857,
+     "financing_drag_included": true
+    },
+    "induced_note": null,
+    "uncertainty": {
+     "low": 56598.69677450213,
+     "high": 119974.3785810066,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "data_source": {
+     "citation": "OECD ICIO 2025 (rev. Jan 2026), year 2022; employment: OECD TiM 2025 (EMPN); fallbacks: tim_parent_residual (see assumptions registry)",
+     "reference_year": 2022,
+     "notes": "households final demand = HFCE + NPISH; inventories kept so that x = Z*1 + F*1 balances; exports computed as residual: x - domestic intermediate use - domestic final demand; GDP proxy = sum(VA) + sum(TLS) (market prices); differs from the WDI dashboard GDP (different vintage and method); employment denominator: use the sector-sum employment (TiM, national-accounts concept); the ILOSTAT national total (labour-force-survey concept) is stored in baseline_totals for cross-checking only"
+    },
+    "assumptions_used": [
+     "SEN-import-demand-elasticity-central",
+     "GLOBAL-own-price-demand-elasticity-central",
+     "GLOBAL-retaliation-share",
+     "GLOBAL-retaliation-top-sectors",
+     "GLOBAL-fiscal-multiplier-central"
+    ],
+    "job_years_note": "programme jobs are reported as JOB-YEARS, not permanent posts; one job-year is one person employed for one year",
+    "employment_programme_note": "Public employment programmes (EIIP / EPWP-style) are an intervention on a different plane from the other levers. They create temporary job-years, not permanent posts, usually at low or stipend-level pay and outside standard employment relations. Their cost-per-job and headline job count are therefore NOT comparable with permanent-job levers - it is apples to oranges. The model also assumes constant returns, so it does not capture the project-pipeline, institutional and fiscal limits that make large marginal expansion difficult where such a programme already operates at scale (for example South Africa's EPWP). The job-quality figures use host-sector averages and so overstate the actual pay and conditions of programme work."
+   }
+  },
+  {
+   "case_id": "preset_tun_public_works",
+   "kwargs": {
+    "tariffs": {},
+    "sector_support": {},
+    "sme_stimulus": 0.0,
+    "include_type_ii": false,
+    "include_retaliation": false,
+    "financing_mode": "tax_financed",
+    "include_financing_drag": null,
+    "extensions": {
+     "public_works": {
+      "budget_pct_gdp": 0.01,
+      "method": "labour_based"
+     }
+    },
+    "iso3": "TUN"
+   },
+   "result": {
+    "country": "TUN",
+    "sectors": [
+     "agriculture",
+     "mining",
+     "manufacturing",
+     "textiles",
+     "automotive",
+     "food_processing",
+     "chemicals",
+     "construction",
+     "utilities",
+     "trade",
+     "transport",
+     "finance",
+     "public_services",
+     "other_services"
+    ],
+    "aggregate": {
+     "direct_jobs": 121295.32449594674,
+     "indirect_jobs": -2508.6265338642816,
+     "induced_jobs": null,
+     "total_jobs": 118786.69796208244,
+     "total_jobs_low": 74553.59137785042,
+     "total_jobs_high": 165557.951492858,
+     "share_of_baseline_employment": 0.033191767621013314,
+     "gross_jobs_before_financing": 139091.87353443014,
+     "net_jobs_after_financing": 118786.69796208244,
+     "financing_offset_jobs": -20305.175572347696
+    },
+    "financing": {
+     "mode": "tax_financed",
+     "label": "Tax-financed, MPC-scaled offset",
+     "fiscal_cost_usd_million": 433.536,
+     "financing_withdrawal_usd_million": 346.8288,
+     "financing_mpc": 0.8,
+     "financing_mpc_source": "GLOBAL-marginal-propensity-to-consume-central (stylised developing-economy central; Haavelmo 1945 framing)",
+     "financing_mpc_status": "literature_based",
+     "household_consumption_vector_source": "OECD ICIO 2025 household final demand (HFCE+NPISH)",
+     "financing_offset_jobs": -20305.175572347696,
+     "financing_offset_output": -477.4442901614991,
+     "caveat": "the offset is scaled by the marginal propensity to consume; it is a simplified static assumption and does not model fiscal sustainability, interest rates, expectations, debt dynamics or tax incidence",
+     "deprecated_input_used": false
+    },
+    "baseline": {
+     "sector_sum_employment_persons": 3578800.0,
+     "reference_year": 2022,
+     "note": "denominator = sector-sum employment (TiM, national-accounts concept); ILOSTAT LFS total differs (see country metadata)"
+    },
+    "sector_effects": [
+     {
+      "sector": "agriculture",
+      "direct_jobs": -3052.5596060910866,
+      "indirect_jobs": -1802.3280518971155,
+      "induced_jobs": null,
+      "total_jobs": -4854.887657988202,
+      "output_change_usd_million": -87.98583773985308,
+      "value_added_change_usd_million": -47.269510459778445
+     },
+     {
+      "sector": "mining",
+      "direct_jobs": 147.61212381084903,
+      "indirect_jobs": 25.0496330102065,
+      "induced_jobs": null,
+      "total_jobs": 172.66175682105552,
+      "output_change_usd_million": 27.13556530559427,
+      "value_added_change_usd_million": 18.607728391299066
+     },
+     {
+      "sector": "manufacturing",
+      "direct_jobs": 3388.966727106572,
+      "indirect_jobs": 234.71502417135085,
+      "induced_jobs": null,
+      "total_jobs": 3623.6817512779226,
+      "output_change_usd_million": 121.87318967282624,
+      "value_added_change_usd_million": 52.82775908432433
+     },
+     {
+      "sector": "textiles",
+      "direct_jobs": -398.3828798481647,
+      "indirect_jobs": -39.734886212877264,
+      "induced_jobs": null,
+      "total_jobs": -438.11776606104195,
+      "output_change_usd_million": -6.894532658412688,
+      "value_added_change_usd_million": -3.0304088878225994
+     },
+     {
+      "sector": "automotive",
+      "direct_jobs": -32.789716337314786,
+      "indirect_jobs": -0.6291949551886376,
+      "induced_jobs": null,
+      "total_jobs": -33.418911292503424,
+      "output_change_usd_million": -1.1732139471142515,
+      "value_added_change_usd_million": -0.4055918900893759
+     },
+     {
+      "sector": "food_processing",
+      "direct_jobs": -484.08986653527796,
+      "indirect_jobs": -26.701333454412392,
+      "induced_jobs": null,
+      "total_jobs": -510.79119998969037,
+      "output_change_usd_million": -31.85033824355517,
+      "value_added_change_usd_million": -9.688063736760787
+     },
+     {
+      "sector": "chemicals",
+      "direct_jobs": -46.799290731768274,
+      "indirect_jobs": -8.000564732874247,
+      "induced_jobs": null,
+      "total_jobs": -54.79985546464252,
+      "output_change_usd_million": -2.4569641404080924,
+      "value_added_change_usd_million": -0.8983828323682721
+     },
+     {
+      "sector": "construction",
+      "direct_jobs": 127351.11816679618,
+      "indirect_jobs": 22.04395206101582,
+      "induced_jobs": null,
+      "total_jobs": 127373.16211885719,
+      "output_change_usd_million": 30.94380256830793,
+      "value_added_change_usd_million": 13.320081383488963
+     },
+     {
+      "sector": "utilities",
+      "direct_jobs": -158.91686068528412,
+      "indirect_jobs": -21.913178248961316,
+      "induced_jobs": null,
+      "total_jobs": -180.83003893424544,
+      "output_change_usd_million": -11.611462985218678,
+      "value_added_change_usd_million": -5.915317049525801
+     },
+     {
+      "sector": "trade",
+      "direct_jobs": -1110.98983137206,
+      "indirect_jobs": -163.12719400894787,
+      "induced_jobs": null,
+      "total_jobs": -1274.1170253810078,
+      "output_change_usd_million": -17.830929575067074,
+      "value_added_change_usd_million": -11.457350745888414
+     },
+     {
+      "sector": "transport",
+      "direct_jobs": 226.63094953249134,
+      "indirect_jobs": -120.93582647949044,
+      "induced_jobs": null,
+      "total_jobs": 105.6951230530009,
+      "output_change_usd_million": 2.8787887419023077,
+      "value_added_change_usd_million": 1.490422092923673
+     },
+     {
+      "sector": "finance",
+      "direct_jobs": -231.53644152159856,
+      "indirect_jobs": -63.91253201882057,
+      "induced_jobs": null,
+      "total_jobs": -295.44897354041916,
+      "output_change_usd_million": -22.91676593476406,
+      "value_added_change_usd_million": -15.255710365373268
+     },
+     {
+      "sector": "public_services",
+      "direct_jobs": -1267.3920298793857,
+      "indirect_jobs": -44.04578738372256,
+      "induced_jobs": null,
+      "total_jobs": -1311.4378172631084,
+      "output_change_usd_million": -19.62079717091507,
+      "value_added_change_usd_million": -14.737256639145802
+     },
+     {
+      "sector": "other_services",
+      "direct_jobs": -3035.5469482973963,
+      "indirect_jobs": -499.1065937144441,
+      "induced_jobs": null,
+      "total_jobs": -3534.6535420118403,
+      "output_change_usd_million": -94.84277717457812,
+      "value_added_change_usd_million": -64.01750019232284
+     }
+    ],
+    "tariff_channels": null,
+    "other_channels": {
+     "public_works_materials": {
+      "jobs": 15623.793740112507,
+      "demand_usd_million": 281.7984
+     },
+     "financing_drag": {
+      "jobs": -20305.175572347696,
+      "demand_usd_million": -346.82880000000006
+     },
+     "public_works_direct": {
+      "jobs": 123468.07979431766,
+      "demand_usd_million": 151.7376
+     }
+    },
+    "costs": {
+     "tariff_revenue_usd_million": 0.0,
+     "spending_cost_usd_million": 433.536,
+     "net_fiscal_usd_million": -433.536,
+     "cost_per_job_fiscal_usd_million": 0.003649701586438473,
+     "financing_drag_included": true
+    },
+    "induced_note": null,
+    "uncertainty": {
+     "low": 74553.59137785042,
+     "high": 165557.951492858,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "data_source": {
+     "citation": "OECD ICIO 2025 (rev. Jan 2026), year 2022; employment: OECD TiM 2025 (EMPN); fallbacks: tim_parent_residual (see assumptions registry)",
+     "reference_year": 2022,
+     "notes": "households final demand = HFCE + NPISH; inventories kept so that x = Z*1 + F*1 balances; exports computed as residual: x - domestic intermediate use - domestic final demand; GDP proxy = sum(VA) + sum(TLS) (market prices); differs from the WDI dashboard GDP (different vintage and method); employment denominator: use the sector-sum employment (TiM, national-accounts concept); the ILOSTAT national total (labour-force-survey concept) is stored in baseline_totals for cross-checking only"
+    },
+    "assumptions_used": [
+     "TUN-import-demand-elasticity-central",
+     "GLOBAL-own-price-demand-elasticity-central",
+     "GLOBAL-retaliation-share",
+     "GLOBAL-retaliation-top-sectors",
+     "GLOBAL-fiscal-multiplier-central"
+    ],
+    "job_years_note": "programme jobs are reported as JOB-YEARS, not permanent posts; one job-year is one person employed for one year",
+    "employment_programme_note": "Public employment programmes (EIIP / EPWP-style) are an intervention on a different plane from the other levers. They create temporary job-years, not permanent posts, usually at low or stipend-level pay and outside standard employment relations. Their cost-per-job and headline job count are therefore NOT comparable with permanent-job levers - it is apples to oranges. The model also assumes constant returns, so it does not capture the project-pipeline, institutional and fiscal limits that make large marginal expansion difficult where such a programme already operates at scale (for example South Africa's EPWP). The job-quality figures use host-sector averages and so overstate the actual pay and conditions of programme work."
+   }
+  },
+  {
+   "case_id": "preset_vnm_public_works",
+   "kwargs": {
+    "tariffs": {},
+    "sector_support": {},
+    "sme_stimulus": 0.0,
+    "include_type_ii": false,
+    "include_retaliation": false,
+    "financing_mode": "tax_financed",
+    "include_financing_drag": null,
+    "extensions": {
+     "public_works": {
+      "budget_pct_gdp": 0.01,
+      "method": "labour_based"
+     }
+    },
+    "iso3": "VNM"
+   },
+   "result": {
+    "country": "VNM",
+    "sectors": [
+     "agriculture",
+     "mining",
+     "manufacturing",
+     "textiles",
+     "automotive",
+     "food_processing",
+     "chemicals",
+     "construction",
+     "utilities",
+     "trade",
+     "transport",
+     "finance",
+     "public_services",
+     "other_services"
+    ],
+    "aggregate": {
+     "direct_jobs": 292594.71582340944,
+     "indirect_jobs": -146965.83004851805,
+     "induced_jobs": null,
+     "total_jobs": 145628.88577489142,
+     "total_jobs_low": 101574.73293188795,
+     "total_jobs_high": 235254.38217912853,
+     "share_of_baseline_employment": 0.0026497780300350155,
+     "gross_jobs_before_financing": 510199.6342647609,
+     "net_jobs_after_financing": 145628.88577489142,
+     "financing_offset_jobs": -364570.74848986947
+    },
+    "financing": {
+     "mode": "tax_financed",
+     "label": "Tax-financed, MPC-scaled offset",
+     "fiscal_cost_usd_million": 4020.168,
+     "financing_withdrawal_usd_million": 3216.1344000000004,
+     "financing_mpc": 0.8,
+     "financing_mpc_source": "GLOBAL-marginal-propensity-to-consume-central (stylised developing-economy central; Haavelmo 1945 framing)",
+     "financing_mpc_status": "literature_based",
+     "household_consumption_vector_source": "OECD ICIO 2025 household final demand (HFCE+NPISH)",
+     "financing_offset_jobs": -364570.74848986947,
+     "financing_offset_output": -7668.358388915975,
+     "caveat": "the offset is scaled by the marginal propensity to consume; it is a simplified static assumption and does not model fiscal sustainability, interest rates, expectations, debt dynamics or tax incidence",
+     "deprecated_input_used": false
+    },
+    "baseline": {
+     "sector_sum_employment_persons": 54958900.0,
+     "reference_year": 2022,
+     "note": "denominator = sector-sum employment (TiM, national-accounts concept); ILOSTAT LFS total differs (see country metadata)"
+    },
+    "sector_effects": [
+     {
+      "sector": "agriculture",
+      "direct_jobs": -39465.53656736771,
+      "indirect_jobs": -122237.98955244753,
+      "induced_jobs": null,
+      "total_jobs": -161703.52611981524,
+      "output_change_usd_million": -1623.6962640408656,
+      "value_added_change_usd_million": -365.5184387270592
+     },
+     {
+      "sector": "mining",
+      "direct_jobs": 372.0827172456913,
+      "indirect_jobs": 506.52746972045907,
+      "induced_jobs": null,
+      "total_jobs": 878.6101869661504,
+      "output_change_usd_million": 401.5182143322657,
+      "value_added_change_usd_million": 162.53527145245198
+     },
+     {
+      "sector": "manufacturing",
+      "direct_jobs": 13799.663932676098,
+      "indirect_jobs": 4841.9994745920485,
+      "induced_jobs": null,
+      "total_jobs": 18641.663407268148,
+      "output_change_usd_million": 1577.1539688844584,
+      "value_added_change_usd_million": 338.3063344877276
+     },
+     {
+      "sector": "textiles",
+      "direct_jobs": -12732.892638595782,
+      "indirect_jobs": -3511.772971676172,
+      "induced_jobs": null,
+      "total_jobs": -16244.665610271953,
+      "output_change_usd_million": -367.0585874908864,
+      "value_added_change_usd_million": -84.95794634659985
+     },
+     {
+      "sector": "automotive",
+      "direct_jobs": -156.10132593336485,
+      "indirect_jobs": -22.50080772006721,
+      "induced_jobs": null,
+      "total_jobs": -178.60213365343205,
+      "output_change_usd_million": -9.873304443488502,
+      "value_added_change_usd_million": -1.6869760334787212
+     },
+     {
+      "sector": "food_processing",
+      "direct_jobs": -8275.582516771774,
+      "indirect_jobs": -4001.3561051392953,
+      "induced_jobs": null,
+      "total_jobs": -12276.93862191107,
+      "output_change_usd_million": -933.442390487513,
+      "value_added_change_usd_million": -147.41367342139975
+     },
+     {
+      "sector": "chemicals",
+      "direct_jobs": 360.4325299445882,
+      "indirect_jobs": -515.8770639919551,
+      "induced_jobs": null,
+      "total_jobs": -155.44453404736686,
+      "output_change_usd_million": -35.34273748787106,
+      "value_added_change_usd_million": -4.2090983659103465
+     },
+     {
+      "sector": "construction",
+      "direct_jobs": 400877.10257883254,
+      "indirect_jobs": 497.17609095479537,
+      "induced_jobs": null,
+      "total_jobs": 401374.27866978734,
+      "output_change_usd_million": 435.49168384692456,
+      "value_added_change_usd_million": 83.03350082421824
+     },
+     {
+      "sector": "utilities",
+      "direct_jobs": -165.04119190077182,
+      "indirect_jobs": -498.0560628193804,
+      "induced_jobs": null,
+      "total_jobs": -663.0972547201523,
+      "output_change_usd_million": -129.81086310978708,
+      "value_added_change_usd_million": -33.19560825131226
+     },
+     {
+      "sector": "trade",
+      "direct_jobs": -12507.292158531403,
+      "indirect_jobs": -7724.806263457138,
+      "induced_jobs": null,
+      "total_jobs": -20232.098421988543,
+      "output_change_usd_million": -232.33464512414716,
+      "value_added_change_usd_million": -79.15530674654886
+     },
+     {
+      "sector": "transport",
+      "direct_jobs": 159.33374959283415,
+      "indirect_jobs": -2307.1942277445623,
+      "induced_jobs": null,
+      "total_jobs": -2147.8604781517283,
+      "output_change_usd_million": -53.59009809600397,
+      "value_added_change_usd_million": -11.561742772040096
+     },
+     {
+      "sector": "finance",
+      "direct_jobs": -1246.2148412930162,
+      "indirect_jobs": -1212.239500544538,
+      "induced_jobs": null,
+      "total_jobs": -2458.4543418375542,
+      "output_change_usd_million": -167.03070832442253,
+      "value_added_change_usd_million": -59.99116366044177
+     },
+     {
+      "sector": "public_services",
+      "direct_jobs": -20333.009294640477,
+      "indirect_jobs": -395.51545891277794,
+      "induced_jobs": null,
+      "total_jobs": -20728.524753553254,
+      "output_change_usd_million": -258.8394015665813,
+      "value_added_change_usd_million": -132.58358663435016
+     },
+     {
+      "sector": "other_services",
+      "direct_jobs": -28092.22914984794,
+      "indirect_jobs": -10384.225069331947,
+      "induced_jobs": null,
+      "total_jobs": -38476.45421917988,
+      "output_change_usd_million": -840.2168837004039,
+      "value_added_change_usd_million": -273.31597932704125
+     }
+    ],
+    "tariff_channels": null,
+    "other_channels": {
+     "public_works_materials": {
+      "jobs": 126581.22165779702,
+      "demand_usd_million": 2613.109200000001
+     },
+     "financing_drag": {
+      "jobs": -364570.74848986947,
+      "demand_usd_million": -3216.1344
+     },
+     "public_works_direct": {
+      "jobs": 383618.4126069639,
+      "demand_usd_million": 1407.0588
+     }
+    },
+    "costs": {
+     "tariff_revenue_usd_million": 0.0,
+     "spending_cost_usd_million": 4020.168,
+     "net_fiscal_usd_million": -4020.168,
+     "cost_per_job_fiscal_usd_million": 0.027605567251364198,
+     "financing_drag_included": true
+    },
+    "induced_note": null,
+    "uncertainty": {
+     "low": 101574.73293188795,
+     "high": 235254.38217912853,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "data_source": {
+     "citation": "OECD ICIO 2025 (rev. Jan 2026), year 2022; employment: OECD TiM 2025 (EMPN); fallbacks: tim_parent_residual (see assumptions registry)",
+     "reference_year": 2022,
+     "notes": "households final demand = HFCE + NPISH; inventories kept so that x = Z*1 + F*1 balances; exports computed as residual: x - domestic intermediate use - domestic final demand; GDP proxy = sum(VA) + sum(TLS) (market prices); differs from the WDI dashboard GDP (different vintage and method); employment denominator: use the sector-sum employment (TiM, national-accounts concept); the ILOSTAT national total (labour-force-survey concept) is stored in baseline_totals for cross-checking only"
+    },
+    "assumptions_used": [
+     "VNM-import-demand-elasticity-central",
+     "GLOBAL-own-price-demand-elasticity-central",
+     "GLOBAL-retaliation-share",
+     "GLOBAL-retaliation-top-sectors",
+     "GLOBAL-fiscal-multiplier-central"
+    ],
+    "job_years_note": "programme jobs are reported as JOB-YEARS, not permanent posts; one job-year is one person employed for one year",
+    "employment_programme_note": "Public employment programmes (EIIP / EPWP-style) are an intervention on a different plane from the other levers. They create temporary job-years, not permanent posts, usually at low or stipend-level pay and outside standard employment relations. Their cost-per-job and headline job count are therefore NOT comparable with permanent-job levers - it is apples to oranges. The model also assumes constant returns, so it does not capture the project-pipeline, institutional and fiscal limits that make large marginal expansion difficult where such a programme already operates at scale (for example South Africa's EPWP). The job-quality figures use host-sector averages and so overstate the actual pay and conditions of programme work."
+   }
+  },
+  {
+   "case_id": "preset_tha_public_works",
+   "kwargs": {
+    "tariffs": {},
+    "sector_support": {},
+    "sme_stimulus": 0.0,
+    "include_type_ii": false,
+    "include_retaliation": false,
+    "financing_mode": "tax_financed",
+    "include_financing_drag": null,
+    "extensions": {
+     "public_works": {
+      "budget_pct_gdp": 0.01,
+      "method": "labour_based"
+     }
+    },
+    "iso3": "THA"
+   },
+   "result": {
+    "country": "THA",
+    "sectors": [
+     "agriculture",
+     "mining",
+     "manufacturing",
+     "textiles",
+     "automotive",
+     "food_processing",
+     "chemicals",
+     "construction",
+     "utilities",
+     "trade",
+     "transport",
+     "finance",
+     "public_services",
+     "other_services"
+    ],
+    "aggregate": {
+     "direct_jobs": 1035915.1247908165,
+     "indirect_jobs": -57907.70311503333,
+     "induced_jobs": null,
+     "total_jobs": 978007.4216757829,
+     "total_jobs_low": 602727.5896121978,
+     "total_jobs_high": 1387609.7359500183,
+     "share_of_baseline_employment": 0.024946623346489716,
+     "gross_jobs_before_financing": 1252587.279360984,
+     "net_jobs_after_financing": 978007.4216757829,
+     "financing_offset_jobs": -274579.85768520116
+    },
+    "financing": {
+     "mode": "tax_financed",
+     "label": "Tax-financed, MPC-scaled offset",
+     "fiscal_cost_usd_million": 4700.933,
+     "financing_withdrawal_usd_million": 3760.7464,
+     "financing_mpc": 0.8,
+     "financing_mpc_source": "GLOBAL-marginal-propensity-to-consume-central (stylised developing-economy central; Haavelmo 1945 framing)",
+     "financing_mpc_status": "literature_based",
+     "household_consumption_vector_source": "OECD ICIO 2025 household final demand (HFCE+NPISH)",
+     "financing_offset_jobs": -274579.85768520116,
+     "financing_offset_output": -6046.392976854339,
+     "caveat": "the offset is scaled by the marginal propensity to consume; it is a simplified static assumption and does not model fiscal sustainability, interest rates, expectations, debt dynamics or tax incidence",
+     "deprecated_input_used": false
+    },
+    "baseline": {
+     "sector_sum_employment_persons": 39204000.0,
+     "reference_year": 2022,
+     "note": "denominator = sector-sum employment (TiM, national-accounts concept); ILOSTAT LFS total differs (see country metadata)"
+    },
+    "sector_effects": [
+     {
+      "sector": "agriculture",
+      "direct_jobs": -60105.861519840604,
+      "indirect_jobs": -55061.15930859028,
+      "induced_jobs": null,
+      "total_jobs": -115167.02082843089,
+      "output_change_usd_million": -636.2747187875912,
+      "value_added_change_usd_million": -355.505235515218
+     },
+     {
+      "sector": "mining",
+      "direct_jobs": 318.1164675159785,
+      "indirect_jobs": 51.87335992636041,
+      "induced_jobs": null,
+      "total_jobs": 369.98982744233894,
+      "output_change_usd_million": 158.92037159282063,
+      "value_added_change_usd_million": 89.19426562510786
+     },
+     {
+      "sector": "manufacturing",
+      "direct_jobs": 9709.998785298101,
+      "indirect_jobs": 4116.2764796617685,
+      "induced_jobs": null,
+      "total_jobs": 13826.27526495987,
+      "output_change_usd_million": 1084.5843024695153,
+      "value_added_change_usd_million": 200.9130132597732
+     },
+     {
+      "sector": "textiles",
+      "direct_jobs": -3754.054486833094,
+      "indirect_jobs": -2250.213731714055,
+      "induced_jobs": null,
+      "total_jobs": -6004.268218547149,
+      "output_change_usd_million": -360.1016455170667,
+      "value_added_change_usd_million": -43.608227945269775
+     },
+     {
+      "sector": "automotive",
+      "direct_jobs": -289.5387975922946,
+      "indirect_jobs": -29.294811021848435,
+      "induced_jobs": null,
+      "total_jobs": -318.83360861414303,
+      "output_change_usd_million": -30.3938813513006,
+      "value_added_change_usd_million": -6.137430916120417
+     },
+     {
+      "sector": "food_processing",
+      "direct_jobs": -11379.433715644755,
+      "indirect_jobs": -2901.8272111921083,
+      "induced_jobs": null,
+      "total_jobs": -14281.260926836863,
+      "output_change_usd_million": -796.6341789946374,
+      "value_added_change_usd_million": -238.64654155016828
+     },
+     {
+      "sector": "chemicals",
+      "direct_jobs": 362.06073787766377,
+      "indirect_jobs": -29.538845502663037,
+      "induced_jobs": null,
+      "total_jobs": 332.52189237500073,
+      "output_change_usd_million": 43.55477511956153,
+      "value_added_change_usd_million": 14.865018561426773
+     },
+     {
+      "sector": "construction",
+      "direct_jobs": 1155359.3231254567,
+      "indirect_jobs": 6103.493126580101,
+      "induced_jobs": null,
+      "total_jobs": 1161462.8162520367,
+      "output_change_usd_million": 900.2786654511152,
+      "value_added_change_usd_million": 240.2215187034833
+     },
+     {
+      "sector": "utilities",
+      "direct_jobs": -324.1015234087173,
+      "indirect_jobs": -208.91097225230732,
+      "induced_jobs": null,
+      "total_jobs": -533.0124956610246,
+      "output_change_usd_million": -161.01223744701133,
+      "value_added_change_usd_million": -39.949663265148175
+     },
+     {
+      "sector": "trade",
+      "direct_jobs": -11340.532985113563,
+      "indirect_jobs": -3639.5260725818034,
+      "induced_jobs": null,
+      "total_jobs": -14980.059057695365,
+      "output_change_usd_million": -263.02160873241235,
+      "value_added_change_usd_million": -197.51272556817065
+     },
+     {
+      "sector": "transport",
+      "direct_jobs": -116.68591699173118,
+      "indirect_jobs": -134.13421393248296,
+      "induced_jobs": null,
+      "total_jobs": -250.82013092421414,
+      "output_change_usd_million": -9.530299966973931,
+      "value_added_change_usd_million": -3.4092981297673663
+     },
+     {
+      "sector": "finance",
+      "direct_jobs": -751.4154441221681,
+      "indirect_jobs": -378.5245988466601,
+      "induced_jobs": null,
+      "total_jobs": -1129.9400429688283,
+      "output_change_usd_million": -95.89876448414066,
+      "value_added_change_usd_million": -77.64920645672363
+     },
+     {
+      "sector": "public_services",
+      "direct_jobs": -2684.325492702229,
+      "indirect_jobs": -31.687064395322306,
+      "induced_jobs": null,
+      "total_jobs": -2716.0125570975515,
+      "output_change_usd_million": -55.37503819193326,
+      "value_added_change_usd_million": -40.85222311084975
+     },
+     {
+      "sector": "other_services",
+      "direct_jobs": -39088.424443083015,
+      "indirect_jobs": -3514.5292511720245,
+      "induced_jobs": null,
+      "total_jobs": -42602.95369425504,
+      "output_change_usd_million": -873.2636979287547,
+      "value_added_change_usd_million": -450.19402564782666
+     }
+    ],
+    "tariff_channels": null,
+    "other_channels": {
+     "public_works_materials": {
+      "jobs": 140895.79024923028,
+      "demand_usd_million": 3055.6064499999998
+     },
+     "financing_drag": {
+      "jobs": -274579.85768520116,
+      "demand_usd_million": -3760.7464
+     },
+     "public_works_direct": {
+      "jobs": 1111691.4891117539,
+      "demand_usd_million": 1645.32655
+     }
+    },
+    "costs": {
+     "tariff_revenue_usd_million": 0.0,
+     "spending_cost_usd_million": 4700.933,
+     "net_fiscal_usd_million": -4700.933,
+     "cost_per_job_fiscal_usd_million": 0.004806643483282682,
+     "financing_drag_included": true
+    },
+    "induced_note": null,
+    "uncertainty": {
+     "low": 602727.5896121978,
+     "high": 1387609.7359500183,
+     "basis": "parameter range (elasticities, fiscal multiplier) from the assumptions registry; not a statistical confidence interval"
+    },
+    "data_source": {
+     "citation": "OECD ICIO 2025 (rev. Jan 2026), year 2022; employment: OECD TiM 2025 (EMPN); fallbacks: tim_parent_residual (see assumptions registry)",
+     "reference_year": 2022,
+     "notes": "households final demand = HFCE + NPISH; inventories kept so that x = Z*1 + F*1 balances; exports computed as residual: x - domestic intermediate use - domestic final demand; GDP proxy = sum(VA) + sum(TLS) (market prices); differs from the WDI dashboard GDP (different vintage and method); employment denominator: use the sector-sum employment (TiM, national-accounts concept); the ILOSTAT national total (labour-force-survey concept) is stored in baseline_totals for cross-checking only"
+    },
+    "assumptions_used": [
+     "THA-import-demand-elasticity-central",
+     "GLOBAL-own-price-demand-elasticity-central",
+     "GLOBAL-retaliation-share",
+     "GLOBAL-retaliation-top-sectors",
+     "GLOBAL-fiscal-multiplier-central"
+    ],
+    "job_years_note": "programme jobs are reported as JOB-YEARS, not permanent posts; one job-year is one person employed for one year",
+    "employment_programme_note": "Public employment programmes (EIIP / EPWP-style) are an intervention on a different plane from the other levers. They create temporary job-years, not permanent posts, usually at low or stipend-level pay and outside standard employment relations. Their cost-per-job and headline job count are therefore NOT comparable with permanent-job levers - it is apples to oranges. The model also assumes constant returns, so it does not capture the project-pipeline, institutional and fiscal limits that make large marginal expansion difficult where such a programme already operates at scale (for example South Africa's EPWP). The job-quality figures use host-sector averages and so overstate the actual pay and conditions of programme work."
    }
   },
   {
@@ -3981,7 +4938,8 @@
      "GLOBAL-retaliation-top-sectors",
      "GLOBAL-fiscal-multiplier-central"
     ],
-    "job_years_note": "programme jobs are reported as JOB-YEARS, not permanent posts; one job-year is one person employed for one year"
+    "job_years_note": "programme jobs are reported as JOB-YEARS, not permanent posts; one job-year is one person employed for one year",
+    "employment_programme_note": "Public employment programmes (EIIP / EPWP-style) are an intervention on a different plane from the other levers. They create temporary job-years, not permanent posts, usually at low or stipend-level pay and outside standard employment relations. Their cost-per-job and headline job count are therefore NOT comparable with permanent-job levers - it is apples to oranges. The model also assumes constant returns, so it does not capture the project-pipeline, institutional and fiscal limits that make large marginal expansion difficult where such a programme already operates at scale (for example South Africa's EPWP). The job-quality figures use host-sector averages and so overstate the actual pay and conditions of programme work."
    }
   },
   {
