@@ -6,7 +6,22 @@ The project is in pre-release (0.x.y); version 1.0.0 will mark the first product
 
 ---
 
-## [1.2.0] — 2026-06-15  ← current
+## [1.2.1] — 2026-06-15  ← current
+**Live labour-market context, Data-tab layout, methodology redesign.** PATCH: data-source and presentation improvements; no model or contract change.
+
+### Backend
+- National **informality** and **working-poverty** context indicators are now fetched live from the ILOSTAT SDMX API (latest available year) instead of the static JSON snapshot: `EMP_NIFL_SEX_RT` (total) and `SDG_0111_SEX_AGE_RT` (total, age 15+). New FastAPI-free module `live_indicators.py` with a 24h in-memory cache, an 8s timeout, a short negative-cache on failure, and a clean fallback to the verified snapshot (labelled). `/api/context/{iso3}` overlays the live values, labels the source and period, and sets `data_mode`. These remain context-only and are never used in the simulation; the sectoral informality used by the job-quality module stays in the verified JSONs (model input, hash-locked). Latest at release: ZAF 2025-Q2, VNM 2024-Q4, THA 2024, SEN 2025-Q1; TUN still 2019 (no newer survey).
+
+### Frontend
+- Data tab: the labour-market context and data-caveats panel now sits below the headline indicators and employment-by-sector but **above** the cross-country comparison chart. Source/period and live-vs-snapshot mode are shown.
+- Methodology tab redesigned: a hero header, a clickable table of contents, and per-section cards (numbered) for the plain-language tier; tier-2 "expert detail" disclosures restyled as clear, collapsed, keyboard-operable panels. Replaces the previous single flat wall of text.
+
+### Tests
+- `test_live_indicators.py`: SDMX-CSV parsing (latest period, SEX/AGE filters), fallback on fetch failure, and cache reuse within the TTL (no network in tests). Suite: 400 -> 405.
+
+---
+
+## [1.2.0] — 2026-06-15
 **Integrated Prompt v5 — financing transparency, methodology, and result interpretation.** MINOR bump: new financing-mode control and job-quality output dimension, a comprehensive two-tier methodology with its own API and UI, and a corrected trade-elasticity parameter. The v1.0.0 simulate contract is preserved except for the deliberate financing change (documented below); the engine regression lock was regenerated at the new numbers after the Workstream C verification stop.
 
 ### Backend

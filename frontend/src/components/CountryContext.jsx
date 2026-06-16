@@ -48,6 +48,12 @@ function CountryContext({ countryCode }) {
               </div>
             )}
           </div>
+          {ctx.data_mode && (
+            <p className="text-xs text-gray-500 mt-2">
+              Source: {ctx.data_mode}
+              {ctx.national_informality_source ? ` - informality: ${ctx.national_informality_source}` : ''}
+            </p>
+          )}
           <p className="text-xs text-gray-400 mt-2">
             Informality and working-poverty indicators provide labour-market
             context. Sectoral informality is also used in the job-quality

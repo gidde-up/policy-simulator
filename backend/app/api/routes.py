@@ -305,7 +305,28 @@ async def get_country_context(country_code: str):
     path = (Path(__file__).resolve().parents[1] / "data" / "countries"
             / f"{iso3}.json")
     d = _json.loads(path.read_text(encoding="utf-8"))
-    ctx = (d.get("informality") or {}).get("context", {})
+    ctx = dict((d.get("informality") or {}).get("context", {}))
+
+    # overlay the latest ILOSTAT values where available (context only;
+    # never used in the simulation). Falls back to the verified snapshot.
+    from . import live_indicators
+    live = live_indicators.get_country_live(iso3)
+    used_live = False
+    inf = live.get("informality")
+    if inf:
+        ctx["national_informal_employment_rate_pct"] = round(inf["value"], 1)
+        ctx["national_informality_year"] = inf["period"]
+        ctx["national_informality_source"] = inf["source"]
+        used_live = True
+    wp = live.get("working_poverty")
+    if wp:
+        ctx["working_poverty_rate_pct"] = round(wp["value"], 1)
+        ctx["working_poverty_year"] = wp["period"]
+        ctx["working_poverty_source"] = wp["source"]
+        used_live = True
+    ctx["data_mode"] = ("ILOSTAT, latest available (live)" if used_live
+                        else "verified snapshot (live source unavailable)")
+
     from .country_caveats import country_caveats
     return {"country": iso3, "context": ctx,
             "caveats": country_caveats(iso3, d)}

@@ -9,7 +9,6 @@ import FirstVisitModal from './components/FirstVisitModal';
 import LimitationsPanel from './components/LimitationsPanel';
 import NotInToolPanel, { NotInToolTeasers } from './components/NotInToolPanel';
 import MethodologyPanel from './components/MethodologyPanel';
-import CountryContext from './components/CountryContext';
 import { useSimulation } from './hooks/useSimulation';
 
 function App() {
@@ -171,15 +170,11 @@ function App() {
           </div>
         )}
 
-        {/* Data Tab: employment-by-sector dashboard first, then the
-            informality / working-poverty context below it */}
+        {/* Data Tab: the country dashboard renders the headline indicators
+            and employment-by-sector first, then the labour-market context
+            and data caveats, with the cross-country comparison chart last */}
         {activeTab === 'data' && (
-          <div>
-            <CountryDashboard countryCode={selectedCountry} />
-            <div className="mt-4">
-              <CountryContext countryCode={selectedCountry} />
-            </div>
-          </div>
+          <CountryDashboard countryCode={selectedCountry} />
         )}
 
         {/* Methodology Tab */}

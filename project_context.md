@@ -381,8 +381,11 @@ entry. Key changes:
   (no snake_case), lever assumption popovers, country "Data and model
   caveats" panel (`/api/context` caveats), guided-mode metadata.
 - New endpoints since v1.1.0: `/api/methodology`; `/api/context` now
-  returns `caveats`. New FastAPI-free helper
-  `backend/app/api/country_caveats.py`.
+  returns `caveats` and overlays **live ILOSTAT** national informality +
+  working-poverty indicators (latest year; 24h cache; static fallback).
+  FastAPI-free helpers `backend/app/api/country_caveats.py` and
+  `backend/app/api/live_indicators.py` (ILOSTAT SDMX; context only, never
+  in the simulation arithmetic).
 Engine entry point: `run_scenario(..., financing_mode="tax_financed",
 extensions=None)`; job quality via `engine.job_quality(iso3, result)`.
 Test count: 308 (v1.1.0) -> 300+ (v1.2.0; regression lock regenerated).

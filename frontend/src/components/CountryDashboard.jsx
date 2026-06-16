@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { TrendingUp, TrendingDown, Minus, RefreshCw, Users, Briefcase, DollarSign, Globe } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { getCountryProfile, compareCountries } from '../services/api';
+import CountryContext from './CountryContext';
 
 function CountryDashboard({ countryCode }) {
   const [profile, setProfile] = useState(null);
@@ -260,6 +261,10 @@ function CountryDashboard({ countryCode }) {
           </div>
         </div>
       )}
+
+      {/* Labour-market context + data caveats: below the rest, but above
+          the cross-country comparison chart */}
+      <CountryContext countryCode={countryCode} />
 
       {/* Unemployment Trend Chart */}
       {chartData.length > 0 && (
