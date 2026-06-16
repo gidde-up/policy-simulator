@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ChevronLeft, ChevronRight, Compass, ExternalLink, Play } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Compass, ExternalLink, Play, Layers } from 'lucide-react';
 import { getPresets, runSimulation } from '../services/api';
 import ResultsPanel from './ResultsPanel';
 
@@ -56,6 +56,25 @@ function GuidedMode({ countryCode, onOpenInExplorer }) {
 
   const steps = selected?.walkthrough || [];
 
+  const isProgramme = (s) =>
+    !!(s.params?.public_works || s.params?.direct_public_employment);
+  const mainScenarios = scenarios.filter((s) => !isProgramme(s));
+  const programmeScenarios = scenarios.filter(isProgramme);
+
+  const renderScenarioButton = (s) => (
+    <button
+      key={s.id}
+      onClick={() => runScenario(s)}
+      className={`w-full text-left p-3 rounded-lg border transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600
+        ${selected?.id === s.id
+          ? 'border-blue-600 bg-blue-50'
+          : 'border-gray-200 hover:border-gray-400'}`}
+    >
+      <div className="font-medium text-gray-900">{s.name}</div>
+      <div className="text-xs text-gray-600 mt-0.5">{s.description}</div>
+    </button>
+  );
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Scenario picker */}
@@ -78,20 +97,29 @@ function GuidedMode({ countryCode, onOpenInExplorer }) {
           )}
 
           <div className="space-y-2">
-            {scenarios.map((s) => (
-              <button
-                key={s.id}
-                onClick={() => runScenario(s)}
-                className={`w-full text-left p-3 rounded-lg border transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600
-                  ${selected?.id === s.id
-                    ? 'border-blue-600 bg-blue-50'
-                    : 'border-gray-200 hover:border-gray-400'}`}
-              >
-                <div className="font-medium text-gray-900">{s.name}</div>
-                <div className="text-xs text-gray-600 mt-0.5">{s.description}</div>
-              </button>
-            ))}
+            {mainScenarios.map((s) => renderScenarioButton(s))}
           </div>
+
+          {/* Employment programmes: a secondary, visibly separated class */}
+          {programmeScenarios.length > 0 && (
+            <div className="mt-5 pt-4 border-t-2 border-dashed border-amber-300">
+              <div className="flex items-center space-x-2 mb-1">
+                <Layers className="w-4 h-4 text-amber-600" />
+                <h3 className="font-semibold text-amber-800 text-sm">
+                  Employment programmes - a different class
+                </h3>
+              </div>
+              <p className="text-xs text-gray-500 mb-3">
+                EIIP / EPWP-style public works create temporary job-years at
+                low pay, not permanent jobs. They are shown separately because
+                their cost-per-job and headline impact are not comparable with
+                the permanent-job levers above - see the caveat on each result.
+              </p>
+              <div className="space-y-2">
+                {programmeScenarios.map((s) => renderScenarioButton(s))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

@@ -316,6 +316,7 @@ class SimulationResponse(BaseModel):
     # extension levers (Session F); present only when the lever is used
     investment_incentive: Optional[InvestmentIncentiveInfo] = None
     job_years_note: Optional[str] = None
+    employment_programme_note: Optional[str] = None
     # job-quality composition of the change (Session G)
     job_quality: Optional[JobQuality] = None
 

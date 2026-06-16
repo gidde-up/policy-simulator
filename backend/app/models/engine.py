@@ -1054,6 +1054,20 @@ def run_scenario(iso3: str, tariffs: dict | None = None,
         resp["job_years_note"] = (
             "programme jobs are reported as JOB-YEARS, not permanent "
             "posts; one job-year is one person employed for one year")
+        resp["employment_programme_note"] = (
+            "Public employment programmes (EIIP / EPWP-style) are an "
+            "intervention on a different plane from the other levers. They "
+            "create temporary job-years, not permanent posts, usually at "
+            "low or stipend-level pay and outside standard employment "
+            "relations. Their cost-per-job and headline job count are "
+            "therefore NOT comparable with permanent-job levers - it is "
+            "apples to oranges. The model also assumes constant returns, so "
+            "it does not capture the project-pipeline, institutional and "
+            "fiscal limits that make large marginal expansion difficult "
+            "where such a programme already operates at scale (for example "
+            "South Africa's EPWP). The job-quality figures use host-sector "
+            "averages and so overstate the actual pay and conditions of "
+            "programme work.")
     return resp
 
 

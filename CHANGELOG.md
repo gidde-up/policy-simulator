@@ -6,7 +6,23 @@ The project is in pre-release (0.x.y); version 1.0.0 will mark the first product
 
 ---
 
-## [1.2.1] — 2026-06-15  ← current
+## [1.2.2] — 2026-06-15  ← current
+**Public works / EIIP reframed as a distinct class of intervention.** PATCH: didactic framing only - no engine math or parameter change. Addresses the risk that the lever's low modelled cost-per-job and large headline job count overstate its standing relative to permanent-job levers (apples to oranges).
+
+### Backend
+- `run_scenario` adds `employment_programme_note` for public-works and direct-public-employment scenarios: a substantial caveat that these create temporary job-years (not permanent posts) at low/stipend pay and outside standard employment relations; that their cost-per-job and headline count are not comparable with permanent-job levers; that the constant-returns assumption ignores the project-pipeline, institutional and fiscal limits on marginal expansion where a programme already operates at scale (for example South Africa's EPWP); and that the job-quality figures use host-sector averages and so overstate actual programme job quality.
+- New labour-based public-works presets for all five countries (previously only South Africa), so the comparison is available everywhere; the South Africa narrative now flags EPWP saturation, and Senegal's flags greenfield headroom.
+
+### Frontend
+- The employment-programme caveat is shown as a prominent amber callout at the top of the result.
+- Guided mode renders EIIP / public-works (and direct public hiring) as a visibly separated, secondary "Employment programmes - a different class" group, below the permanent-job levers, with its own caveat.
+
+### Tests
+- Regression lock regenerated (response gains the note for programme scenarios; 4 new presets). Preset count 24 -> 28.
+
+---
+
+## [1.2.1] — 2026-06-15
 **Live labour-market context, Data-tab layout, methodology redesign.** PATCH: data-source and presentation improvements; no model or contract change.
 
 ### Backend

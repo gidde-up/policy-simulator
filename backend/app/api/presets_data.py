@@ -381,13 +381,104 @@ PRESETS = [
                      "~16%). The wage component creates direct job-years; "
                      "the materials component flows through the "
                      "construction supply chain."},
-            {"title": "Job-years, not permanent posts",
-             "text": "Results are job-years: one person employed for one "
-                     "year. Even net of the tax-financing drag, the "
-                     "labour intensity makes this strongly job-positive. "
-                     "Real programmes such as South Africa's EPWP use "
-                     "this approach (referenced as context; the tool does "
-                     "not model the EPWP's specific design)."},
+            {"title": "Job-years on a different plane - read the caveat",
+             "text": "Results are job-years (one person for one year), not "
+                     "permanent posts, and at low/stipend pay - do not "
+                     "compare the cost-per-job with permanent-job levers. "
+                     "South Africa's EPWP already runs this approach at "
+                     "scale, so a further 1% of GDP is far less realistic "
+                     "than the constant-returns number implies (project "
+                     "pipeline, municipal capacity and fiscal limits). "
+                     "See the amber caveat on the result."},
+        ],
+        "expected": {"net_sign": "positive", "has_tariff_channels": False,
+                     "has_job_years": True},
+    },
+    {
+        "id": "sen_public_works",
+        "country_code": "SEN",
+        "name": "Public Works (Labour-Based)",
+        "description": "An employment-intensive public works programme, "
+                       "1% of GDP",
+        "params": {"public_works": {"budget_pct_gdp": 1.0,
+                                    "method": "labour_based"}},
+        "walkthrough": [
+            {"title": "More greenfield headroom",
+             "text": "Senegal has no large mature public-works programme, "
+                     "so a new labour-based scheme has more genuine "
+                     "headroom: the modelled job-years are more plausibly "
+                     "additional than where such programmes already "
+                     "saturate (compare South Africa)."},
+            {"title": "Still job-years, not permanent posts",
+             "text": "The result is temporary job-years at low pay, an "
+                     "intervention on a different plane from permanent-job "
+                     "levers - see the amber caveat. Institutional capacity "
+                     "to deliver at this scale is itself a constraint the "
+                     "model does not capture."},
+        ],
+        "expected": {"net_sign": "positive", "has_tariff_channels": False,
+                     "has_job_years": True},
+    },
+    {
+        "id": "tun_public_works",
+        "country_code": "TUN",
+        "name": "Public Works (Labour-Based)",
+        "description": "An employment-intensive public works programme, "
+                       "1% of GDP",
+        "params": {"public_works": {"budget_pct_gdp": 1.0,
+                                    "method": "labour_based"}},
+        "walkthrough": [
+            {"title": "Labour content vs imports",
+             "text": "Labour-based methods put most of the budget into "
+                     "wages; in import-dependent Tunisia that keeps more of "
+                     "the spend at home than equipment-heavy works."},
+            {"title": "Job-years, a different plane",
+             "text": "The result is temporary job-years at low pay, not "
+                     "permanent posts; do not compare the cost-per-job with "
+                     "permanent-job levers. See the amber caveat."},
+        ],
+        "expected": {"net_sign": "positive", "has_tariff_channels": False,
+                     "has_job_years": True},
+    },
+    {
+        "id": "vnm_public_works",
+        "country_code": "VNM",
+        "name": "Public Works (Labour-Based)",
+        "description": "An employment-intensive public works programme, "
+                       "1% of GDP",
+        "params": {"public_works": {"budget_pct_gdp": 1.0,
+                                    "method": "labour_based"}},
+        "walkthrough": [
+            {"title": "Labour-intensive infrastructure",
+             "text": "The wage component creates direct job-years; the "
+                     "materials component flows through Viet Nam's "
+                     "construction supply chain."},
+            {"title": "Job-years, a different plane",
+             "text": "Temporary job-years at low pay, not permanent posts - "
+                     "an intervention on a different plane that should not "
+                     "be ranked on cost-per-job against permanent-job "
+                     "levers. See the amber caveat."},
+        ],
+        "expected": {"net_sign": "positive", "has_tariff_channels": False,
+                     "has_job_years": True},
+    },
+    {
+        "id": "tha_public_works",
+        "country_code": "THA",
+        "name": "Public Works (Labour-Based)",
+        "description": "An employment-intensive public works programme, "
+                       "1% of GDP",
+        "params": {"public_works": {"budget_pct_gdp": 1.0,
+                                    "method": "labour_based"}},
+        "walkthrough": [
+            {"title": "Labour-intensive infrastructure",
+             "text": "Labour-based methods spend a large share of the "
+                     "budget on wages, creating many direct job-years; the "
+                     "materials component flows through the supply chain."},
+            {"title": "Job-years, a different plane",
+             "text": "Temporary job-years at low pay, not permanent posts; "
+                     "do not compare the cost-per-job with permanent-job "
+                     "levers. See the amber caveat."},
         ],
         "expected": {"net_sign": "positive", "has_tariff_channels": False,
                      "has_job_years": True},

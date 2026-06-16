@@ -46,7 +46,7 @@ _FISCAL_LEVERS = ("sector_support", "sme_stimulus", "production_subsidy",
 
 
 def test_presets_structure(presets):
-    assert len(presets) == 24
+    assert len(presets) == 28
     ids = [p["id"] for p in presets]
     assert len(set(ids)) == len(presets)
     for p in presets:

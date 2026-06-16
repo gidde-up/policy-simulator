@@ -136,7 +136,7 @@ function ResultsPanel({ results, loading }) {
     );
   }
 
-  const { aggregate, sector_effects, tariff_channels, other_channels, costs, uncertainty, data_source, baseline, induced_note, job_quality, investment_incentive, job_years_note, financing } = results;
+  const { aggregate, sector_effects, tariff_channels, other_channels, costs, uncertainty, data_source, baseline, induced_note, job_quality, investment_incentive, job_years_note, employment_programme_note, financing } = results;
   const totalJobs = aggregate.total_jobs;
   const isPositive = totalJobs > 0;
 
@@ -204,6 +204,17 @@ function ResultsPanel({ results, loading }) {
           >
             Dismiss
           </button>
+        </div>
+      )}
+
+      {/* Employment programme caveat (EIIP/EPWP): a different plane */}
+      {employment_programme_note && (
+        <div className="bg-amber-50 border-l-4 border-amber-500 rounded-r-xl p-4">
+          <div className="flex items-center space-x-2 mb-1">
+            <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0" />
+            <span className="font-bold text-amber-900">A different class of intervention - read before comparing</span>
+          </div>
+          <p className="text-sm text-amber-900 leading-relaxed">{employment_programme_note}</p>
         </div>
       )}
 
@@ -494,7 +505,7 @@ function ResultsPanel({ results, loading }) {
       )}
 
       {/* Job-years framing */}
-      {job_years_note && (
+      {job_years_note && !employment_programme_note && (
         <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 text-sm text-blue-800">
           {job_years_note}
         </div>
